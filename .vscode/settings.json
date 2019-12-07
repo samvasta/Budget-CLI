@@ -1,0 +1,44 @@
+{
+    "antlr4.generation": {
+        "mode": "external",
+        "outputDir": "Generated",
+        "language": "CSharp",
+        "visitors": true,
+        "listeners": false,
+        "package": "BudgetCliCore.Grammar"
+    },
+    "dotnet-test-explorer.testProjectPath": "*Test",
+    "coverage-gutters.lcovname": "lcov.info",
+    "dotnet-test-explorer.testArguments": "/p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info",
+    "dotnet-test-explorer.runInParallel": true,
+    "dotnet-test-explorer.codeLensFailed": "💥",
+    "dotnet-test-explorer.codeLensPassed": "👌",
+    "sqltools.connections": [],
+    "sqltools.useNodeRuntime": true,
+    
+    "todohighlight.isCaseSensitive": false,
+    "todohighlight.keywords": [
+        {
+            "text": "fixme",
+            "color": "#839496",
+            "backgroundColor": "rgba(211, 54, 130, 0.5)",
+            "overviewRulerColor": "#d33682",
+            "isWholeLine": true
+        },
+        {
+            "text": "hack",
+            "color": "#839496",
+            "backgroundColor": "rgba(133, 153, 0, 0.5)",
+            "overviewRulerColor": "#859900",
+            "isWholeLine": true,
+        },
+        {
+            "text": "//todo",
+            "color": "#839496",
+            "backgroundColor": "rgba(220, 50, 47, 0.5)",
+            "isWholeLine": true,
+            "overviewRulerColor": "#b58900"
+            //other styling properties goes here ... 
+        }
+    ],
+}
