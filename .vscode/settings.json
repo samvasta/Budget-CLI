@@ -5,9 +5,9 @@
         "language": "CSharp",
         "visitors": true,
         "listeners": false,
-        "package": "BudgetCliCore.Grammar"
+        "package": "BudgetCli.Core.Grammar"
     },
-    "dotnet-test-explorer.testProjectPath": "*Test",
+    "dotnet-test-explorer.testProjectPath": "*Tests",
     "coverage-gutters.lcovname": "lcov.info",
     "dotnet-test-explorer.testArguments": "/p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info",
     "dotnet-test-explorer.runInParallel": true,

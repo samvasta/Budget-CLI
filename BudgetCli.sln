@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCliCore", "BudgetCliCore\BudgetCliCore.csproj", "{AFE77F6C-82FB-45CE-88D2-1F69E3DEE27D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCli.Core", "BudgetCli.Core\BudgetCli.Core.csproj", "{AFE77F6C-82FB-45CE-88D2-1F69E3DEE27D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCliCoreTest", "BudgetCliCoreTest\BudgetCliCoreTest.csproj", "{23FEB6FC-A4E5-4EC1-B8CA-5DB5E641B3EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCli.Core.Tests", "BudgetCli.Core.Tests\BudgetCli.Core.Tests.csproj", "{23FEB6FC-A4E5-4EC1-B8CA-5DB5E641B3EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCliData", "BudgetCliData\BudgetCliData.csproj", "{C84E000B-2B7D-4FCE-8DC2-CAA492CCB1B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCli.Data", "BudgetCli.Data\BudgetCli.Data.csproj", "{C84E000B-2B7D-4FCE-8DC2-CAA492CCB1B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCliUtil", "BudgetCliUtil\BudgetCliUtil.csproj", "{B94EFD40-5BD0-41B9-9428-13E55F82DDDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCli.Util", "BudgetCli.Util\BudgetCli.Util.csproj", "{B94EFD40-5BD0-41B9-9428-13E55F82DDDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCliDataTest", "BudgetCliDataTest\BudgetCliDataTest.csproj", "{C978C75B-6AA3-459F-8AE8-FE4926BDC69B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetCli.Data.Tests", "BudgetCli.Data.Tests\BudgetCli.Data.Tests.csproj", "{C978C75B-6AA3-459F-8AE8-FE4926BDC69B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

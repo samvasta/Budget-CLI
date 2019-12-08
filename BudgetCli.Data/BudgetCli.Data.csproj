@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dapper" Version="2.0.30" />
+    <PackageReference Include="DbUp" Version="4.3.0" />
+    <PackageReference Include="DbUp-SQLite" Version="4.3.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.112.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112.0" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <EmbeddedResource Include="IO/MigrationScripts/Script0001__InitDb.sql" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <ProjectReference Include="..\BudgetCli.Util\BudgetCli.Util.csproj" />
+  </ItemGroup>
+
+</Project>
