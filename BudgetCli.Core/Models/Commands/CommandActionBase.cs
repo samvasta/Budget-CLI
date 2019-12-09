@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetCli.Core.Models.Options;
 using BudgetCli.Data.Enums;
 using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories;
@@ -94,7 +95,21 @@ namespace BudgetCli.Core.Models.Commands
 
         protected abstract bool TryUndoAction();
 
-        protected abstract IEnumerable<CommandActionParameterDto> GetParameterDtos();
+        protected abstract IEnumerable<CommandOptionBase> GetOptions();
+
+        protected IEnumerable<CommandActionParameterDto> GetParameterDtos()
+        {
+            foreach(var option in GetOptions())
+            {
+                if(option != null && option.IsDataValid)
+                {
+                    yield return new CommandActionParameterDto()
+                    {
+                        Data = option.Data.ToString()
+                    };
+                }
+            }
+        }
 
         public CommandActionDto ToDto()
         {

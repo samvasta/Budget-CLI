@@ -2252,7 +2252,7 @@ public partial class BudgetCliParser : Parser {
 	}
 
 	public partial class IntExprContext : ParserRuleContext {
-		public BudgetCli.Core.Models.Range<int> range;
+		public BudgetCli.Util.Models.Range<int> range;
 		public IntegerContext from;
 		public IntegerContext to;
 		public IntegerContext _integer;
@@ -2290,7 +2290,7 @@ public partial class BudgetCliParser : Parser {
 				State = 345; _localctx.from = integer();
 				State = 346; Match(T__26);
 				State = 347; _localctx.to = integer();
-				_localctx.range =  new BudgetCli.Core.Models.Range<int>(_localctx.from.value, _localctx.to.value);
+				_localctx.range =  new BudgetCli.Util.Models.Range<int>(_localctx.from.value, _localctx.to.value);
 				}
 				break;
 			case 2:
@@ -2303,13 +2303,13 @@ public partial class BudgetCliParser : Parser {
 				case PLUS:
 					{
 					State = 351; Match(PLUS);
-					 _localctx.range =  new BudgetCli.Core.Models.Range<int>(_localctx._integer.value, int.MaxValue); 
+					 _localctx.range =  new BudgetCli.Util.Models.Range<int>(_localctx._integer.value, int.MaxValue); 
 					}
 					break;
 				case MINUS:
 					{
 					State = 353; Match(MINUS);
-					 _localctx.range =  new BudgetCli.Core.Models.Range<int>(int.MinValue, _localctx._integer.value); 
+					 _localctx.range =  new BudgetCli.Util.Models.Range<int>(int.MinValue, _localctx._integer.value); 
 					}
 					break;
 				default:
@@ -2331,7 +2331,7 @@ public partial class BudgetCliParser : Parser {
 	}
 
 	public partial class DecimalExprContext : ParserRuleContext {
-		public BudgetCli.Core.Models.Range<decimal> range;
+		public BudgetCli.Util.Models.Range<decimal> range;
 		public DecimalContext from;
 		public DecimalContext to;
 		public DecimalContext _decimal;
@@ -2369,7 +2369,7 @@ public partial class BudgetCliParser : Parser {
 				State = 359; _localctx.from = @decimal();
 				State = 360; Match(T__26);
 				State = 361; _localctx.to = @decimal();
-				_localctx.range =  new BudgetCli.Core.Models.Range<decimal>(_localctx.from.value, _localctx.to.value);
+				_localctx.range =  new BudgetCli.Util.Models.Range<decimal>(_localctx.from.value, _localctx.to.value);
 				}
 				break;
 			case 2:
@@ -2382,13 +2382,13 @@ public partial class BudgetCliParser : Parser {
 				case PLUS:
 					{
 					State = 365; Match(PLUS);
-					 _localctx.range =  new BudgetCli.Core.Models.Range<decimal>(_localctx._decimal.value, decimal.MaxValue); 
+					 _localctx.range =  new BudgetCli.Util.Models.Range<decimal>(_localctx._decimal.value, decimal.MaxValue); 
 					}
 					break;
 				case MINUS:
 					{
 					State = 367; Match(MINUS);
-					 _localctx.range =  new BudgetCli.Core.Models.Range<decimal>(decimal.MinValue, _localctx._decimal.value); 
+					 _localctx.range =  new BudgetCli.Util.Models.Range<decimal>(decimal.MinValue, _localctx._decimal.value); 
 					}
 					break;
 				default:

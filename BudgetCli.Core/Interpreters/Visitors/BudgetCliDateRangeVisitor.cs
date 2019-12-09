@@ -3,6 +3,7 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using BudgetCli.Core.Grammar;
 using BudgetCli.Core.Models;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Interpreters.Visitors
 {

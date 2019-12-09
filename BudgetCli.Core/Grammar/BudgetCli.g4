@@ -150,15 +150,15 @@ locals [BudgetCli.Core.Enums.TransactionKind kind]
 
 
 intExpr
-returns [BudgetCli.Core.Models.Range<int> range]
-            : from=integer ':' to=integer       {$range = new BudgetCli.Core.Models.Range<int>($from.value, $to.value);}
-            | integer (PLUS { $range = new BudgetCli.Core.Models.Range<int>($integer.value, int.MaxValue); } | MINUS { $range = new BudgetCli.Core.Models.Range<int>(int.MinValue, $integer.value); })
+returns [BudgetCli.Util.Models.Range<int> range]
+            : from=integer ':' to=integer       {$range = new BudgetCli.Util.Models.Range<int>($from.value, $to.value);}
+            | integer (PLUS { $range = new BudgetCli.Util.Models.Range<int>($integer.value, int.MaxValue); } | MINUS { $range = new BudgetCli.Util.Models.Range<int>(int.MinValue, $integer.value); })
             ;
 
 decimalExpr
-returns [BudgetCli.Core.Models.Range<decimal> range]
-            : from=decimal ':' to=decimal       {$range = new BudgetCli.Core.Models.Range<decimal>($from.value, $to.value);}
-            | decimal (PLUS { $range = new BudgetCli.Core.Models.Range<decimal>($decimal.value, decimal.MaxValue); } | MINUS { $range = new BudgetCli.Core.Models.Range<decimal>(decimal.MinValue, $decimal.value); })
+returns [BudgetCli.Util.Models.Range<decimal> range]
+            : from=decimal ':' to=decimal       {$range = new BudgetCli.Util.Models.Range<decimal>($from.value, $to.value);}
+            | decimal (PLUS { $range = new BudgetCli.Util.Models.Range<decimal>($decimal.value, decimal.MaxValue); } | MINUS { $range = new BudgetCli.Util.Models.Range<decimal>(decimal.MinValue, $decimal.value); })
             ;
 
 dateExpr: date

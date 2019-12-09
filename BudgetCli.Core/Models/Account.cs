@@ -6,6 +6,7 @@ using BudgetCli.Data.Enums;
 using BudgetCli.Util.Attributes;
 using BudgetCli.Data.Repositories;
 using BudgetCli.Data.Models;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Models
 {
@@ -26,7 +27,7 @@ namespace BudgetCli.Core.Models
         public virtual long? CategoryId { get; set; }
 
         [HelpInfo("Initial Funds", "Funds held when the account was first created")]
-        public virtual long InitialFunds { get; set; }
+        public virtual Money InitialFunds { get; set; }
 
         [HelpInfo("Priority", "A relative value that helps sort accounts.")]
         public virtual long Priority { get; set; }
@@ -57,7 +58,7 @@ namespace BudgetCli.Core.Models
         /// <summary>
         /// New Account Constructor
         /// </summary>
-        public Account(string name, long initialFunds, RepositoryBag repositories)
+        public Account(string name, Money initialFunds, RepositoryBag repositories)
         {
             this.Id = null;
             this.Name = name;
@@ -72,7 +73,7 @@ namespace BudgetCli.Core.Models
         /// <summary>
         /// From DTO Constructor
         /// </summary>
-        public Account(long id, string name, long? categoryId, long initialFunds, long priority, AccountKind accountKind, string description, RepositoryBag repositories)
+        public Account(long id, string name, long? categoryId, Money initialFunds, long priority, AccountKind accountKind, string description, RepositoryBag repositories)
         {
             this.Id = id;
             this.Name = name;
