@@ -22,5 +22,25 @@ namespace BudgetCli.Data.Models
 
         [Persisted]
         public virtual string Memo { get; set; }
+
+
+        public override bool Equals(object obj)
+        {
+            if(obj is TransactionDto other)
+            {
+                return this.Id.Equals(other.Id) &&
+                       this.Timestamp.Equals(other.Timestamp) &&
+                       this.SourceAccountId.Equals(other.SourceAccountId) &&
+                       this.DestinationAccountId.Equals(other.DestinationAccountId) &&
+                       this.TransferAmount.Equals(other.TransferAmount) &&
+                       this.Memo.Equals(other.Memo);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Timestamp, SourceAccountId, DestinationAccountId, TransferAmount, Memo);
+        }
     }
 }

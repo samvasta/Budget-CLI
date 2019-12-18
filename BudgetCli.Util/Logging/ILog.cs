@@ -12,5 +12,6 @@ namespace BudgetCli.Util.Logging
         void WriteLine(string text);
          void WriteLine(string text, Color color);
          void WriteLine(string text, LogLevel level);
+
     }
 }

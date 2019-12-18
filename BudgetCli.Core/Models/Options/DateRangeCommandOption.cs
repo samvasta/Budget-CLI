@@ -1,16 +1,23 @@
 using System;
 using BudgetCli.Core.Enums;
+using BudgetCli.Data.Enums;
 using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Models.Options
 {
     public class DateRangeCommandOption : CommandOptionBase<Range<DateTime>>
     {
-        public DateRangeCommandOption(string rawText) : base(rawText)
+
+        public DateRangeCommandOption(CommandOptionKind optionKind) : base(optionKind)
+        {
+            IsDataValid = false;
+        }
+
+        public DateRangeCommandOption(CommandOptionKind optionKind, string rawText) : base(optionKind, rawText)
         {
         }
 
-        public DateRangeCommandOption(Range<DateTime> data) : base(data)
+        public DateRangeCommandOption(CommandOptionKind optionKind, Range<DateTime> data) : base(optionKind, data)
         {
         }
 

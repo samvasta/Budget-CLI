@@ -33,8 +33,7 @@ namespace BudgetCli.Data.Tests.IO
             Assert.True(File.Exists(filePath));
 
             AssertHasTable(filePath, AccountRepository.TABLE_NAME);
-            AssertHasTable(filePath, CommandActionRepository.TABLE_NAME);
-            AssertHasTable(filePath, CommandActionParameterRepository.TABLE_NAME);
+            AssertHasTable(filePath, AccountStateRepository.TABLE_NAME);
             AssertHasTable(filePath, TransactionRepository.TABLE_NAME);
 
             if(File.Exists(filePath))

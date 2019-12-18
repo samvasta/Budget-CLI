@@ -12,6 +12,9 @@ namespace BudgetCli.Core.Models
 {
     public class Account
     {
+        public const long DEFAULT_PRIORITY = 5;
+        public const AccountKind DEFAULT_ACCOUNT_KIND = AccountKind.Sink;
+
         [HelpInfo(Visible: false)]
         protected RepositoryBag Repositories { get; }
         
@@ -26,16 +29,13 @@ namespace BudgetCli.Core.Models
         [HelpInfo(Visible: false)]
         public virtual long? CategoryId { get; set; }
 
-        [HelpInfo("Initial Funds", "Funds held when the account was first created")]
-        public virtual Money InitialFunds { get; set; }
-
         [HelpInfo("Priority", "A relative value that helps sort accounts.")]
         public virtual long Priority { get; set; }
 
         [HelpInfo("Account Type", "Describes, generally, how money flows through the account.")]
         public virtual AccountKind AccountKind { get; set; }
         
-        [HelpInfo("Description", "A brief description of the account")]
+        [HelpInfo("Description", "A brief description of the account.")]
         public virtual string Description { get; set; }
 
         #endregion - DTO Properties -
@@ -55,6 +55,21 @@ namespace BudgetCli.Core.Models
             }
         }
 
+        private AccountState _currentState;
+        [HelpInfo("Current State", "The current state of the account. Contains info such as current funds, and time of last change.")]
+        public AccountState CurrentState
+        {
+            get
+            {
+                if(_currentState == null && Id.HasValue)
+                {
+                    AccountStateDto dto = Repositories.AccountStateRepository.GetLatestByAccountId(Id.Value);
+                    _currentState = DtoToModelTranslator.FromDto(dto, Repositories);
+                }
+                return _currentState;
+            }
+        }
+
         /// <summary>
         /// New Account Constructor
         /// </summary>
@@ -63,9 +78,8 @@ namespace BudgetCli.Core.Models
             this.Id = null;
             this.Name = name;
             this.CategoryId = null;
-            this.InitialFunds = initialFunds;
-            this.Priority = 5;
-            this.AccountKind = AccountKind.Sink;
+            this.Priority = DEFAULT_PRIORITY;
+            this.AccountKind = DEFAULT_ACCOUNT_KIND;
             this.Description = String.Empty;
             this.Repositories = repositories;
         }
@@ -73,12 +87,11 @@ namespace BudgetCli.Core.Models
         /// <summary>
         /// From DTO Constructor
         /// </summary>
-        public Account(long id, string name, long? categoryId, Money initialFunds, long priority, AccountKind accountKind, string description, RepositoryBag repositories)
+        public Account(long id, string name, long? categoryId, long priority, AccountKind accountKind, string description, RepositoryBag repositories)
         {
             this.Id = id;
             this.Name = name;
             this.CategoryId = categoryId;
-            this.InitialFunds = initialFunds;
             this.Priority = priority;
             this.AccountKind = accountKind;
             this.Description = description;

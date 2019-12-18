@@ -1,11 +1,10 @@
 using System.Collections.Generic;
+using BudgetCli.Util.Logging;
 
 namespace BudgetCli.Core.Models.Commands
 {
     public interface ICommandAction
     {
-        long? Id { get; set; }
-
         /// <summary>
         /// The raw text used to invoke the action
         /// </summary>
@@ -20,12 +19,6 @@ namespace BudgetCli.Core.Models.Commands
         /// Executes the action
         /// </summary>
         /// <returns>True if execution was successful, false otherwise</returns>
-        bool TryExecute();
-        
-        /// <summary>
-        /// Reverses the action
-        /// </summary>
-        /// /// <returns>True if undo was successful, false otherwise</returns>
-        bool TryUndo();
+        bool TryExecute(ILog log);
     }
 }

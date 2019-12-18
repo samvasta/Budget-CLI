@@ -1,14 +1,21 @@
 using BudgetCli.Core.Enums;
+using BudgetCli.Data.Enums;
 
 namespace BudgetCli.Core.Models.Options
 {
     public class DecimalCommandOption : CommandOptionBase<decimal>
     {
-        public DecimalCommandOption(string rawText) : base(rawText)
+
+        public DecimalCommandOption(CommandOptionKind optionKind) : base(optionKind)
+        {
+            IsDataValid = false;
+        }
+        
+        public DecimalCommandOption(CommandOptionKind optionKind, string rawText) : base(optionKind, rawText)
         {
         }
 
-        public DecimalCommandOption(decimal data) : base(data)
+        public DecimalCommandOption(CommandOptionKind optionKind, decimal data) : base(optionKind, data)
         {
         }
 

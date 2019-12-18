@@ -1,14 +1,21 @@
+using BudgetCli.Data.Enums;
 using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Models.Options
 {
     public class MoneyCommandOption : CommandOptionBase<Money>
     {
-        public MoneyCommandOption(string rawText) : base(rawText)
+
+        public MoneyCommandOption(CommandOptionKind optionKind) : base(optionKind)
+        {
+            IsDataValid = false;
+        }
+        
+        public MoneyCommandOption(CommandOptionKind optionKind, string rawText) : base(optionKind, rawText)
         {
         }
 
-        public MoneyCommandOption(Money data) : base(data)
+        public MoneyCommandOption(CommandOptionKind optionKind, Money data) : base(optionKind, data)
         {
         }
 

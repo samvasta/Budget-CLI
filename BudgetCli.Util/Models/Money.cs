@@ -8,17 +8,16 @@ namespace BudgetCli.Util.Models
 
         private long _value;
 
+        public long InternalValue { get { return _value; } }
+
         #region - Constructors & Conversions -
-        public Money(byte value) : this((long)value) {}
-        public Money(short value) : this((long)value) {}
-        public Money(ushort value) : this((long)value) {}
-        public Money(int value) : this((long)value) {}
-        public Money(uint value) : this((long)value) {}
-        public Money(ulong value) : this((long)value) {}
-        public Money(long value)
-        {
-            _value = ConvertToMoneyLong(value);
-        }
+        public Money(byte value) : this((long)value, false) {}
+        public Money(short value) : this((long)value, false) {}
+        public Money(ushort value) : this((long)value, false) {}
+        public Money(int value) : this((long)value, false) {}
+        public Money(uint value) : this((long)value, false) {}
+        public Money(ulong value) : this((long)value, false) {}
+        public Money(long value) : this(value, false) {}
 
         public Money(float value) : this((double) value) {}
         public Money(double value) 
@@ -30,10 +29,10 @@ namespace BudgetCli.Util.Models
             _value = ConvertToMoneyLong(value);
         }
 
-
-        private Money(long moneyValue, bool isMoneyValue)
+        /// <param name="isInternalValue">False indicates that the moneyValue is in whole dollars</param>
+        public Money(long moneyValue, bool isInternalValue)
         {
-            if(isMoneyValue)
+            if(isInternalValue)
             {
                 //No need to convert. It's already a money value
                 _value = moneyValue;

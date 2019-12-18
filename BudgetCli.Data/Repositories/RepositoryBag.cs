@@ -1,5 +1,7 @@
+using System.Transactions;
 using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories.Interfaces;
+using Dapper;
 
 namespace BudgetCli.Data.Repositories
 {
@@ -7,7 +9,6 @@ namespace BudgetCli.Data.Repositories
     {
         public IAccountRepository AccountRepository { get; set; }
         public ITransactionRepository TransactionRepository { get; set; }
-        public ICommandActionRepository CommandActionRepository { get; set; }
-        public ICommandActionParameterRepository CommandActionParameterRepository { get; set; }
+        public IAccountStateRepository AccountStateRepository { get; set; }
     }
 }

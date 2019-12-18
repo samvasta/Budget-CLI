@@ -1,14 +1,21 @@
 using System;
+using BudgetCli.Data.Enums;
 
 namespace BudgetCli.Core.Models.Options
 {
     public class EnumCommandOption<T> : CommandOptionBase<T> where T : struct, IConvertible
     {
-        public EnumCommandOption(string rawText) : base(rawText)
+
+        public EnumCommandOption(CommandOptionKind optionKind) : base(optionKind)
+        {
+            IsDataValid = false;
+        }
+        
+        public EnumCommandOption(CommandOptionKind optionKind, string rawText) : base(optionKind, rawText)
         {
         }
 
-        public EnumCommandOption(T data) : base(data)
+        public EnumCommandOption(CommandOptionKind optionKind, T data) : base(optionKind, data)
         {
         }
 

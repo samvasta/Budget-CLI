@@ -14,8 +14,7 @@ namespace BudgetCli.Data.Tests.Repositories
             string connectionString = "DataSource=:memory:;Version=3;New=True;";
 
             Assert.Equal("Account", (new AccountRepository(connectionString, log.Object)).GetTableName());
-            Assert.Equal("CommandAction", (new CommandActionRepository(connectionString, log.Object)).GetTableName());
-            Assert.Equal("CommandActionParameter", (new CommandActionParameterRepository(connectionString, log.Object)).GetTableName());
+            Assert.Equal("AccountState", (new AccountStateRepository(connectionString, log.Object)).GetTableName());
             Assert.Equal("Transaction", (new TransactionRepository(connectionString, log.Object)).GetTableName());
         }
     }

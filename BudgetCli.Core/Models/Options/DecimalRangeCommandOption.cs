@@ -1,15 +1,22 @@
 using BudgetCli.Core.Enums;
+using BudgetCli.Data.Enums;
 using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Models.Options
 {
     public class DecimalRangeCommandOption : CommandOptionBase<Range<decimal>>
     {
-        public DecimalRangeCommandOption(string rawText) : base(rawText)
+
+        public DecimalRangeCommandOption(CommandOptionKind optionKind) : base(optionKind)
+        {
+            IsDataValid = false;
+        }
+        
+        public DecimalRangeCommandOption(CommandOptionKind optionKind, string rawText) : base(optionKind, rawText)
         {
         }
 
-        public DecimalRangeCommandOption(Range<decimal> data) : base(data)
+        public DecimalRangeCommandOption(CommandOptionKind optionKind, Range<decimal> data) : base(optionKind, data)
         {
         }
 

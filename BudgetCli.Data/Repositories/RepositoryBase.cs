@@ -194,7 +194,7 @@ namespace BudgetCli.Data.Repositories
                 LogError($"Remove was called for object that does not exist in the table! (Id = {id})");
             }
 #endif
-            return exists;            
+            return exists;
         }
 
         public abstract string GetTableName();

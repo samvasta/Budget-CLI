@@ -1,8 +1,13 @@
+using System.IO;
 using System;
 using System.Collections.Generic;
+using BudgetCli.Core.Models.CommandResults;
 using BudgetCli.Core.Models.Options;
 using BudgetCli.Data.Enums;
+using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories;
+using BudgetCli.Util.Logging;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Models.Commands.Accounts
 {
@@ -12,47 +17,99 @@ namespace BudgetCli.Core.Models.Commands.Accounts
         {
             get
             {
-                //TODO
-                return "";
+                return $"Added account \"{AccountName.GetValue(String.Empty)}\" with initial funds {FundsOption.GetValue(Money.None)}";
             }
         }
+
         public override CommandActionKind CommandActionKind 
         {
             get { return CommandActionKind.AddAccount; }
         }
 
         //Options
+        public IntegerCommandOption AccountId { get; set; }
+        public StringCommandOption AccountName { get; set; }
         public IntegerCommandOption CategoryIdOption { get; set; }
         public StringCommandOption DescriptionOption { get; set; }
-        public DecimalCommandOption FundsOption { get; set; }
+        public MoneyCommandOption FundsOption { get; set; }
         public IntegerCommandOption PriorityOption { get; set; }
         public EnumCommandOption<AccountKind> AccountTypeOption { get; set; }
 
-        public AddAccountCommand(string rawText, RepositoryBag repositories) : base(rawText, repositories)
+        public AddAccountCommand(string rawText, RepositoryBag repositories, string accountName) : base(rawText, repositories)
         {
+            AccountId = new IntegerCommandOption(CommandOptionKind.Account);
+            AccountName = new StringCommandOption(CommandOptionKind.Name);
+            CategoryIdOption = new IntegerCommandOption(CommandOptionKind.Category);
+            DescriptionOption = new StringCommandOption(CommandOptionKind.Description);
+            FundsOption = new MoneyCommandOption(CommandOptionKind.Funds);
+            PriorityOption = new IntegerCommandOption(CommandOptionKind.Priority);
+            AccountTypeOption = new EnumCommandOption<AccountKind>(CommandOptionKind.AccountType);
+            AccountName.SetData(accountName);
         }
 
-        public AddAccountCommand(long id, string rawText, bool isExecuted, DateTime timestamp, RepositoryBag repositories) : base(id, rawText, isExecuted, timestamp, repositories)
+        protected override bool TryDoAction(ILog log, IEnumerable<ICommandActionListener> listeners = null)
         {
+            CreateCommandResult<Account> result = new CreateCommandResult<Account>(this, false, null);
+            AccountDto accountDto = BuildAccountDto();
+            
+            bool successful = Repositories.AccountRepository.Upsert(accountDto);
+            AccountId.SetData(accountDto.Id.Value);
+
+            if(!accountDto.Id.HasValue)
+            {
+                log?.WriteLine("Error occurred while adding account. Account was not assigned a valid Id.", LogLevel.Error);
+                TransmitResult(result, listeners);
+                return false;
+            }
+
+            AccountStateDto accountStateDto = BuildAccountStateDto(accountDto.Id.Value);
+            successful &= Repositories.AccountStateRepository.Upsert(accountStateDto);
+
+            if(successful)
+            {
+                log?.WriteLine($"Added account \"{accountDto.Name}\"", LogLevel.Normal);
+                
+                result = new CreateCommandResult<Account>(this, successful, DtoToModelTranslator.FromDto(accountDto, Repositories));
+            }
+
+            TransmitResult(result, listeners);
+            return successful;
         }
 
-        protected override IEnumerable<CommandOptionBase> GetOptions()
+        private AccountDto BuildAccountDto()
         {
-            yield return CategoryIdOption;
-            yield return DescriptionOption;
-            yield return FundsOption;
-            yield return PriorityOption;
-            yield return AccountTypeOption;
+            AccountDto dto = new AccountDto()
+            {
+                AccountKind = AccountTypeOption.GetValue(Account.DEFAULT_ACCOUNT_KIND),
+                CategoryId = (long?)CategoryIdOption.GetValue((long?)null),
+                Description = DescriptionOption.GetValue(String.Empty),
+                Name = AccountName.GetValue(String.Empty),
+                Priority = PriorityOption.GetValue(Account.DEFAULT_PRIORITY)
+            };
+
+            if(AccountId.IsDataValid)
+            {
+                dto.Id = AccountId.GetValue(-1);
+            }
+            else
+            {
+                dto.Id = null;
+            }
+
+            return dto;
         }
 
-        protected override bool TryDoAction()
+        private AccountStateDto BuildAccountStateDto(long accountId)
         {
-            throw new NotImplementedException();
-        }
+            AccountStateDto dto = new AccountStateDto()
+            {
+                AccountId = accountId,
+                Funds = FundsOption.GetValue(0).InternalValue,
+                IsClosed = false,
+                Timestamp = DateTime.Now
+            };
 
-        protected override bool TryUndoAction()
-        {
-            throw new NotImplementedException();
+            return dto;
         }
     }
 }

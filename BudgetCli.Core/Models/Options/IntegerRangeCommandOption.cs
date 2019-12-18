@@ -1,15 +1,22 @@
 using BudgetCli.Core.Enums;
+using BudgetCli.Data.Enums;
 using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Models.Options
 {
     public class IntegerRangeCommandOption : CommandOptionBase<Range<long>>
     {
-        public IntegerRangeCommandOption(string rawText) : base(rawText)
+
+        public IntegerRangeCommandOption(CommandOptionKind optionKind) : base(optionKind)
+        {
+            IsDataValid = false;
+        }
+        
+        public IntegerRangeCommandOption(CommandOptionKind optionKind, string rawText) : base(optionKind, rawText)
         {
         }
 
-        public IntegerRangeCommandOption(Range<long> data) : base(data)
+        public IntegerRangeCommandOption(CommandOptionKind optionKind, Range<long> data) : base(optionKind, data)
         {
         }
 

@@ -7,6 +7,8 @@ using BudgetCli.Util.Logging;
 using DbUp.SQLite.Helpers;
 using Moq;
 using Dapper;
+using BudgetCli.Data.Repositories;
+using BudgetCli.Data.Repositories.Interfaces;
 
 namespace BudgetCli.Data.Tests.TestHarness
 {
@@ -76,6 +78,16 @@ namespace BudgetCli.Data.Tests.TestHarness
             }
 
             return new TestDbInfo(filePath);
+        }
+
+        public static RepositoryBag CreateMockRepositoryBag(string connectionString, ILog log, IAccountRepository accountRepository = null, IAccountStateRepository accountStateRepository = null, ITransactionRepository transactionRepository = null)
+        {
+            return new RepositoryBag()
+            {
+                AccountRepository = accountRepository ?? new Mock<AccountRepository>(connectionString, log).Object,
+                AccountStateRepository = accountStateRepository ?? new Mock<AccountStateRepository>(connectionString, log).Object,
+                TransactionRepository = transactionRepository ?? new Mock<TransactionRepository>(connectionString, log).Object,
+            };
         }
     }
 }

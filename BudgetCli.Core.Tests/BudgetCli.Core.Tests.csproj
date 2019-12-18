@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BudgetCli.Core\BudgetCli.Core.csproj" />
+    <ProjectReference Include="..\BudgetCli.Data.Tests\BudgetCli.Data.Tests.csproj" />
   </ItemGroup>
 
 </Project>
