@@ -5,54 +5,33 @@ using BudgetCli.Data.Enums;
 
 namespace BudgetCli.Core.Models.Options
 {
-    public abstract class CommandOptionBase
+    public abstract class CommandOptionBase<T>
     {
-        public CommandOptionKind OptionKind { get; }
+        public virtual CommandOptionKind OptionKind { get; }
         public virtual bool IsDataValid { get; protected set; }
-        protected object Data { get; set; }
+        protected virtual T Data { get; set; }
 
-        protected CommandOptionBase(CommandOptionKind optionKind)
+        public CommandOptionBase(CommandOptionKind optionKind)
         {
             OptionKind = optionKind;
-        }
-
-        /// <summary>
-        /// Returns Data if available, otherwise it returns the default value provided
-        /// </summary>
-        public virtual object GetValue(object defaultValue)
-        {
-            if(IsDataValid)
-            {
-                return Data;
-            }
-            return defaultValue;
-        }
-
-        public abstract bool SetData(string rawText);
-    }
-
-    public abstract class CommandOptionBase<T> : CommandOptionBase
-    {
-        protected new T Data { get; set; }
-
-        public CommandOptionBase(CommandOptionKind optionKind) : base(optionKind)
-        {
             IsDataValid = false;
         }
 
-        public CommandOptionBase(CommandOptionKind optionKind, string rawText) : base(optionKind)
+        public CommandOptionBase(CommandOptionKind optionKind, string rawText)
         {
+            OptionKind = optionKind;
             SetData(rawText);
         }
 
-        public CommandOptionBase(CommandOptionKind optionKind, T data) : base(optionKind)
+        public CommandOptionBase(CommandOptionKind optionKind, T data)
         {
+            OptionKind = optionKind;
             //Assume data is valid if it is set directly
             IsDataValid = true;
             Data = data;
         }
 
-        public override bool SetData(string rawText)
+        public virtual bool SetData(string rawText)
         {
             T data;
             if(TryParseData(rawText, out data))
@@ -67,7 +46,7 @@ namespace BudgetCli.Core.Models.Options
             return IsDataValid;
         }
 
-        public bool SetData(T newData)
+        public virtual bool SetData(T newData)
         {
             Data = newData;
             IsDataValid = true;
@@ -80,6 +59,15 @@ namespace BudgetCli.Core.Models.Options
         /// Returns Data if available, otherwise it returns the default value provided
         /// </summary>
         public virtual T GetValue(T defaultValue)
+        {
+            if(IsDataValid)
+            {
+                return Data;
+            }
+            return defaultValue;
+        }
+
+        public virtual object GetValue(object defaultValue)
         {
             if(IsDataValid)
             {

@@ -125,5 +125,22 @@ namespace BudgetCli.Util.Models
             range = new Range<T>(default(T), default(T));
             return false;
         }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Range<T> other)
+            {
+                return this.From.Equals(other.From) &&
+                       this.To.Equals(other.To) &&
+                       this.IsFromInclusive == other.IsFromInclusive &&
+                       this.IsToInclusive == other.IsToInclusive;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(From, To, IsFromInclusive, IsToInclusive);
+        }
     }
 }

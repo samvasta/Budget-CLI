@@ -199,5 +199,23 @@ namespace BudgetCli.Util.Tests.Models
 
             Assert.Equal(expected, rangeStr);
         }
+
+        [Fact]
+        public void TestRange_Equals()
+        {
+            Range<DateTime> range = new Range<DateTime>(new DateTime(2020, 4, 18), new DateTime(2021, 1, 11), false, false);
+            Range<DateTime> range2 = new Range<DateTime>(new DateTime(2020, 4, 18), new DateTime(2021, 1, 11), false, false);
+
+            Assert.Equal(range, range2);
+        }
+
+        [Fact]
+        public void TestRange_HashCode()
+        {
+            Range<DateTime> range = new Range<DateTime>(new DateTime(2020, 4, 18), new DateTime(2021, 1, 11), false, false);
+            Range<DateTime> range2 = new Range<DateTime>(new DateTime(2020, 4, 18), new DateTime(2021, 1, 11), false, false);
+
+            Assert.Equal(range.GetHashCode(), range2.GetHashCode());
+        }
     }
 }
