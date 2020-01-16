@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using BudgetCli.Core.Models.CommandResults.InfoModels;
 using BudgetCli.Core.Models.Commands;
+using BudgetCli.Core.Models.Interfaces;
 
 namespace BudgetCli.Core.Models.CommandResults
 {
-    public class ReadCommandResult<TModel> : ICommandResult
+    public class ReadCommandResult<TModel> : ICommandResult where TModel : IListable
     {
-        public CommandActionBase Command { get; }
+        public ICommandAction Command { get; }
 
         public bool IsSuccessful { get; }
 

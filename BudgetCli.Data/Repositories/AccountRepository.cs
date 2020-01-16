@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using BudgetCli.Data.Enums;
 using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories.Interfaces;
 using BudgetCli.Util.Logging;
+using BudgetCli.Util.Models;
 using Dapper;
 
 namespace BudgetCli.Data.Repositories
@@ -54,6 +57,134 @@ namespace BudgetCli.Data.Repositories
             }
 #endif
             return id;
+        }
+
+        public bool DoesNameExist(string name)
+        {
+            long count = 0;
+            Execute((con) =>
+            {
+                string command = $@"SELECT COUNT(*) FROM [{GetTableName()}] WHERE [Name] = @Name;";
+                object parameter = new { Name = name };
+                count = con.QueryFirst<long>(command, parameter);
+            });
+
+            return count > 0;
+        }
+
+        public IEnumerable<AccountDto> GetAccounts(long? id = null, string nameContains = null, long? categoryId = null, string descriptionContains = null, Range<long> priorityRange = null, AccountKind? accountKind = null, Range<Money> fundsRange = null, bool includeClosedAccounts = false)
+        {
+            StringBuilder commandBuilder = new StringBuilder();
+            commandBuilder.Append($"SELECT * FROM [{GetTableName()}] AS A JOIN (SELECT [AccountId], [Funds], MAX([Timestamp]), [IsClosed] FROM [{AccountStateRepository.TABLE_NAME}] GROUP BY [AccountId]) AS S ON A.Id = S.AccountId");
+
+            bool isFirstCondition = true;
+
+            if(id.HasValue)
+            {
+                AddSelectConditionPrefix(commandBuilder, ref isFirstCondition);
+                commandBuilder.Append(" A.[Id] = @Id");
+            }
+            if(!String.IsNullOrEmpty(nameContains))
+            {
+                AddSelectConditionPrefix(commandBuilder, ref isFirstCondition);
+                commandBuilder.Append(" A.[Name] LIKE @Name");
+            }
+            if(!String.IsNullOrEmpty(descriptionContains))
+            {
+                AddSelectConditionPrefix(commandBuilder, ref isFirstCondition);
+                commandBuilder.Append(" A.[Description] LIKE @Description");
+            }
+            if(categoryId.HasValue)
+            {
+                AddSelectConditionPrefix(commandBuilder, ref isFirstCondition);
+                commandBuilder.Append(" A.[CategoryId] = @CategoryId");
+            }
+            if(accountKind.HasValue)
+            {
+                AddSelectConditionPrefix(commandBuilder, ref isFirstCondition);
+                commandBuilder.Append(" A.[AccountKind] = @AccountKind");
+            }
+            if(priorityRange != null)
+            {
+                AddSelectConditionPrefix(commandBuilder, ref isFirstCondition);
+                if(priorityRange.IsFromInclusive)
+                {
+                    commandBuilder.Append(" A.[Priority] >= @PriorityMin");
+                }
+                else
+                {
+                    commandBuilder.Append(" A.[Priority] > @PriorityMin");
+                }
+                if(priorityRange.IsToInclusive)
+                {
+                    commandBuilder.Append(" AND A.[Priority] <= @PriorityMax");
+                }
+                else
+                {
+                    commandBuilder.Append(" AND A.[Priority] < @PriorityMax");
+                }
+            }
+            if(fundsRange != null)
+            {
+                AddSelectConditionPrefix(commandBuilder, ref isFirstCondition);
+                if(fundsRange.IsFromInclusive)
+                {
+                    commandBuilder.Append(" S.[Funds] >= @FundsMin");
+                }
+                else
+                {
+                    commandBuilder.Append(" S.[Funds] > @FundsMin");
+                }
+                if(fundsRange.IsToInclusive)
+                {
+                    commandBuilder.Append(" AND S.[Funds] <= @FundsMax");
+                }
+                else
+                {
+                    commandBuilder.Append(" AND S.[Funds] < @FundsMax");
+                }
+            }
+            if(!includeClosedAccounts)
+            {
+                AddSelectConditionPrefix(commandBuilder, ref isFirstCondition);
+                commandBuilder.Append(" S.IsClosed = 0");
+            }
+
+
+            commandBuilder.Append(";");
+
+            object parameters = new
+            {
+                Id = id,
+                Name = $"%{nameContains}%",
+                CategoryId = categoryId,
+                Description = $"%{descriptionContains}%",
+                PriorityMin = priorityRange?.From,
+                PriorityMax = priorityRange?.To,
+                AccountKind = accountKind,
+                FundsMin = fundsRange?.From.InternalValue,
+                FundsMax = fundsRange?.To.InternalValue
+            };
+            List<AccountDto> list = new List<AccountDto>();
+            Execute((con) =>
+            {
+                string command = commandBuilder.ToString();
+                list.AddRange(con.Query<AccountDto>(command, parameters));
+            });
+            return list;
+        }
+
+        private void AddSelectConditionPrefix(StringBuilder commandBuilder, ref bool isFirstCondition)
+        {
+            if(isFirstCondition)
+            {
+                commandBuilder.Append(" WHERE");
+            }
+            else
+            {
+                commandBuilder.Append(" AND ");
+            }
+            isFirstCondition = false;
         }
 
         public override string GetTableName()

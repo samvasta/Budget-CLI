@@ -13,7 +13,13 @@
     "dotnet-test-explorer.runInParallel": true,
     "dotnet-test-explorer.codeLensFailed": "💥",
     "dotnet-test-explorer.codeLensPassed": "👌",
-    "sqltools.connections": [],
+    "sqltools.connections": [
+        {
+            "database": "${workspaceFolder}\\test.budget",
+            "dialect": "SQLite",
+            "name": "test.budget"
+        }
+    ],
     "sqltools.useNodeRuntime": true,
     
     "todohighlight.isCaseSensitive": false,

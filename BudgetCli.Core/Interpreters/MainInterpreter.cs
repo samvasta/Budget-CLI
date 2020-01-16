@@ -11,12 +11,12 @@ namespace BudgetCli.Core.Cli
     {
         private readonly VisitorBag _visitorBag;
 
-        public MainInterpreter()
+        public MainInterpreter(VisitorBag visitorBag)
         {
-            _visitorBag = VisitorBagUtil.GetRuntimeVisitorBag();
+            _visitorBag = visitorBag;
         }
 
-        public ICommandAction GetAction(string input)
+        public InterpreterResult<ICommandAction> GetAction(string input)
         {
             AntlrInputStream inputStream = new AntlrInputStream(input);
 

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 using BudgetCli.Core.Models.CommandResults;
+using BudgetCli.Core.Models.Interfaces;
 using BudgetCli.Core.Models.Options;
 using BudgetCli.Data.Enums;
 using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories;
-using BudgetCli.Util.Attributes;
 using BudgetCli.Util.Logging;
 
 namespace BudgetCli.Core.Models.Commands
@@ -31,11 +31,11 @@ namespace BudgetCli.Core.Models.Commands
             Repositories = repositories;
         }
 
-        public bool TryExecute(ILog log)
+        public bool TryExecute(ILog log, IEnumerable<ICommandActionListener> listeners = null)
         {
             // using(TransactionScope scope = new TransactionScope())
             // {
-                if(TryDoAction(log))
+                if(TryDoAction(log, listeners))
                 {
                     // scope.Complete();
                     return true;
@@ -47,15 +47,5 @@ namespace BudgetCli.Core.Models.Commands
 
         protected abstract bool TryDoAction(ILog log, IEnumerable<ICommandActionListener> listeners = null);
 
-        protected void TransmitResult(ICommandResult result, IEnumerable<ICommandActionListener> listeners)
-        {
-            if(listeners != null && result != null)
-            {
-                foreach(var listener in listeners)
-                {
-                    listener.OnCommand(result);
-                }
-            }
-        }
     }
 }

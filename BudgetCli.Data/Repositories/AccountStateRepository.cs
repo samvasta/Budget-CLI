@@ -32,7 +32,7 @@ namespace BudgetCli.Data.Repositories
             Execute((con) =>
             {
                 object parameters = new { AccountId = accountId };
-                string command = $@"SELECT * FROM [{GetTableName()}] WHERE [AccountId] = @AccountId AND [Timestamp] = (SELECT MAX([Timestamp]) FROM [{GetTableName()}]);";
+                string command = $@"SELECT * FROM [{GetTableName()}] WHERE [AccountId] = @AccountId AND [Timestamp] = (SELECT MAX([Timestamp]) FROM [{GetTableName()}] WHERE [AccountId] = @AccountId);";
                 latestDto = con.QueryFirstOrDefault<AccountStateDto>(command, parameters);
             });
             return latestDto;

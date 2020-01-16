@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using BudgetCli.Core.Models.CommandResults.InfoModels;
 using BudgetCli.Core.Models.Commands;
+using BudgetCli.Core.Models.Interfaces;
 
 namespace BudgetCli.Core.Models.CommandResults
 {
-    public class UpdateCommandResult<TModel> : ICommandResult
+    public class UpdateCommandResult<TModel> : ICommandResult where TModel : IDetailable
     {
-        public CommandActionBase Command { get; }
+        public ICommandAction Command { get; }
 
         public bool IsSuccessful { get; }
         public TModel UpdatedItem { get; }

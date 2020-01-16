@@ -22,12 +22,16 @@ namespace BudgetCli.Core.Models
 
         public static AccountState FromDto(AccountStateDto dto, RepositoryBag repositories)
         {
+            if(dto == null)
+            {
+                throw new Exception("THIS IS SUPER DUMB");
+            }
             return new AccountState(dto.Id.Value, dto.AccountId, new Money(dto.Funds, true), dto.Timestamp, dto.IsClosed);
         }
 
         public static Transaction FromDto(TransactionDto dto, RepositoryBag repositories)
         {
-            return new Transaction(dto.Id.Value, dto.Timestamp, dto.SourceAccountId, dto.DestinationAccountId, dto.TransferAmount, dto.Memo, repositories);
+            return new Transaction(dto.Id.Value, dto.Timestamp, dto.SourceAccountId, dto.DestinationAccountId, new Money(dto.TransferAmount, true), dto.Memo, repositories);
         }
 
     }

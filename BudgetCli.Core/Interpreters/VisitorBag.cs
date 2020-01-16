@@ -9,11 +9,11 @@ namespace BudgetCli.Core.Interpreters
 {
     public class VisitorBag
     {
-        public readonly BudgetCliVisitorBase<ICommandAction> CommandVisitor;
+        public readonly BudgetCliVisitorBase<InterpreterResult<ICommandAction>> CommandVisitor;
         public readonly BudgetCliVisitorBase<Range<DateTime>> DateRangeVisitor;
         public readonly BudgetCliVisitorBase<DateTime> DateVisitor;
 
-        private VisitorBag(BudgetCliVisitorBase<ICommandAction> commandVisitor,
+        private VisitorBag(BudgetCliVisitorBase<InterpreterResult<ICommandAction>> commandVisitor,
                            BudgetCliVisitorBase<Range<DateTime>> dateRangeVisitor,
                            BudgetCliVisitorBase<DateTime> dateVisitor
                            )
@@ -29,11 +29,11 @@ namespace BudgetCli.Core.Interpreters
         
         public class VisitorBagBuilder
         {
-            private BudgetCliVisitorBase<ICommandAction> _commandVisitor;
+            private BudgetCliVisitorBase<InterpreterResult<ICommandAction>> _commandVisitor;
             private BudgetCliVisitorBase<Range<DateTime>> _dateRangeVisitor;
             private BudgetCliVisitorBase<DateTime> _dateVisitor;
 
-            public VisitorBagBuilder CommandVisitor(BudgetCliVisitorBase<ICommandAction> visitor)
+            public VisitorBagBuilder CommandVisitor(BudgetCliVisitorBase<InterpreterResult<ICommandAction>> visitor)
             {
                 _commandVisitor = visitor;
                 return this;

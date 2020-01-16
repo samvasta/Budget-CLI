@@ -6,7 +6,6 @@ using BudgetCli.Data.IO;
 using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories.Interfaces;
 using BudgetCli.Data.Util;
-using BudgetCli.Util.Attributes;
 using BudgetCli.Util.Logging;
 using Dapper;
 
@@ -38,7 +37,7 @@ namespace BudgetCli.Data.Repositories
                 return base.Upsert(data);
             }
 
-            LogError($"Transactions must have at least one of [{data.GetPropertyName(x => x.SourceAccountId)}, {data.GetPropertyName(x => x.DestinationAccountId)}] defined.");
+            LogError($"Transactions must have at least one of [Source Account, Destination Account] defined.");
             return false;
         }
     }

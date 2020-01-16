@@ -1,47 +1,56 @@
 grammar BudgetCli;
 
-@members { public bool strict { get; set; } = false; }
+@header
+{
+#pragma warning disable 3021
+}
+
+@members
+{
+    public bool strict { get; set; } = false;
+}
 
 expression: command
           ;
 
-command: HELP                                               #help
-       | VERSION                                            #version
-       | UNDO                                               #undo
-       | REDO                                               #redo
+command: HELP           #help
+       | VERSION        #version
+       | EXIT           #exit
+       | CLEAR          #clear
 
        //ACCOUNTS
-       | CAT ACCOUNT (optHelp | (string optDate?))                  #catAccounts
-       | LS ACCOUNT                                                 #listAccounts
-       | NEW ACCOUNT (optHelp | optionsListAccountLs)               #newAccount
-       | REMOVE ACCOUNT (optHelp | optRecursive?)                   #removeAccount
-       | MOVE ACCOUNT (optHelp | (oldName=string newName=string))   #moveAccount
-       | SET ACCOUNT (optHelp | optionsListAccountSet)              #setAccount
+       | DETAIL ACCOUNT (optHelp | (accountName=STRING optDate?))                     #detailAccounts
+       | LS ACCOUNT (optHelp | optionsListAccountLs)                               #listAccounts
+       | NEW ACCOUNT (optHelp | accountName=STRING optionsListAccountNew)          #newAccount
+       | REMOVE ACCOUNT (optHelp | accountName=STRING optRecursive?)               #removeAccount
+       | SET ACCOUNT (optHelp | accountName=STRING optionsListAccountSet)                             #setAccount
        
        //TRANSACTIONS
-       | CAT TRANSACTION (optHelp | id=integer)                         #catTransaction
+       | DETAIL TRANSACTION (optHelp | id=integer)                         #detailTransaction
        | LS TRANSACTION (optHelp | optionsListTransactionLs)            #listTransactions
-       | NEW TRANSACTION (optHelp | optionsListTransactionNew)          #newTransaction
+       | NEW TRANSACTION (optHelp | funds=decimal optionsListTransactionNew)          #newTransaction
 
        //REPORTING
-       | LS HISTORY (optHelp | optionsListHistoryLs)                    #listHistory
+       | LS HISTORY (optHelp | accountName=STRING optionsListHistoryLs)                    #listHistory
        ;
 
 //Options
 
 optionsListAccountLs
-locals [int categoryCount = 0,
+locals [int idCount = 0,
+        int categoryCount = 0,
         int descriptionCount = 0,
         int fundsCount = 0,
         int nameCount = 0,
         int priorityCount = 0,
         int typeCount = 0]
             :(
+                {!strict || $idCount < 1}? optId {$idCount++;} |
                 {!strict || $categoryCount < 1}? optName {$categoryCount++;} |
                 {!strict || $descriptionCount < 1}? optDescription {$descriptionCount++;} |
                 {!strict || $fundsCount < 1}? optFundsExpr {$fundsCount++;} |
                 {!strict || $nameCount < 1}? optName {$nameCount++;} |
-                {!strict || $priorityCount < 1}? optPriority {$priorityCount++;} |
+                {!strict || $priorityCount < 1}? optPriorityExpr {$priorityCount++;} |
                 {!strict || $typeCount < 1}? optAccountType {$typeCount++;}
              )*
             ;
@@ -53,7 +62,7 @@ locals [int categoryCount = 0,
         int priorityCount = 0,
         int typeCount = 0]
             :(
-                {!strict || $categoryCount < 1}? optName {$categoryCount++;} |
+                {!strict || $categoryCount < 1}? optCategory {$categoryCount++;} |
                 {!strict || $descriptionCount < 1}? optDescription {$descriptionCount++;} |
                 {!strict || $fundsCount < 1}? optFunds {$fundsCount++;} |
                 {!strict || $priorityCount < 1}? optPriority {$priorityCount++;} |
@@ -64,14 +73,12 @@ locals [int categoryCount = 0,
 optionsListAccountSet
 locals [int categoryCount = 0,
         int descriptionCount = 0,
-        int fundsCount = 0,
         int nameCount = 0,
         int priorityCount = 0,
         int typeCount = 0]
             :(
                 {!strict || $categoryCount < 1}? optName {$categoryCount++;} |
                 {!strict || $descriptionCount < 1}? optDescription {$descriptionCount++;} |
-                {!strict || $fundsCount < 1}? optFunds {$fundsCount++;} |
                 {!strict || $nameCount < 1}? optName {$nameCount++;} |
                 {!strict || $priorityCount < 1}? optPriority {$priorityCount++;} |
                 {!strict || $typeCount < 1}? optAccountType {$typeCount++;}
@@ -94,13 +101,11 @@ locals[int accountCount = 0,
            ;
 
 optionsListTransactionNew
-locals [int fundsCount = 0,
-        int sourceCount = 0,
+locals [int sourceCount = 0,
         int destCount = 0]
             :(
                 {!strict || $sourceCount < 1}? optSource {$sourceCount++;} |
-                {!strict || $destCount < 1}? optDest {$destCount++;} |
-                {!strict || $fundsCount < 1}? optFunds {$fundsCount++;}
+                {!strict || $destCount < 1}? optDest {$destCount++;}
              )*
             ;
 
@@ -115,50 +120,53 @@ locals [int countCount = 0,
 
 
 
-optAccount: ('-a' | '--account') accountName=string;
+optAccount: ('-a' | '--account') accountName=STRING;
 optAmountExpr: ('-a' | '--amount') decimalExpr;
-optCategory: ('-c' | '--category') categoryName=string;
-optCount: ('-c' | '--count') integer;
+optCategory: ('-c' | '--category') categoryName=STRING;
+optCount: ('-c' | '--count') count=integer;
 optDate: ('-d' | '--date') date;
 optDateExpr: ('-d' | '--date') dateExpr;
-optDescription: ('-d' | '--description') string;
-optDest: ('-d' | '--destination') destination=string;
-optFunds: ('-f' | '--funds') decimal;
-optFundsExpr: ('-f' | '--funds') decimalExpr;
+optDescription: ('-d' | '--description') description=STRING;
+optDest: ('-d' | '--destination') destination=STRING;
+optFunds: ('-f' | '--funds') funds=decimal;
+optFundsExpr: ('-f' | '--funds') fundsExpr=decimalExpr;
 optHelp: '-h' | '--help';
-optId: ('-i' | '--id') integer;
-optName: ('-n' | '--name') name=string;
-optPriority: ('-p' | '--priority') priority=intExpr;
+optId: ('-i' | '--id') id=integer;
+optName: ('-n' | '--name') name=STRING;
+optPriorityExpr: ('-p' | '--priority') priority=intExpr;
+optPriority: ('-p' | '--priority') priority=integer;
 optRecursive: ('-r' | '--recurseive');
-optSource: ('-s' | '--source') source=string;
+optSource: ('-s' | '--source') source=STRING;
 optAccountType
 locals [BudgetCli.Data.Enums.AccountKind kind]
-            : CATEGORY      { $kind = BudgetCli.Data.Enums.AccountKind.Category; }
-            | SOURCE        { $kind = BudgetCli.Data.Enums.AccountKind.Source; }
-            | SINK          { $kind = BudgetCli.Data.Enums.AccountKind.Sink; }
-            ;
+            : ('-t' | '--type')
+            (
+                CATEGORY      { $kind = BudgetCli.Data.Enums.AccountKind.Category; } |
+                SOURCE        { $kind = BudgetCli.Data.Enums.AccountKind.Source; } |
+                SINK          { $kind = BudgetCli.Data.Enums.AccountKind.Sink; }
+            );
 optTransactionType
 locals [BudgetCli.Core.Enums.TransactionKind kind]
             : ('-t' | '--type')
               (
                 INFLOW {$kind = BudgetCli.Core.Enums.TransactionKind.Inflow;} |
                 OUTFLOW {$kind = BudgetCli.Core.Enums.TransactionKind.Outflow;} |
-                INTERNAL {$kind = BudgetCli.Core.Enums.TransactionKind.Internal;} |
+                INTERNAL {$kind = BudgetCli.Core.Enums.TransactionKind.Internal;}
               )
             ;
 
 
 
 intExpr
-returns [BudgetCli.Util.Models.Range<int> range]
-            : from=integer ':' to=integer       {$range = new BudgetCli.Util.Models.Range<int>($from.value, $to.value);}
-            | integer (PLUS { $range = new BudgetCli.Util.Models.Range<int>($integer.value, int.MaxValue); } | MINUS { $range = new BudgetCli.Util.Models.Range<int>(int.MinValue, $integer.value); })
+returns [BudgetCli.Util.Models.Range<long> range]
+            : from=integer ':' to=integer       {$range = new BudgetCli.Util.Models.Range<long>($from.value, $to.value);}
+            | integer (PLUS { $range = new BudgetCli.Util.Models.Range<long>($integer.value, int.MaxValue); } | MINUS { $range = new BudgetCli.Util.Models.Range<long>(int.MinValue, $integer.value); })
             ;
 
 decimalExpr
-returns [BudgetCli.Util.Models.Range<decimal> range]
-            : from=decimal ':' to=decimal       {$range = new BudgetCli.Util.Models.Range<decimal>($from.value, $to.value);}
-            | decimal (PLUS { $range = new BudgetCli.Util.Models.Range<decimal>($decimal.value, decimal.MaxValue); } | MINUS { $range = new BudgetCli.Util.Models.Range<decimal>(decimal.MinValue, $decimal.value); })
+returns [BudgetCli.Util.Models.Range<BudgetCli.Util.Models.Money> range]
+            : from=decimal ':' to=decimal       {$range = new BudgetCli.Util.Models.Range<BudgetCli.Util.Models.Money>($from.value, $to.value);}
+            | decimal (PLUS { $range = new BudgetCli.Util.Models.Range<BudgetCli.Util.Models.Money>($decimal.value, decimal.MaxValue); } | MINUS { $range = new BudgetCli.Util.Models.Range<BudgetCli.Util.Models.Money>(decimal.MinValue, $decimal.value); })
             ;
 
 dateExpr: date
@@ -219,18 +227,14 @@ dayOfWeek returns [System.DayOfWeek Day]: MONDAY       { $Day = System.DayOfWeek
                                         | SUNDAY       { $Day = System.DayOfWeek.Sunday; }
                                         ;
 
-string returns [string Text]: '"' (CHAR|' ') '"'     { $Text = $text.Substring(1,$text.Length-2); /* Trim off quote marks */ }
-                            | CHAR+                  { $Text = $text; }
-                            ;
-
 // LEXER RULES
 PLUS: '+';
 MINUS: '-';
 
 HELP: H (E L P)?;
 VERSION: V (E R S I O N)?;
-UNDO: U N D O;
-REDO: R E D O;
+EXIT: E X I T;
+CLEAR: C L E A R;
 
 ACCOUNT: A (C C O U N T S?)?;
 CATEGORY: C (A T E G O R Y)?;
@@ -243,18 +247,20 @@ INTERNAL: I N T E R N A L;
 
 HISTORY: H (I S T O R Y)?;
 
-CAT: C A T;
+DETAIL: D (E T A I L S?)?;
 LS: L S
   | L I S T
   ;
 MOVE: M V
     | M O V E
     ;
-NEW: N E W;
+NEW: N E W
+   | ADD;
 REMOVE: R M
       | R E M O V E
       | D E L (E T E)?
       ;
+
 SET: S E T;
 ADD: A D D;
 SUBTRACT: S U B (T R A C T)?;       
@@ -331,6 +337,10 @@ fragment Z:('z'|'Z');
 CURRENCY: '$';
 DIGIT: [0-9];
 DIGITS: DIGIT+;
+
+STRING: '"' (CHAR|' ')+ '"' { Text = Text.Substring(1, Text.Length - 2); }
+      | CHAR+
+      ;
 
 CHAR: [a-zA-Z0-9_\-!@#$%^&*()/,.?<>'];
 WS  : [ \t\r\n]+ -> skip ;

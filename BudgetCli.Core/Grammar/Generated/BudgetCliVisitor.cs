@@ -20,6 +20,9 @@
 #pragma warning disable 419
 
 namespace BudgetCli.Core.Grammar {
+
+#pragma warning disable 3021
+
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IToken = Antlr4.Runtime.IToken;
@@ -53,26 +56,26 @@ public interface IBudgetCliVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitVersion([NotNull] BudgetCliParser.VersionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>undo</c>
+	/// Visit a parse tree produced by the <c>exit</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUndo([NotNull] BudgetCliParser.UndoContext context);
+	Result VisitExit([NotNull] BudgetCliParser.ExitContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>redo</c>
+	/// Visit a parse tree produced by the <c>clear</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitRedo([NotNull] BudgetCliParser.RedoContext context);
+	Result VisitClear([NotNull] BudgetCliParser.ClearContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>catAccounts</c>
+	/// Visit a parse tree produced by the <c>detailAccounts</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCatAccounts([NotNull] BudgetCliParser.CatAccountsContext context);
+	Result VisitDetailAccounts([NotNull] BudgetCliParser.DetailAccountsContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>listAccounts</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
@@ -95,13 +98,6 @@ public interface IBudgetCliVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitRemoveAccount([NotNull] BudgetCliParser.RemoveAccountContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>moveAccount</c>
-	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitMoveAccount([NotNull] BudgetCliParser.MoveAccountContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>setAccount</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// </summary>
@@ -109,12 +105,12 @@ public interface IBudgetCliVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitSetAccount([NotNull] BudgetCliParser.SetAccountContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>catTransaction</c>
+	/// Visit a parse tree produced by the <c>detailTransaction</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCatTransaction([NotNull] BudgetCliParser.CatTransactionContext context);
+	Result VisitDetailTransaction([NotNull] BudgetCliParser.DetailTransactionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>listTransactions</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
@@ -251,6 +247,12 @@ public interface IBudgetCliVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitOptName([NotNull] BudgetCliParser.OptNameContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="BudgetCliParser.optPriorityExpr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitOptPriorityExpr([NotNull] BudgetCliParser.OptPriorityExprContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="BudgetCliParser.optPriority"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -356,11 +358,5 @@ public interface IBudgetCliVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitDayOfWeek([NotNull] BudgetCliParser.DayOfWeekContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="BudgetCliParser.string"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitString([NotNull] BudgetCliParser.StringContext context);
 }
 } // namespace BudgetCli.Core.Grammar

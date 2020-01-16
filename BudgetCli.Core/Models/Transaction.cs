@@ -1,48 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetCli.Core.Models.Interfaces;
+using BudgetCli.Core.Models.ModelInfo;
 using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories;
-using BudgetCli.Util.Attributes;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Models
 {
-
-    [HelpInfo("Transaction", "Represents a transfer of funds between accounts")]
     public class Transaction : IDataModel<TransactionDto>
     {
-        [HelpInfo(Visible: false)]
+        public static readonly ModelProperty PROP_ID = new ModelProperty("Id", "A unique ID used to reference a transaction.");
+        public static readonly ModelProperty PROP_TIMESTAMP = new ModelProperty("Date", "The date this transaction was (or will be) executed");
+        public static readonly ModelProperty PROP_SOURCE = new ModelProperty("Source Account", "The account that funds are withdrawn from. Leave this empty if funds come from an external account (eg. salary)");
+        public static readonly ModelProperty PROP_DEST = new ModelProperty("Destination Account", "The account that funds are deposited into. Leave this empty if funds are deposited into an external account (eg. paying off a credit card)");
+        public static readonly ModelProperty PROP_AMOUNT = new ModelProperty("Transfer Amount", "The amount being transferred");
+        public static readonly ModelProperty PROP_MEMO = new ModelProperty("Memo", "Write a note explaining the transaction (Optional)");
+
         protected RepositoryBag Repositories { get; }
+
+        public string TypeName { get { return "Transaction"; } }
+        public string DisplayName { get { return Id?.ToString(); } }
 
         #region - DTO Properties -
         
-        [HelpInfo("Id", "A unique ID used to reference a transaction")]
         public virtual long? Id { get; set; }
-
-
-        [HelpInfo("Date", "The date this transaction was (or will be) executed")]
         public virtual DateTime Timestamp { get; }
-
-
-        [HelpInfo(Visible: false)]
         public virtual long? SourceAccountId { get; }
-
-
-        [HelpInfo(Visible: false)]
         public virtual long? DestinationAccountId { get; }
-
-
-        [HelpInfo("Transfer Amount", "The amount being transferred")]
-        public virtual long TransferAmount { get; }
-
-
-        [HelpInfo("Memo", "Write a note explaining the transaction (Optional)")]
+        public virtual Money TransferAmount { get; }
         public virtual string Memo { get; }
 
         #endregion - DTO Properties -
         
         private Account _sourceAccount;
-        [HelpInfo("Source Account", "The account that funds are withdrawn from. Leave this empty if funds come from an external account (eg. salary)")]
         public virtual Account SourceAccount
         {
             get
@@ -56,7 +48,6 @@ namespace BudgetCli.Core.Models
         }
         
         private Account _destAccount;
-        [HelpInfo("Destination Account", "The account that funds are deposited into. Leave this empty if funds are deposited into an external account (eg. paying off a credit card)")]
         public virtual Account DestinationAccount
         {
             get
@@ -85,7 +76,7 @@ namespace BudgetCli.Core.Models
         /// <summary>
         /// From Dto constructor
         /// </summary>
-        public Transaction(long id, DateTime timestamp, long? sourceAccountId, long? destAccountId, long transferAmount, string memo, RepositoryBag repositories)
+        public Transaction(long id, DateTime timestamp, long? sourceAccountId, long? destAccountId, Money transferAmount, string memo, RepositoryBag repositories)
         {
             this.Id = id;
             this.Timestamp = timestamp;
@@ -103,11 +94,31 @@ namespace BudgetCli.Core.Models
                 Timestamp = this.Timestamp,
                 SourceAccountId = this.SourceAccountId,
                 DestinationAccountId = this.DestinationAccountId,
-                TransferAmount = this.TransferAmount,
+                TransferAmount = this.TransferAmount.InternalValue,
                 Memo = this.Memo
             };
 
             return dto;
+        }
+
+        public IEnumerable<ModelProperty> GetProperties()
+        {
+            yield return PROP_ID;
+            yield return PROP_TIMESTAMP;
+            yield return PROP_SOURCE;
+            yield return PROP_DEST;
+            yield return PROP_AMOUNT;
+            yield return PROP_MEMO;
+        }
+
+        public IEnumerable<ModelPropertyValue> GetPropertyValues()
+        {
+            yield return new ModelPropertyValue<long?>(PROP_ID, Id);
+            yield return new ModelPropertyValue<DateTime>(PROP_TIMESTAMP, Timestamp);
+            yield return new ModelPropertyValue<Account>(PROP_SOURCE, SourceAccount);
+            yield return new ModelPropertyValue<Account>(PROP_DEST, DestinationAccount);
+            yield return new ModelPropertyValue<Money>(PROP_AMOUNT, TransferAmount);
+            yield return new ModelPropertyValue<string>(PROP_MEMO, Memo);
         }
     }
 }

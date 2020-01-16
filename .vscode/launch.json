@@ -4,5 +4,16 @@
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
    "configurations": [
+       {
+           "name": ".NET Core Launch (console)",
+           "type": "coreclr",
+           "request": "launch",
+           "preLaunchTask": "build",
+           "program": "${workspaceFolder}/BudgetCli.ConsoleApp/bin/Debug/netcoreapp3.0/BudgetCli.ConsoleApp.exe",
+           "args": ["test.budget"],
+           "cwd": "${workspaceFolder}",
+           "stopAtEntry": false,
+           "console": "integratedTerminal"
+       },
     ]
 }

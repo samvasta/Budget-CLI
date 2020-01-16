@@ -20,6 +20,9 @@
 #pragma warning disable 419
 
 namespace BudgetCli.Core.Grammar {
+
+#pragma warning disable 3021
+
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IToken = Antlr4.Runtime.IToken;
@@ -67,7 +70,7 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// <return>The visitor result.</return>
 	public virtual Result VisitVersion([NotNull] BudgetCliParser.VersionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>undo</c>
+	/// Visit a parse tree produced by the <c>exit</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -76,9 +79,9 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUndo([NotNull] BudgetCliParser.UndoContext context) { return VisitChildren(context); }
+	public virtual Result VisitExit([NotNull] BudgetCliParser.ExitContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>redo</c>
+	/// Visit a parse tree produced by the <c>clear</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -87,9 +90,9 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRedo([NotNull] BudgetCliParser.RedoContext context) { return VisitChildren(context); }
+	public virtual Result VisitClear([NotNull] BudgetCliParser.ClearContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>catAccounts</c>
+	/// Visit a parse tree produced by the <c>detailAccounts</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -98,7 +101,7 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCatAccounts([NotNull] BudgetCliParser.CatAccountsContext context) { return VisitChildren(context); }
+	public virtual Result VisitDetailAccounts([NotNull] BudgetCliParser.DetailAccountsContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>listAccounts</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
@@ -133,17 +136,6 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// <return>The visitor result.</return>
 	public virtual Result VisitRemoveAccount([NotNull] BudgetCliParser.RemoveAccountContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>moveAccount</c>
-	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitMoveAccount([NotNull] BudgetCliParser.MoveAccountContext context) { return VisitChildren(context); }
-	/// <summary>
 	/// Visit a parse tree produced by the <c>setAccount</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// <para>
@@ -155,7 +147,7 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// <return>The visitor result.</return>
 	public virtual Result VisitSetAccount([NotNull] BudgetCliParser.SetAccountContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>catTransaction</c>
+	/// Visit a parse tree produced by the <c>detailTransaction</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -164,7 +156,7 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCatTransaction([NotNull] BudgetCliParser.CatTransactionContext context) { return VisitChildren(context); }
+	public virtual Result VisitDetailTransaction([NotNull] BudgetCliParser.DetailTransactionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>listTransactions</c>
 	/// labeled alternative in <see cref="BudgetCliParser.command"/>.
@@ -389,6 +381,16 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// <return>The visitor result.</return>
 	public virtual Result VisitOptName([NotNull] BudgetCliParser.OptNameContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="BudgetCliParser.optPriorityExpr"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitOptPriorityExpr([NotNull] BudgetCliParser.OptPriorityExprContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="BudgetCliParser.optPriority"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -562,15 +564,5 @@ public partial class BudgetCliBaseVisitor<Result> : AbstractParseTreeVisitor<Res
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitDayOfWeek([NotNull] BudgetCliParser.DayOfWeekContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="BudgetCliParser.string"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitString([NotNull] BudgetCliParser.StringContext context) { return VisitChildren(context); }
 }
 } // namespace BudgetCli.Core.Grammar

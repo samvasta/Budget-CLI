@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using BudgetCli.Core.Models;
+using BudgetCli.Core.Models.CommandResults;
 using BudgetCli.Core.Models.Commands.Accounts;
+using BudgetCli.Core.Models.Interfaces;
 using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories;
 using BudgetCli.Data.Tests.TestHarness;
@@ -67,6 +70,71 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, stateCountBeforeDelete);
                 Assert.Equal(2, stateCountAfterDelete);
                 Assert.True(isClosed);
+            }
+        }
+
+        [Fact]
+        public void TestDeleteAccountActionExecute_WithListeners()
+        {
+            using(var testDbInfo = SetupUtil.CreateTestDb())
+            {
+                //Arrange
+                Mock<ILog> mockLog = new Mock<ILog>();
+                AccountRepository repo = new AccountRepository(testDbInfo.ConnectionString, mockLog.Object);
+                AccountStateRepository accountStateRepo = new AccountStateRepository(testDbInfo.ConnectionString, mockLog.Object);
+                RepositoryBag repositories = SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object, repo, accountStateRepo);
+
+                AccountDto accountDto = new AccountDto()
+                {
+                    AccountKind = Data.Enums.AccountKind.Sink,
+                    CategoryId = null,
+                    Description = "test account",
+                    Name = "Test Account",
+                    Priority = 5
+                };
+                bool isInsertSuccessful = repo.Upsert(accountDto);
+                long accountId = accountDto.Id.Value;
+
+                int accountCountBeforeDelete = repo.GetAll().Count();
+                AccountStateDto stateDto = new AccountStateDto()
+                {
+                    AccountId = accountId,
+                    Funds = 0,
+                    Timestamp = DateTime.Now,
+                    IsClosed = false
+                };
+                isInsertSuccessful &= accountStateRepo.Upsert(stateDto);
+                int stateCountBeforeDelete = accountStateRepo.GetAll().Count();
+
+
+                DeleteAccountCommand action = new DeleteAccountCommand("rm account \"Test Account\"", repositories);
+                action.AccountName.SetData("Test Account");
+                action.IsRecursiveOption.SetData(false);
+
+                Mock<ICommandActionListener> mockListener = new Mock<ICommandActionListener>();
+                mockListener.Setup(x => x.OnCommand(It.Is<DeleteCommandResult<Account>>(a => a.IsSuccessful && a.DeletedItems.Count() == 1 && a.DeletedItems.First().Name.Equals("Test Account")))).Verifiable();
+
+                List<ICommandActionListener> listeners = new List<ICommandActionListener>();
+                listeners.Add(mockListener.Object);
+                
+                //Act
+                bool successful = action.TryExecute(mockLog.Object, listeners);
+
+                int accountCountAfterDelete = repo.GetAll().Count();
+                int stateCountAfterDelete = accountStateRepo.GetAll().Count();
+
+                bool isClosed = accountStateRepo.GetLatestByAccountId(accountId).IsClosed;
+                
+                //Assert
+                Assert.True(isInsertSuccessful);
+                Assert.True(successful);
+                Assert.Equal(1, accountCountBeforeDelete);
+                Assert.Equal(1, accountCountAfterDelete);
+                Assert.Equal(1, stateCountBeforeDelete);
+                Assert.Equal(2, stateCountAfterDelete);
+                Assert.True(isClosed);
+
+                mockListener.VerifyAll();
             }
         }
     }

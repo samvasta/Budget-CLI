@@ -1,10 +1,11 @@
 using BudgetCli.Core.Models.Commands;
+using BudgetCli.Core.Models.Interfaces;
 
 namespace BudgetCli.Core.Models.CommandResults
 {
-    public class CreateCommandResult<TModel> : ICommandResult
+    public class CreateCommandResult<TModel> : ICommandResult where TModel : IDetailable
     {
-        public CommandActionBase Command { get; }
+        public ICommandAction Command { get; }
 
         public bool IsSuccessful { get; }
 

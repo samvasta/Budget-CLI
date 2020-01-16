@@ -1,11 +1,8 @@
-using System.Drawing;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
-using BudgetCli.Data.Models;
 using BudgetCli.Util.Logging;
 using Dapper;
 using DbUp;
@@ -60,8 +57,8 @@ namespace BudgetCli.Data.IO
 
             if (!result.Successful)
             {
-                log.WriteLine("Upgrage failed!", Color.Red);
-                log.WriteLine(result.Error.ToString(), Color.Red);
+                log.WriteLine("Upgrage failed!", LogLevel.Error);
+                log.WriteLine(result.Error.ToString(), LogLevel.Error);
                 return false;
             }
 

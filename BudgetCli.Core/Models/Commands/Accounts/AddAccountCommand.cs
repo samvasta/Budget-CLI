@@ -8,6 +8,7 @@ using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories;
 using BudgetCli.Util.Logging;
 using BudgetCli.Util.Models;
+using BudgetCli.Core.Models.Interfaces;
 
 namespace BudgetCli.Core.Models.Commands.Accounts
 {
@@ -50,6 +51,13 @@ namespace BudgetCli.Core.Models.Commands.Accounts
         protected override bool TryDoAction(ILog log, IEnumerable<ICommandActionListener> listeners = null)
         {
             CreateCommandResult<Account> result = new CreateCommandResult<Account>(this, false, null);
+
+            if(Repositories.AccountRepository.DoesNameExist(AccountName.GetValue(String.Empty)))
+            {
+                TransmitResult(result, listeners);
+                return false;
+            }
+
             AccountDto accountDto = BuildAccountDto();
             
             bool successful = Repositories.AccountRepository.Upsert(accountDto);
@@ -110,6 +118,17 @@ namespace BudgetCli.Core.Models.Commands.Accounts
             };
 
             return dto;
+        }
+
+        private void TransmitResult(CreateCommandResult<Account> result, IEnumerable<ICommandActionListener> listeners = null)
+        {
+            if(listeners != null && result != null)
+            {
+                foreach(var listener in listeners)
+                {
+                    listener.OnCommand(result);
+                }
+            }
         }
     }
 }

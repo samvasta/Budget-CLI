@@ -1,20 +1,28 @@
+using System.Collections.Generic;
 using BudgetCli.Core.Models.Commands;
+using BudgetCli.Core.Models.Interfaces;
 
 namespace BudgetCli.Core.Models.CommandResults
 {
-    public class DeleteCommandResult<TModel> : ICommandResult
+    public class DeleteCommandResult<TModel> : ICommandResult where TModel : IDetailable
     {
-        public CommandActionBase Command { get; }
+        public ICommandAction Command { get; }
 
         public bool IsSuccessful { get; }
 
-        public TModel DeletedItem { get; }
+        public IEnumerable<TModel> DeletedItems { get; }
 
         public DeleteCommandResult(CommandActionBase command, bool isSuccessful, TModel deletedItem)
+            : this(command, isSuccessful, new [] { deletedItem} )
+        {
+            //intentionally blank
+        }
+
+        public DeleteCommandResult(CommandActionBase command, bool isSuccessful, IEnumerable<TModel> deletedItems)
         {
             Command = command;
             IsSuccessful = isSuccessful;
-            DeletedItem = deletedItem;
+            DeletedItems = deletedItems;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BudgetCli.Core.Models.Interfaces;
 using BudgetCli.Util.Logging;
 
 namespace BudgetCli.Core.Models.Commands
@@ -19,6 +20,6 @@ namespace BudgetCli.Core.Models.Commands
         /// Executes the action
         /// </summary>
         /// <returns>True if execution was successful, false otherwise</returns>
-        bool TryExecute(ILog log);
+        bool TryExecute(ILog log, IEnumerable<ICommandActionListener> listeners = null);
     }
 }

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BudgetCli.Util\BudgetCli.Util.csproj" />
+    <ProjectReference Include="..\BudgetCli.Core\BudgetCli.Core.csproj" />
+    <ProjectReference Include="..\BudgetCli.Data\BudgetCli.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Colorful.Console" Version="1.2.10" />
+    <PackageReference Include="ConsoleTables" Version="2.4.0" />
+    <PackageReference Include="Humanizer" Version="2.7.9" />
+    <PackageReference Include="ReadLine" Version="2.0.1" />
+  </ItemGroup>
+
+</Project>

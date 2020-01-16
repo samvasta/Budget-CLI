@@ -76,6 +76,87 @@ namespace BudgetCli.Data.Tests.Repositories
         }
         
         [Fact]
+        public void TestGetLatestStateByAccountId_MultipleAccounts()
+        {
+            using(var testDbInfo = SetupUtil.CreateTestDb())
+            {
+                //Arrange
+                Mock<ILog> log = new Mock<ILog>();
+                AccountRepository accountRepo = new AccountRepository(testDbInfo.ConnectionString, log.Object);
+                AccountStateRepository repo = new AccountStateRepository(testDbInfo.ConnectionString, log.Object);
+
+                AccountDto account = new AccountDto()
+                {
+                    AccountKind = Enums.AccountKind.Category,
+                    Description = String.Empty,
+                    Name = "account",
+                    Priority = 5,
+                    CategoryId = null
+                };
+                AccountDto account2 = new AccountDto()
+                {
+                    AccountKind = Enums.AccountKind.Category,
+                    Description = String.Empty,
+                    Name = "account2",
+                    Priority = 5,
+                    CategoryId = null
+                };
+                bool isInsertSuccessful = accountRepo.Upsert(account);
+                isInsertSuccessful &= accountRepo.Upsert(account2);
+
+                DateTime state1Timestamp = DateTime.Now;
+                AccountStateDto accountState = new AccountStateDto()
+                {
+                    AccountId = account.Id.Value,
+                    Funds = (new Money(100)).InternalValue,
+                    IsClosed = false,
+                    Timestamp = state1Timestamp
+                };
+                isInsertSuccessful &= repo.Upsert(accountState);
+
+                
+                DateTime state2Timestamp = state1Timestamp.AddDays(-1);
+                AccountStateDto accountState2 = new AccountStateDto()
+                {
+                    AccountId = account.Id.Value,
+                    Funds = (new Money(500)).InternalValue,
+                    IsClosed = false,
+                    Timestamp = state2Timestamp
+                };
+                isInsertSuccessful &= repo.Upsert(accountState2);
+                
+                DateTime state3Timestamp = state1Timestamp.AddDays(-2);
+                AccountStateDto accountState3 = new AccountStateDto()
+                {
+                    AccountId = account.Id.Value,
+                    Funds = (new Money(800)).InternalValue,
+                    IsClosed = false,
+                    Timestamp = state3Timestamp
+                };
+                isInsertSuccessful &= repo.Upsert(accountState3);
+                
+                //This should be the most recent state, but doesn't belong to the original account
+                DateTime state4Timestamp = state1Timestamp.AddDays(5);
+                AccountStateDto accountState4 = new AccountStateDto()
+                {
+                    AccountId = account2.Id.Value,
+                    Funds = (new Money(800)).InternalValue,
+                    IsClosed = false,
+                    Timestamp = state3Timestamp
+                };
+                isInsertSuccessful &= repo.Upsert(accountState4);
+                
+                //Act
+                AccountStateDto latest = repo.GetLatestByAccountId(account.Id.Value);
+                
+                //Assert
+                Assert.True(isInsertSuccessful);
+                Assert.Equal(state1Timestamp, latest.Timestamp);
+                Assert.Equal(100, new Money(latest.Funds, true));
+            }
+        }
+        
+        [Fact]
         public void TestGetAllStatesByAccountId()
         {
             using(var testDbInfo = SetupUtil.CreateTestDb())
