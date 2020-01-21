@@ -10,11 +10,14 @@ namespace BudgetCli.Core.Models.InfoItems
         
         public string Text { get; set; }
 
-        public HelpUsageToken(string text, HelpUsageTokenKind kind = HelpUsageTokenKind.Option, bool isOptional = true)
+        public string[] AlternateTexts { get; set; }
+
+        public HelpUsageToken(string text, HelpUsageTokenKind kind = HelpUsageTokenKind.Option, bool isOptional = true, params string[] alternateTexts)
         {
             Text = text;
             Kind = kind;
             IsOptional = isOptional;
+            AlternateTexts = alternateTexts;
         }
     }
 }

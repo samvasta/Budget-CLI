@@ -31,6 +31,19 @@ namespace BudgetCli.Core.Utilities
             "ls history",
         };
 
+        #region - Common Command Usage Tokens -
+        private static readonly HelpUsageToken USAGE_NEW = new HelpUsageToken("new", HelpUsageTokenKind.Command, false, "add");
+
+        private static readonly HelpUsageToken USAGE_LIST = new HelpUsageToken("list", HelpUsageTokenKind.Command, false, "ls");
+
+        private static readonly HelpUsageToken USAGE_DETAIL = new HelpUsageToken("details", HelpUsageTokenKind.Command, false, "detail", "d");
+
+        private static readonly HelpUsageToken USAGE_REMOVE = new HelpUsageToken("remove", HelpUsageTokenKind.Command, false, "rm", "delete", "del");
+        
+        private static readonly HelpUsageToken USAGE_SET = new HelpUsageToken("set", HelpUsageTokenKind.Command, false);
+
+        #endregion - Common Command Usage Tokens -
+
         #region - Usage Tokens -
 
         private static readonly HelpUsageToken USAGE_OPT_ACCOUNT = new HelpUsageToken("-a <account-name>");
