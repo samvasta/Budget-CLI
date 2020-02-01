@@ -3050,7 +3050,7 @@ public partial class BudgetCliParser : Parser {
 	}
 
 	public partial class TimeUnitContext : ParserRuleContext {
-		public BudgetCli.Core.Enums.TimeUnit TimeUnit;
+		public BudgetCli.Util.Enums.TimeUnit TimeUnit;
 		public ITerminalNode UNIT_DAY() { return GetToken(BudgetCliParser.UNIT_DAY, 0); }
 		public ITerminalNode UNIT_WEEK() { return GetToken(BudgetCliParser.UNIT_WEEK, 0); }
 		public ITerminalNode UNIT_MONTH() { return GetToken(BudgetCliParser.UNIT_MONTH, 0); }
@@ -3079,28 +3079,28 @@ public partial class BudgetCliParser : Parser {
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 496; Match(UNIT_DAY);
-				 _localctx.TimeUnit =  BudgetCli.Core.Enums.TimeUnit.Day; 
+				 _localctx.TimeUnit =  BudgetCli.Util.Enums.TimeUnit.Day; 
 				}
 				break;
 			case UNIT_WEEK:
 				EnterOuterAlt(_localctx, 2);
 				{
 				State = 498; Match(UNIT_WEEK);
-				 _localctx.TimeUnit =  BudgetCli.Core.Enums.TimeUnit.Week; 
+				 _localctx.TimeUnit =  BudgetCli.Util.Enums.TimeUnit.Week; 
 				}
 				break;
 			case UNIT_MONTH:
 				EnterOuterAlt(_localctx, 3);
 				{
 				State = 500; Match(UNIT_MONTH);
-				 _localctx.TimeUnit =  BudgetCli.Core.Enums.TimeUnit.Month; 
+				 _localctx.TimeUnit =  BudgetCli.Util.Enums.TimeUnit.Month; 
 				}
 				break;
 			case UNIT_YEAR:
 				EnterOuterAlt(_localctx, 4);
 				{
 				State = 502; Match(UNIT_YEAR);
-				 _localctx.TimeUnit =  BudgetCli.Core.Enums.TimeUnit.Year; 
+				 _localctx.TimeUnit =  BudgetCli.Util.Enums.TimeUnit.Year; 
 				}
 				break;
 			default:

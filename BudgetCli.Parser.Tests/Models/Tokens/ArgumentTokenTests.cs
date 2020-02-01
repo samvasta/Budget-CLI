@@ -8,19 +8,11 @@ namespace BudgetCli.Parser.Tests.Models.Tokens
     public class ArgumentTokenTests
     {
         [Fact]
-        public void TestNameHasWhitespace()
+        public void TestNullParser()
         {
-            Assert.Throws<ArgumentException>(() => 
+            Assert.Throws<ArgumentNullException>(() => 
             {
-                new ArgumentToken<int>.Builder().Name("this has whitespace").Parser(int.TryParse).Build();
-            });
-            Assert.Throws<ArgumentException>(() => 
-            {
-                new ArgumentToken<int>.Builder().Name("this\thas-whitespace").Parser(int.TryParse).Build();
-            });
-            Assert.Throws<ArgumentException>(() => 
-            {
-                new ArgumentToken<int>.Builder().Name("this\nhas-whitespace").Parser(int.TryParse).Build();
+                new ArgumentToken<int>.Builder().Name("arg").Parser(null).Build();
             });
         }
 
@@ -49,11 +41,17 @@ namespace BudgetCli.Parser.Tests.Models.Tokens
         {
             var token = new ArgumentToken<int>.Builder().Name("arg1").IsOptional(false).Parser(int.TryParse).Build();
 
-            int matchLength;
-            bool matches = token.Matches(input, startIdx, out matchLength);
+            TokenMatchResult matchResult = token.Matches(input, startIdx);
 
-            Assert.True(expMatches == matches, $"Failed in case \"{input}\"");
-            Assert.Equal(expMatchLength, matchLength);
+            if(expMatches)
+            {
+                Assert.True(matchResult.MatchOutcome == MatchOutcome.Full, $"Failed in case \"{input}\"");
+            }
+            else
+            {
+                Assert.False(matchResult.MatchOutcome == MatchOutcome.Full, $"Failed in case \"{input}\"");
+            }
+            Assert.Equal(expMatchLength, matchResult.TokensMatched);
         }
     }
 }

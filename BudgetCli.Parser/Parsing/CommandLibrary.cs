@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using BudgetCli.Parser.Interfaces;
 using BudgetCli.Parser.Models;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Parser.Parsing
 {
@@ -21,12 +22,13 @@ namespace BudgetCli.Parser.Parsing
         public CommandLibrary Include(ICommandRoot command)
         {
             _commands.Add(command);
+            //_recognizer.Add(command, command.CommonTokens);
             return this;
         }
 
         public IEnumerable<Name> GetAllCommandNames()
         {
-            return _commands.Select(x => x.CommandName);
+            return null;//_commands.Select(x => x.CommandName);
         }
 
         public IEnumerable<ICommandRoot> GetAllCommands()

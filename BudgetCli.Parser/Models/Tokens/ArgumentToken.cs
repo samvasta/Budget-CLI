@@ -1,6 +1,7 @@
 using System;
 using BudgetCli.Parser.Enums;
 using BudgetCli.Parser.Interfaces;
+using BudgetCli.Parser.Util;
 using BudgetCli.Util.Utilities;
 using Humanizer;
 
@@ -16,18 +17,17 @@ namespace BudgetCli.Parser.Models.Tokens
 
         public string Description { get; }
 
+        public virtual string[] PossibleValues { get; }
+
         protected ArgumentToken(string argumentName, bool isOptional)
         {
-            if(argumentName.ContainsWhitespace())
-            {
-                throw new ArgumentException($"{nameof(argumentName)} cannot contain whitespace");
-            }
             ArgumentName = argumentName;
             Description = $"<{argumentName.Kebaberize()}>";
             IsOptional = isOptional;
+            PossibleValues = new string[0];
         }
 
-        public abstract bool Matches(string[] inputTokens, int startIdx, out int matchLength);
+        public abstract TokenMatchResult Matches(string[] inputTokens, int startIdx);
     }
 
     public class ArgumentToken<T> : ArgumentToken, ICommandArgumentToken<T>
@@ -35,36 +35,37 @@ namespace BudgetCli.Parser.Models.Tokens
 
         public ICommandArgumentToken<T>.ValueParser Parser { get; }
 
-        private ArgumentToken(string argumentName, bool isOptional, ICommandArgumentToken<T>.ValueParser parser)
+        protected ArgumentToken(string argumentName, bool isOptional, ICommandArgumentToken<T>.ValueParser parser)
             : base(argumentName, isOptional)
         {
+            if(parser == null)
+            {
+                throw new ArgumentNullException(nameof(parser));
+            }
             Parser = parser;
         }
 
-        public override bool Matches(string[] inputTokens, int startIdx, out int matchLength)
+        public override TokenMatchResult Matches(string[] inputTokens, int startIdx)
         {
             if(startIdx >= inputTokens.Length || startIdx < 0)
             {
-                matchLength = 0;
-                return false;
+                return TokenMatchResult.None;
             }
 
             if(Parser(inputTokens[startIdx], out _))
             {
-                matchLength = 1;
-                return true;
+                return new TokenMatchResult(this, TokenUtils.GetMatchText(inputTokens, startIdx, 1),  MatchOutcome.Full, inputTokens[startIdx].Length, 1);
             }
 
-            matchLength = 0;
-            return false;
+            return TokenMatchResult.None;
         }
 
         public class Builder
         {
-            private string _name;
-            private bool _isOptional;
+            protected string _name;
+            protected bool _isOptional;
 
-            private ICommandArgumentToken<T>.ValueParser _parser;
+            protected ICommandArgumentToken<T>.ValueParser _parser;
 
             public Builder Name(string name)
             {

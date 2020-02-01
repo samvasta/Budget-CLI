@@ -1,4 +1,4 @@
-namespace BudgetCli.Core.Enums
+namespace BudgetCli.Util.Enums
 {
     public enum TimeUnit
     {

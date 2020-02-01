@@ -3,6 +3,7 @@ using Xunit;
 using BudgetCli.Parser.Models.Tokens;
 using BudgetCli.Parser.Enums;
 using BudgetCli.Parser.Models;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Parser.Tests.Models.Tokens
 {
@@ -31,11 +32,17 @@ namespace BudgetCli.Parser.Tests.Models.Tokens
         {
             var token = new VerbToken(new Name("verb", "alt1", "alt2"));
 
-            int matchLength;
-            bool matches = token.Matches(input, startIdx, out matchLength);
+            TokenMatchResult matchResult = token.Matches(input, startIdx);
 
-            Assert.True(expMatches == matches, $"Failed in case \"{String.Join(", ", input)}\"");
-            Assert.Equal(expMatchLength, matchLength);
+            if(expMatches)
+            {
+                Assert.True(matchResult.MatchOutcome == MatchOutcome.Full, $"Failed in case \"{input}\"");
+            }
+            else
+            {
+                Assert.False(matchResult.MatchOutcome == MatchOutcome.Full, $"Failed in case \"{input}\"");
+            }
+            Assert.Equal(expMatchLength, matchResult.TokensMatched);
         }
     }
 }

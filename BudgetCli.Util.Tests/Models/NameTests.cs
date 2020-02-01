@@ -2,9 +2,9 @@ using System;
 using System.Reflection;
 using Xunit;
 using Moq;
-using BudgetCli.Parser.Models;
+using BudgetCli.Util.Models;
 
-namespace BudgetCli.Parser.Tests.Models
+namespace BudgetCli.Util.Tests.Models
 {
     public class NameTests
     {
@@ -99,6 +99,14 @@ namespace BudgetCli.Parser.Tests.Models
             Assert.Contains("alt3", name.Alternates);
         }
 
+
+        [Fact]
+        public void TestNameEqualsIgnoreCase()
+        {
+            Name name = new Name("preferred");
+
+            Assert.True(name.Equals("PrEfErReD", StringComparison.CurrentCultureIgnoreCase));
+        }
 
 
         [Fact]
@@ -237,6 +245,21 @@ namespace BudgetCli.Parser.Tests.Models
             int length;
             bool isIn = name.IsStartOf(input, out length);
             Assert.Equal(expIsIn, isIn);
+            Assert.Equal(expLength, length);
+        }
+
+        [Theory]
+        [InlineData("this_is_a_short_test", "this_is_the_third_name", 8)]
+        [InlineData("this_name_is_a1", "this_name_is_a1", 15)]
+        [InlineData("this_name_is_a", "this_name_is_a1", 14)]
+        [InlineData("this", "this_is_the_third_name", 4)]
+        public void TestNameLongestMatch(string input, string expLongestMatch, int expLength)
+        {
+            Name name = new Name("this_name_is_a1", "this_name_is_a2", "this_is_the_third_name");
+
+            int length;
+            string longestMatch = name.GetLongestMatch(input, out length);
+            Assert.Equal(expLongestMatch, longestMatch);
             Assert.Equal(expLength, length);
         }
     }

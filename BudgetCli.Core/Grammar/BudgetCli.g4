@@ -212,10 +212,10 @@ month returns [BudgetCli.Core.Enums.Month Month]: JANUARY        { $Month = Budg
                                                | DECEMBER       { $Month = BudgetCli.Core.Enums.Month.December; }
                                                ;
 
-timeUnit returns [BudgetCli.Core.Enums.TimeUnit TimeUnit]: UNIT_DAY    { $TimeUnit = BudgetCli.Core.Enums.TimeUnit.Day; }
-                                                        | UNIT_WEEK   { $TimeUnit = BudgetCli.Core.Enums.TimeUnit.Week; }
-                                                        | UNIT_MONTH  { $TimeUnit = BudgetCli.Core.Enums.TimeUnit.Month; }
-                                                        | UNIT_YEAR   { $TimeUnit = BudgetCli.Core.Enums.TimeUnit.Year; }
+timeUnit returns [BudgetCli.Util.Enums.TimeUnit TimeUnit]: UNIT_DAY    { $TimeUnit = BudgetCli.Util.Enums.TimeUnit.Day; }
+                                                        | UNIT_WEEK   { $TimeUnit = BudgetCli.Util.Enums.TimeUnit.Week; }
+                                                        | UNIT_MONTH  { $TimeUnit = BudgetCli.Util.Enums.TimeUnit.Month; }
+                                                        | UNIT_YEAR   { $TimeUnit = BudgetCli.Util.Enums.TimeUnit.Year; }
                                                         ;
 
 dayOfWeek returns [System.DayOfWeek Day]: MONDAY       { $Day = System.DayOfWeek.Monday; }
@@ -271,7 +271,7 @@ LAST: L A S T;
 AGO: A G O;
 
 JANUARY: J A N (U A R Y)?;
-FEBRUARY: F E B (U A R Y)?;
+FEBRUARY: F E B (R U A R Y)?;
 MARCH: M A R (C H)?;
 APRIL: A P R (I L)?;
 MAY: M A Y;

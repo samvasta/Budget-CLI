@@ -18,5 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BudgetCli.Data\BudgetCli.Data.csproj" />
+    <ProjectReference Include="..\BudgetCli.Parser\BudgetCli.Parser.csproj" />
   </ItemGroup>
 </Project>

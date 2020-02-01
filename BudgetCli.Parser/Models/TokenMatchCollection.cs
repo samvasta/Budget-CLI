@@ -6,22 +6,22 @@ namespace BudgetCli.Parser.Models
 {
     public class TokenMatchCollection
     {
-        public ICommandUsage Usage { get; }
-        private List<TokenMatch> _matches;
-        public IEnumerable<TokenMatch> Matches { get { return _matches; } }
+        public ICommandToken[] MatchableTokens { get; }
+        private List<ParserTokenMatch> _matches;
+        public IEnumerable<ParserTokenMatch> Matches { get { return _matches; } }
 
-        public TokenMatchCollection(ICommandUsage usage)
+        public TokenMatchCollection(ICommandToken[] matchableTokens)
         {
-            if(usage == null)
+            if(matchableTokens == null)
             {
-                throw new ArgumentNullException(nameof(usage) + " cannot be null");
+                throw new ArgumentNullException(nameof(matchableTokens) + " cannot be null");
             }
-            _matches = new List<TokenMatch>();
+            _matches = new List<ParserTokenMatch>();
             
-            Usage = usage;
+            MatchableTokens = matchableTokens;
         }
 
-        public TokenMatchCollection With(TokenMatch match)
+        public TokenMatchCollection With(ParserTokenMatch match)
         {
             _matches.Add(match);
 

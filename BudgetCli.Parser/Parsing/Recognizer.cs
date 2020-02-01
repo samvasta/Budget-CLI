@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetCli.Parser.Models;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Parser.Parsing
 {

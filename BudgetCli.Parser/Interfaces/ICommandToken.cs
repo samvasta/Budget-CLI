@@ -1,5 +1,6 @@
 using BudgetCli.Parser.Enums;
 using BudgetCli.Parser.Models;
+using BudgetCli.Parser.Models.Tokens;
 
 namespace BudgetCli.Parser.Interfaces
 {
@@ -7,10 +8,18 @@ namespace BudgetCli.Parser.Interfaces
     {
         TokenKind Kind { get; }
 
+        /// <summary>
+        /// If true, this token can be omitted
+        /// </summary>
         bool IsOptional { get; }
         
+        /// <summary>
+        /// 
+        /// </summary>
         string Description { get; }
 
-        bool Matches(string[] inputTokens, int startIdx, out int length);
+        string[] PossibleValues { get; }
+
+        TokenMatchResult Matches(string[] inputTokens, int startIdx);
     }
 }

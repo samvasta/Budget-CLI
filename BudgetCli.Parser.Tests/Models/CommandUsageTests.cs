@@ -2,6 +2,7 @@ using System;
 using BudgetCli.Parser.Interfaces;
 using BudgetCli.Parser.Models;
 using BudgetCli.Parser.Models.Tokens;
+using BudgetCli.Util.Models;
 using Xunit;
 
 namespace BudgetCli.Parser.Tests.Models

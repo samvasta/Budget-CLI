@@ -1,4 +1,5 @@
 using BudgetCli.Parser.Models;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Parser.Interfaces
 {
