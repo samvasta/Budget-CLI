@@ -29,5 +29,5 @@ To generate human readable coverage reports:
 2. From solution root run: 
 
 ```
-    reportgenerator "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" -reporttypes:Html "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*"
+    reportgenerator "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" -reporttypes:Html "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*;-*Generated*;-*.nuget*"
 ```
