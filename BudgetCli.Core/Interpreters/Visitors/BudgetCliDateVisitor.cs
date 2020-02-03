@@ -35,8 +35,8 @@ namespace BudgetCli.Core.Interpreters.Visitors
         public override DateTime VisitRelativeDayOfMonthDate([NotNull] BudgetCliParser.RelativeDayOfMonthDateContext context)
         {
             Month target = context.month().Month;
-            
-            return DateUtil.GetRelativeDateDayOfMonth((int)target);
+            int day = int.Parse(context.DATE_DAY().GetText());
+            return DateUtil.GetRelativeDateDayOfMonth((int)target, day);
         }
 
         public override DateTime VisitRelativeDate([NotNull] BudgetCliParser.RelativeDateContext context)

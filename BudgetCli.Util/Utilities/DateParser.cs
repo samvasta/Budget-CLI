@@ -92,12 +92,20 @@ namespace BudgetCli.Util.Utilities
 
         public static bool TryParseDayOfMonth(string input, int year, int month, out int dayOfMonth)
         {
-            int maxDays = DateTime.DaysInMonth(year, month);
-            int day;
-            if(int.TryParse(input, out day) && day <= maxDays && day > 0)
+            try
             {
-                dayOfMonth = day;
-                return true;
+                int maxDays = DateTime.DaysInMonth(year, month);
+                int day;
+                if(int.TryParse(input, out day) && day <= maxDays && day > 0)
+                {
+                    dayOfMonth = day;
+                    return true;
+                }
+            }
+            catch(ArgumentOutOfRangeException)
+            {
+                //Month/year combo is not valid
+                //Ignore - fallthrough will return an error state anyways
             }
             
             dayOfMonth = -1;

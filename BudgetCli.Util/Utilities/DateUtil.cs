@@ -6,42 +6,59 @@ namespace BudgetCli.Util.Utilities
 {
     public static class DateUtil
     {
+        /// <summary>
+        /// Calls <see cref="DateUtil.GetRelativeDateDayOfWeek()"/> starting from <see cref="DateTime.Today"/>
+        /// </summary>
         public static DateTime GetRelativeDateDayOfWeek(DayOfWeek target)
+        {
+            return GetRelativeDateDayOfWeek(DateTime.Today, target);
+        }
+
+        /// <summary>
+        /// Weeks start on Monday! Goes back to the sunday before startDate and continues stepping back until the appropriate day of week is found
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetRelativeDateDayOfWeek(DateTime startDate, DayOfWeek target)
         {
             int targetInt = (int)target;
             
-            int currentDowInt = (int)DateTime.Today.DayOfWeek;
+            int currentDowInt = (int)startDate.DayOfWeek;
 
-            if(currentDowInt > targetInt)
-            {
-                int numDays = targetInt - currentDowInt;
-                return DateTime.Today.AddDays(-numDays);
-            }
-            else if(currentDowInt < targetInt)
-            {
-                int numDays = currentDowInt + ((int)DayOfWeek.Saturday - targetInt);
-                return DateTime.Today.AddDays(-numDays);
-            }
-            else
-            {
-                return DateTime.Today;
-            }
+            //Add 1 because MSFT says weeks start on Sunday but I like when they start on Monday because it's called a weekEND not a weekSTART
+            int deltaToStartOfCurrentWeek = currentDowInt - (int)DayOfWeek.Monday + 1;
+
+            //Add 7 to get to start of last week
+            return startDate.Subtract(new TimeSpan(deltaToStartOfCurrentWeek + 7 - targetInt, 0, 0, 0));
         }
         
-        public static DateTime GetRelativeDateDayOfMonth(int targetMonth)
+        /// <summary>
+        /// Calls <see cref="DateUtil.GetRelativeDateDayOfMonth()"/> starting from <see cref="DateTime.Today"/>
+        /// </summary>
+        public static DateTime GetRelativeDateDayOfMonth(int targetMonth, int targetDay)
         {
-            DateTime now = DateTime.Today;
+            return GetRelativeDateDayOfMonth(DateTime.Today, targetMonth, targetDay);
+        }
+        
+        public static DateTime GetRelativeDateDayOfMonth(DateTime startDate, int targetMonth, int targetDay)
+        {
+            int targetYear = startDate.Year-1;
 
-            int targetYear = DateTime.Today.Year-1;
-
-            int targetDay = Math.Min(DateTime.DaysInMonth(targetYear, targetMonth), targetMonth);
+            targetDay = Math.Clamp(targetDay, 1, DateTime.DaysInMonth(targetYear, targetMonth));
 
             return new DateTime(targetYear, targetMonth, targetDay);
         }
 
+        /// <summary>
+        /// Calls <see cref="DateUtil.GetRelativeDate()"/> starting from <see cref="DateTime.Today"/>
+        /// </summary>
         public static DateTime GetRelativeDate(int yearsDiff, int monthsDiff, int daysDiff)
         {
-            return DateTime.Today.AddYears(yearsDiff).AddMonths(monthsDiff).AddDays(daysDiff);
+            return GetRelativeDate(DateTime.Today, yearsDiff, monthsDiff, daysDiff);
+        }
+
+        public static DateTime GetRelativeDate(DateTime start, int yearsDiff, int monthsDiff, int daysDiff)
+        {
+            return start.AddYears(yearsDiff).AddMonths(monthsDiff).AddDays(daysDiff);
         }
 
         public static DateTime GetRelativeDate(DateTime date, int delta, TimeUnit unit)
@@ -49,12 +66,12 @@ namespace BudgetCli.Util.Utilities
             switch(unit)
             {
                 case TimeUnit.Day:
-                    return date.Subtract(new TimeSpan(1, 0, 0, 0));
+                    return date.Add(new TimeSpan(1*delta, 0, 0, 0));
                 case TimeUnit.Week:
-                    return date.Subtract(new TimeSpan(7, 0, 0, 0));
+                    return date.Add(new TimeSpan(7*delta, 0, 0, 0));
                 case TimeUnit.Month:
                     int monthIndex0 = date.Month-1;
-                    monthIndex0 -= delta;
+                    monthIndex0 += delta;
                     int year = date.Year;
 
                     //Ensure within 0-11 range, and in/decrement year accordingly
@@ -71,7 +88,7 @@ namespace BudgetCli.Util.Utilities
                     //Add one to year to get back to range 1-12
                     return new DateTime(year, monthIndex0+1, date.Day);
                 case TimeUnit.Year:
-                    return new DateTime(date.Year-delta, date.Month, date.Day);
+                    return new DateTime(date.Year+delta, date.Month, date.Day);
                 default:
                     throw new Exception("Cannot get relative date for this type of time unit: " + unit.Humanize());
             }

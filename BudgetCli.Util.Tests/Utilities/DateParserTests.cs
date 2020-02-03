@@ -65,6 +65,13 @@ namespace BudgetCli.Util.Tests.Utilities
             Assert.True(success, input);
             Assert.Equal(expected, dayOfWeek);
         }
+
+        [Fact]
+        public void IsNotDayOfWeek()
+        {
+            bool success = DateParser.TryParseDayOfWeek("morndas", out _);
+            Assert.False(success);
+        }
         
 
         [Theory]
@@ -95,6 +102,13 @@ namespace BudgetCli.Util.Tests.Utilities
 
             Assert.True(success, input);
             Assert.Equal(expected, unit);
+        }
+
+        [Fact]
+        public void IsNotTimeUnit()
+        {
+            bool success = DateParser.TryParseTimeUnit("meter", out _);
+            Assert.False(success);
         }
 
         
@@ -130,6 +144,45 @@ namespace BudgetCli.Util.Tests.Utilities
 
             Assert.True(success, input);
             Assert.Equal(expected, month);
+        }
+
+        [Fact]
+        public void IsNotMonth()
+        {
+            int month;
+            bool success = DateParser.TryParseMonth("febtober", out month);
+
+            Assert.False(success);
+        }
+
+        [Theory]
+        [InlineData("1", 2020, 1, 1)]
+        [InlineData("31", 2020, 1, 31)]
+        [InlineData("30", 2020, 6, 30)]
+        [InlineData("31", 2020, 6, -1)]
+        [InlineData("4", 2020, 7, 4)]
+        [InlineData("29", 2019, 2, -1)]     //NOT Leap year
+        [InlineData("29", 2020, 2, 29)]     //Leap year
+        [InlineData("32", 2020, 1, -1)]
+        [InlineData("-1", 2020, 1, -1)]
+        [InlineData("1", 2020, 13, -1)]     //Invalid month
+        [InlineData("1", 0, 1, -1)]         //Invalid year
+
+        public void ParseDayOfMonth(string dayStr, int year, int month, int expectedDay)
+        {
+            int dayOfMonth;
+            bool success = DateParser.TryParseDayOfMonth(dayStr, year, month, out dayOfMonth);
+
+            if(expectedDay < 0)
+            {
+                Assert.False(success);
+                Assert.True(dayOfMonth < 0);
+            }
+            else
+            {
+                Assert.True(success);
+                Assert.Equal(expectedDay, dayOfMonth);
+            }
         }
     }
 }
