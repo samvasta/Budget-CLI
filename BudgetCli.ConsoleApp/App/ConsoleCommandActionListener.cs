@@ -14,6 +14,7 @@ using BudgetCli.ConsoleApp.Interfaces;
 using BudgetCli.Core.Models.Commands.SystemCommands;
 using BudgetCli.ConsoleApp.Writers;
 using BudgetCli.Core.Utilities;
+using BudgetCli.Parser.Parsing;
 
 namespace BudgetCli.ConsoleApp.App
 {
@@ -23,13 +24,13 @@ namespace BudgetCli.ConsoleApp.App
 
         public HelpInfoConsoleWriter HelpInfoWriter { get; }
 
-        public HelpLookup HelpLookup { get; }
+        public CommandLibrary CommandLibrary { get; }
 
-        public ConsoleCommandActionListener(IExitListener exitListener, HelpInfoConsoleWriter helpInfoWriter, HelpLookup helpLookup)
+        public ConsoleCommandActionListener(IExitListener exitListener, HelpInfoConsoleWriter helpInfoWriter, CommandLibrary commandLibrary)
         {
             ExitListener = exitListener;
             HelpInfoWriter = helpInfoWriter;
-            HelpLookup = helpLookup;
+            CommandLibrary = commandLibrary;
         }
 
         public bool ConfirmAction(string confirmationMessage)
@@ -68,7 +69,7 @@ namespace BudgetCli.ConsoleApp.App
             else if(result.CommandKind == SystemCommandKind.Help)
             {
                 HelpCommand helpCommand = (HelpCommand)result.Command;
-                HelpInfoWriter.WriteHelpItems(HelpLookup.GetHelpItemsFor(helpCommand.HelpTarget));
+                //TODO: Get ICommandRoot and pass to HelpInfoWriter
             }
         }
 

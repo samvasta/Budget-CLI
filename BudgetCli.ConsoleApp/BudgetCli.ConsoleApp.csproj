@@ -9,6 +9,7 @@
     <ProjectReference Include="..\BudgetCli.Util\BudgetCli.Util.csproj" />
     <ProjectReference Include="..\BudgetCli.Core\BudgetCli.Core.csproj" />
     <ProjectReference Include="..\BudgetCli.Data\BudgetCli.Data.csproj" />
+    <ProjectReference Include="..\BudgetCli.Parser\BudgetCli.Parser.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@ using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Grammar
 {
-    public class BudgetCliCommands
+    public static class BudgetCliCommands
     {
         #region - Tokens -
 
@@ -47,13 +47,11 @@ namespace BudgetCli.Core.Grammar
                 .WithUsage(new CommandUsage.Builder().Description("Help").WithToken(OPT_HELP).WithExample("new account --help").WithExample("n a -h").Build())
                 .Build();
 
-        private CommandLibrary _commands { get; }
-
-        public BudgetCliCommands()
+        public static CommandLibrary BuildCommandLibrary()
         {
-            //TODO Instantiate command library
+            //TODO
+            throw new NotImplementedException();
         }
-
         
     }
 }

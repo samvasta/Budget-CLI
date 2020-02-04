@@ -3,12 +3,14 @@ using System.IO;
 using BudgetCli.ConsoleApp.Interfaces;
 using BudgetCli.ConsoleApp.Writers;
 using BudgetCli.Core.Cli;
+using BudgetCli.Core.Grammar;
 using BudgetCli.Core.Interpreters;
 using BudgetCli.Core.Models.Commands;
 using BudgetCli.Core.Models.Interfaces;
 using BudgetCli.Core.Utilities;
 using BudgetCli.Data.IO;
 using BudgetCli.Data.Util;
+using BudgetCli.Parser.Parsing;
 using ReadLine = System.ReadLine;
 
 namespace BudgetCli.ConsoleApp.App
@@ -22,11 +24,11 @@ namespace BudgetCli.ConsoleApp.App
 
         private bool _continueLoop;
 
-        public App(FileInfo dbInfo, HelpLookup helpLookup)
+        public App(FileInfo dbInfo, CommandLibrary commandLibrary)
         {
             _interpreter = new MainInterpreter(VisitorBagUtil.GetRuntimeVisitorBag(RepositoryBagUtil.GetRuntimeRepositoryBag(dbInfo, null)));
 
-            _listeners = new [] { new ConsoleCommandActionListener(this, new HelpInfoConsoleWriter(), helpLookup) };
+            _listeners = new [] { new ConsoleCommandActionListener(this, new HelpInfoConsoleWriter(), commandLibrary) };
 
             ReadLine.HistoryEnabled = true;
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
@@ -90,8 +92,8 @@ namespace BudgetCli.ConsoleApp.App
                 {
                     DbHelper.CreateSQLiteFile(args[0], null);
                 }
-                
-                new App(dbInfo, HelpLookupUtil.GetRuntimeHelpLookup()).StartInteractiveShell();
+
+                new App(dbInfo, BudgetCliCommands.BuildCommandLibrary()).StartInteractiveShell();
             }
             catch (ArgumentException e)
             {
