@@ -13,7 +13,7 @@ namespace BudgetCli.Data.Repositories
 {
     public class TransactionRepository : RepositoryBase<TransactionDto>, ITransactionRepository
     {
-        public const string TABLE_NAME = "Transaction";
+        public static string TABLE_NAME { get { return "Transaction"; } }
 
         public override string GetTableName()
         {

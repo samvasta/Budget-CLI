@@ -6,7 +6,8 @@ namespace BudgetCli.Data.Tests.TestHarness
 {
     public class FakeRepositoryBase : RepositoryBase<FakeDto>
     {
-        public const string TABLE_NAME = "Data";
+        public static string TABLE_NAME { get { return "Data"; } }
+        
         public FakeRepositoryBase(FileInfo dbInfo, ILog log) : base(dbInfo, log)
         {
         }

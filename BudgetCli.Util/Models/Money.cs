@@ -6,7 +6,7 @@ namespace BudgetCli.Util.Models
     {
         public static readonly Money None = (Money)0;
 
-        private long _value;
+        private readonly long _value;
 
         public long InternalValue { get { return _value; } }
 

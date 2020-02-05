@@ -84,7 +84,7 @@ namespace BudgetCli.Parser.Models.Tokens
         public class Builder
         {
             private Name _name;
-            private List<ArgumentToken> _arguments;
+            private readonly List<ArgumentToken> _arguments;
             
             public Builder()
             {

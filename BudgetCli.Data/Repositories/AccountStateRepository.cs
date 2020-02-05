@@ -11,7 +11,7 @@ namespace BudgetCli.Data.Repositories
 {
     public class AccountStateRepository : RepositoryBase<AccountStateDto>, IAccountStateRepository
     {
-        public const string TABLE_NAME = "AccountState";
+        public static string TABLE_NAME { get { return "AccountState"; } }
         
         public AccountStateRepository(FileInfo dbInfo, ILog log) : base(dbInfo, log)
         {

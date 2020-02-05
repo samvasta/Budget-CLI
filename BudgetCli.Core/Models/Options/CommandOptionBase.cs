@@ -11,19 +11,19 @@ namespace BudgetCli.Core.Models.Options
         public virtual bool IsDataValid { get; protected set; }
         protected virtual T Data { get; set; }
 
-        public CommandOptionBase(CommandOptionKind optionKind)
+        protected CommandOptionBase(CommandOptionKind optionKind)
         {
             OptionKind = optionKind;
             IsDataValid = false;
         }
 
-        public CommandOptionBase(CommandOptionKind optionKind, string rawText)
+        protected CommandOptionBase(CommandOptionKind optionKind, string rawText)
         {
             OptionKind = optionKind;
             SetData(rawText);
         }
 
-        public CommandOptionBase(CommandOptionKind optionKind, T data)
+        protected CommandOptionBase(CommandOptionKind optionKind, T data)
         {
             OptionKind = optionKind;
             //Assume data is valid if it is set directly
@@ -31,7 +31,7 @@ namespace BudgetCli.Core.Models.Options
             Data = data;
         }
 
-        public virtual bool SetData(string rawText)
+        public bool SetData(string rawText)
         {
             T data;
             if(TryParseData(rawText, out data))
@@ -46,7 +46,7 @@ namespace BudgetCli.Core.Models.Options
             return IsDataValid;
         }
 
-        public virtual bool SetData(T newData)
+        public bool SetData(T newData)
         {
             Data = newData;
             IsDataValid = true;

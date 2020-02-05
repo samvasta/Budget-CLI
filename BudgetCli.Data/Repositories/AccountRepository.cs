@@ -13,7 +13,7 @@ namespace BudgetCli.Data.Repositories
 {
     public class AccountRepository : RepositoryBase<AccountDto>, IAccountRepository
     {
-        public const string TABLE_NAME = "Account";
+        public static string TABLE_NAME { get { return "Account"; } }
 
         public AccountRepository(FileInfo dbInfo, ILog log) : base(dbInfo, log)
         {

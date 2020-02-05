@@ -28,9 +28,9 @@ namespace BudgetCli.Parser.Models
 
         public class Builder
         {
-            private List<VerbToken> _commonTokens;
+            private readonly List<VerbToken> _commonTokens;
             private string _description;
-            private List<ICommandUsage> _usages;
+            private readonly List<ICommandUsage> _usages;
 
             public Builder()
             {
