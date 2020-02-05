@@ -93,8 +93,8 @@ Examples:
     : [DATE]           'from' is unbounded
     [DATE] : [DATE]    Bounded on both sides
 
-
 ## Accounts
+
 * `cat [a, account] [STRING]` list details of an account
   * `-d --date` list details of account on a specific date
 * `ls [a, account, accounts]` list accounts as tree
@@ -125,6 +125,7 @@ Examples:
     * `source` or `sink`
 
 ## Transactions
+
 * `cat [t, trans, transaction] [INTEGER]` display details of a transaction
 * `ls [t, trans, transactions]` list transactions
   * `-a --account [STRING]` Filter by account
@@ -141,6 +142,7 @@ Examples:
 * `rm [t, trans, transaction] [INTEGER]` remove transaction
 
 ## Reporting
+
 * `ls [h, history]` list history of activity in reverse chronological order
   * `-d --date [DATE EXPR]`
   * `-c --count [INTEGER]` max count of results to return (default 10)

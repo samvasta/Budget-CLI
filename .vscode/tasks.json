@@ -50,6 +50,21 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "generate-coverage-report",
+            "command": "reportgenerator",
+            "type": "shell",
+            "args": [
+                "\"-reports:BudgetCli.*.Tests/lcov.info\"",
+                "-targetdir:coveragereport",
+                "\"-reporttypes:Html\"",
+                "\"-filefilters:-*\\Budget-CLI\\BudgetCli.*.Tests\\*;-*Generated*;-*.nuget*\""
+            ],
+            "group": "none",
+            "presentation": {
+                "reveal": "silent"
+            }
         }
     ]
 }

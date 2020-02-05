@@ -8,6 +8,7 @@ Projects should have a corresponding tests project, where applicable. Test proje
 ## Tests
 
 Tests can be run in several ways:
+
 - `dotnet test`
 - The [.NET Core Test Explorer](https://marketplace.visualstudio.com/items?itemName=formulahendry.dotnet-test-explorer) Visual Studio Code plugin
 - The `test` or `test-cover` Visual Studio Code task
@@ -22,12 +23,8 @@ To generate human readable coverage reports:
 
 1. Install report generator as a global tool in VS Code with
 
-```
-    dotnet tool install --global dotnet-reportgenerator-globaltool
-```
+    `dotnet tool install --global dotnet-reportgenerator-globaltool`
 
-2. From solution root run: 
+2. From solution root run:
 
-```
-    reportgenerator "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" -reporttypes:Html "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*;-*Generated*;-*.nuget*"
-```
+    `reportgenerator "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" -reporttypes:Html "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*;-*Generated*;-*.nuget*"`
