@@ -57,7 +57,7 @@ namespace BudgetCli.Parser.Parsing
             int commandTokensIdx = 0;
             List<int> matchableTokenIndexes = new List<int>();
 
-            TokenMatchCollection matchCollection = new TokenMatchCollection(commandTokens);
+            TokenMatchCollection matchCollection = new TokenMatchCollection(input, commandTokens);
 
             while(inputTokenIdx < inputTokens.Length)
             {

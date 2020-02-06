@@ -2,12 +2,9 @@ using System;
 using System.IO;
 using BudgetCli.ConsoleApp.Interfaces;
 using BudgetCli.ConsoleApp.Writers;
-using BudgetCli.Core.Cli;
 using BudgetCli.Core.Grammar;
-using BudgetCli.Core.Interpreters;
 using BudgetCli.Core.Models.Commands;
 using BudgetCli.Core.Models.Interfaces;
-using BudgetCli.Core.Utilities;
 using BudgetCli.Data.IO;
 using BudgetCli.Data.Util;
 using BudgetCli.Parser.Parsing;
@@ -19,15 +16,12 @@ namespace BudgetCli.ConsoleApp.App
     {
         public string Prompt { get; set; } = ">";
 
-        private readonly MainInterpreter _interpreter;
         private readonly ICommandActionListener[] _listeners;
 
         private bool _continueLoop;
 
         public App(FileInfo dbInfo, CommandLibrary commandLibrary)
         {
-            _interpreter = new MainInterpreter(VisitorBagUtil.GetRuntimeVisitorBag(RepositoryBagUtil.GetRuntimeRepositoryBag(dbInfo, null)));
-
             _listeners = new [] { new ConsoleCommandActionListener(this, new HelpInfoConsoleWriter(), commandLibrary) };
 
             ReadLine.HistoryEnabled = true;
@@ -63,13 +57,7 @@ namespace BudgetCli.ConsoleApp.App
 
         protected virtual bool TryParse(string input, out ICommandAction action)
         {
-            InterpreterResult<ICommandAction> result = _interpreter.GetAction(input);
-
-            if(result.IsSuccessful)
-            {
-                action = result.ReturnValue;
-                return true;
-            }
+            //TODO
 
             action = null;
             return false;

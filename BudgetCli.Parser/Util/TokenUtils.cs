@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using BudgetCli.Parser.Models.Tokens;
+using BudgetCli.Util.Models;
 using BudgetCli.Util.Utilities;
 
 namespace BudgetCli.Parser.Util
@@ -26,6 +27,16 @@ namespace BudgetCli.Parser.Util
         public static ArgumentToken<string> BuildArgString(string name, bool isOptional = false)
         {
             return new ArgumentToken<string>.Builder().Name(name).IsOptional(isOptional).Parser(TryParseString).Build();
+        }
+        
+        public static ArgumentToken<Money> BuildArgMoney(string name, bool isOptional = false)
+        {
+            return new ArgumentToken<Money>.Builder().Name(name).IsOptional(isOptional).Parser(Money.TryParse).Build();
+        }
+        
+        public static EnumArgumentToken<TEnum> BuildArgEnum<TEnum>(string name, bool isOptional = false) where TEnum : Enum
+        {
+            return new EnumArgumentToken<TEnum>.Builder().Name(name).IsOptional(isOptional).Build();
         }
         
         public static ArgumentToken<float> BuildArgFloat(string name, bool isOptional = false)

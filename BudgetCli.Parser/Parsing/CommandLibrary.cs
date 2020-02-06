@@ -11,24 +11,24 @@ namespace BudgetCli.Parser.Parsing
     public class CommandLibrary
     {
         private readonly List<ICommandRoot> _commands;
-        private readonly IRecognizer<ICommandRoot> _recognizer;
 
-        public CommandLibrary(IRecognizer<ICommandRoot> recognizer)
+        public CommandLibrary()
         {
             _commands = new List<ICommandRoot>();
-            _recognizer = recognizer;
         }
 
-        public CommandLibrary Include(ICommandRoot command)
+        public CommandLibrary AddCommand(ICommandRoot command)
         {
             _commands.Add(command);
-            //_recognizer.Add(command, command.CommonTokens);
             return this;
         }
 
-        public IEnumerable<Name> GetAllCommandNames()
+        public IEnumerable<string> GetAllCommandNames()
         {
-            return null;//_commands.Select(x => x.CommandName);
+            foreach(var command in _commands)
+            {
+                yield return String.Join(" ", command.CommonTokens.Select(x => x.Name.Preferred));
+            }
         }
 
         public IEnumerable<ICommandRoot> GetAllCommands()
@@ -38,34 +38,30 @@ namespace BudgetCli.Parser.Parsing
 
         public bool TryGetCommand(string text, out ICommandRoot command)
         {
-            IOrderedEnumerable<Recognizer<ICommandRoot>.MatchResult> results = _recognizer.Recognize(text);
+            float bestMatchQuality = 0;
+            command = null;
 
-            if(results.Any())
+            foreach(var c in _commands)
             {
-                command = results.First().Value;
-                return true;
+                TokenMatchCollection match = CommandParser.Match(c.CommonTokens, text);
+                if(match.MatchQuality > bestMatchQuality)
+                {
+                    bestMatchQuality = match.MatchQuality;
+                    command = c;
+                }
             }
 
-            command = null;
-            return false;
+            return bestMatchQuality > 0;
         }
 
         public Dictionary<ICommandRoot, float> GetCommandSuggestions(string text)
         {
             Dictionary<ICommandRoot, float> suggestions = new Dictionary<ICommandRoot, float>();
             
-            IOrderedEnumerable<Recognizer<ICommandRoot>.MatchResult> results = _recognizer.Recognize(text);
-
-            foreach(var matchResult in results)
+            foreach(var c in _commands)
             {
-                if(!suggestions.ContainsKey(matchResult.Value))
-                {
-                    suggestions.Add(matchResult.Value, matchResult.Confidence);
-                }
-                else if(suggestions[matchResult.Value] < matchResult.Confidence)
-                {
-                    suggestions[matchResult.Value] = matchResult.Confidence;
-                }
+                TokenMatchCollection match = CommandParser.Match(c.CommonTokens, text);
+                suggestions.Add(c, match.MatchQuality);
             }
 
             return suggestions;

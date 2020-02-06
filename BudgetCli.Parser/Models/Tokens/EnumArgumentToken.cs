@@ -35,8 +35,6 @@ namespace BudgetCli.Parser.Models.Tokens
             protected string _name;
             protected bool _isOptional;
 
-            protected ICommandArgumentToken<T>.ValueParser _parser;
-
             public Builder Name(string name)
             {
                 _name = name;
@@ -46,12 +44,6 @@ namespace BudgetCli.Parser.Models.Tokens
             public Builder IsOptional(bool isOptional)
             {
                 _isOptional = isOptional;
-                return this;
-            }
-
-            public Builder Parser(ICommandArgumentToken<T>.ValueParser parser)
-            {
-                _parser = parser;
                 return this;
             }
 

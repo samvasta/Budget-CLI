@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Intrinsics.X86;
-using Internal;
 using System;
 using BudgetCli.Core.Models.CommandResults;
 using BudgetCli.Core.Models.Interfaces;
@@ -13,7 +10,6 @@ using BudgetCli.Core.Enums;
 using BudgetCli.ConsoleApp.Interfaces;
 using BudgetCli.Core.Models.Commands.SystemCommands;
 using BudgetCli.ConsoleApp.Writers;
-using BudgetCli.Core.Utilities;
 using BudgetCli.Parser.Parsing;
 
 namespace BudgetCli.ConsoleApp.App

@@ -9,27 +9,14 @@ using Humanizer;
 
 namespace BudgetCli.Parser.Models.Tokens
 {
-    public class DateArgumentToken : ICommandToken
+    public class DateArgumentToken : ArgumentToken
     {
-        public TokenKind Kind { get { return TokenKind.Argument; } }
-
-        public string ArgumentName { get; }
-        public bool IsOptional { get; }
-
-        public string Description { get; }
-
-        public string[] PossibleValues { get; }
-
         public DateArgumentToken(string argumentName, bool isOptional)
+            : base(argumentName, isOptional)
         {
-            ArgumentName = argumentName;
-            Description = $"<{argumentName.Kebaberize()}>";
-            IsOptional = isOptional;
-            PossibleValues = new string[0];
         }
 
-
-        public TokenMatchResult Matches(string[] inputTokens, int startIdx)
+        public override TokenMatchResult Matches(string[] inputTokens, int startIdx)
         {
             DateTime output;
             //Explicit date
