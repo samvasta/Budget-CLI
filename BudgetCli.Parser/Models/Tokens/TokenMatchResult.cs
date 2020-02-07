@@ -38,7 +38,7 @@ namespace BudgetCli.Parser.Models.Tokens
             {
                 throw new ArgumentOutOfRangeException($"{nameof(charsMatched)} should be <= {nameof(matchedTokensText)}.Length");
             }
-
+            
             Token = token;
             MatchedTokensText = matchedTokensText;
             MatchOutcome = matchOutcome;

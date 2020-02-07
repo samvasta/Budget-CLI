@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BudgetCli.Parser.Interfaces;
+using BudgetCli.Parser.Models.Tokens;
 
 namespace BudgetCli.Parser.Models
 {
@@ -10,6 +11,8 @@ namespace BudgetCli.Parser.Models
         public ICommandToken[] MatchableTokens { get; }
         private List<ParserTokenMatch> _matches;
         public IEnumerable<ParserTokenMatch> Matches { get { return _matches; } }
+
+        private readonly ValueBag<ArgumentToken> _argumentValues;
 
         /// <summary>
         /// Heuristic for quality of match. Bigger is better. Not guaranteed to be in any range.
@@ -39,6 +42,7 @@ namespace BudgetCli.Parser.Models
             }
             TextToMatch = textToMatch;
             _matches = new List<ParserTokenMatch>();
+            _argumentValues = new ValueBag<ArgumentToken>();
             
             MatchableTokens = matchableTokens;
         }
@@ -48,6 +52,16 @@ namespace BudgetCli.Parser.Models
             _matches.Add(match);
 
             return this;
+        }
+
+        public void SetArgValue(ArgumentToken argument, object value)
+        {
+            _argumentValues.SetValue(argument, value);
+        }
+
+        public bool TryGetArgValue<T>(ArgumentToken argument, out T value)
+        {
+            return _argumentValues.TryGetValue<T>(argument, out value);
         }
     }
 }

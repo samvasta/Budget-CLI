@@ -115,10 +115,9 @@ Examples:
     * `source` or `sink`
 * `rm [STRING]` Remove an account
   * `-r --recursive` to remove child accounts
-* `set [a, account]` Sets values of the account
+* `set [a, account] [STRING]` Sets values of the account
   * `-c --category [STRING]`
   * `-d --description`
-  * `-f --funds [DECIMAL]`
   * `-n --name [STRING]`
   * `-p --priority [INTEGER]`
   * `-t --type`

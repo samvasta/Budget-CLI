@@ -19,6 +19,7 @@ namespace BudgetCli.ConsoleApp.App
         private readonly ICommandActionListener[] _listeners;
 
         private bool _continueLoop;
+        private readonly CommandInterpreter _interpreter;
 
         public App(FileInfo dbInfo, CommandLibrary commandLibrary)
         {
@@ -27,6 +28,7 @@ namespace BudgetCli.ConsoleApp.App
             ReadLine.HistoryEnabled = true;
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
             _continueLoop = true;
+            _interpreter = new CommandInterpreter(commandLibrary);
         }
 
         void IExitListener.Exit()
@@ -41,7 +43,7 @@ namespace BudgetCli.ConsoleApp.App
                 string input = ReadLine.Read(Prompt);
 
                 ICommandAction command;
-                if(TryParse(input, out command))
+                if(_interpreter.TryParseCommand(input, out command))
                 {
                     if(command.TryExecute(null, _listeners))
                     {
@@ -53,14 +55,6 @@ namespace BudgetCli.ConsoleApp.App
                     Console.WriteLine("Unrecognized command");
                 }
             }
-        }
-
-        protected virtual bool TryParse(string input, out ICommandAction action)
-        {
-            //TODO
-
-            action = null;
-            return false;
         }
 
         public static void Main(string[] args)

@@ -90,6 +90,10 @@ namespace BudgetCli.Parser.Parsing
                         //match!
                         string matchText = string.Join(" ", inputTokens.Skip(inputTokenIdx).Take(tokenMatchLength));
                         matchCollection.With(new ParserTokenMatch(tokenIdx, matchResult));
+                        if(token is ArgumentToken argToken)
+                        {
+                            matchCollection.SetArgValue(argToken, argToken.Parse(matchResult.MatchedTokensText));
+                        }
                         matchableTokenIndexes.Remove(tokenIdx);
                         inputTokenIdx += tokenMatchLength;
 

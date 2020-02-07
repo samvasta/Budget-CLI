@@ -132,6 +132,24 @@ namespace BudgetCli.Core.Grammar
                     .WithToken(OPT_RECURSIVE)
                     .Build())
                 .Build();
+                
+        private static readonly CommandRoot CMD_SET_ACCOUNTS = new CommandRoot.Builder()
+                .WithToken(SET)
+                .WithToken(ACCOUNT)
+                .WithUsage(new CommandUsage.Builder()
+                    .Description("Help").WithToken(OPT_HELP)
+                    .WithExample("set account --help").WithExample("set a -h")
+                    .Build())
+                .WithUsage(new CommandUsage.Builder()
+                    .Description("Change one or more fields of the account.")
+                    .WithToken(TokenUtils.BuildArgString("account-name"))
+                    .WithToken(OPT_CATEGORY)
+                    .WithToken(OPT_FUNDS)
+                    .WithToken(OPT_DESCRIPTION)
+                    .WithToken(OPT_PRIORITY)
+                    .WithToken(OPT_ACCOUNT_TYPE)
+                    .Build())
+                .Build();
 
         public static CommandLibrary BuildCommandLibrary()
         {
@@ -140,7 +158,9 @@ namespace BudgetCli.Core.Grammar
             library.AddCommand(CMD_NEW_ACCOUNT)
                    .AddCommand(CMD_DETAIL_ACCOUNTS)
                    .AddCommand(CMD_LS_ACCOUNTS)
-                   .AddCommand(CMD_REMOVE_ACCOUNTS);
+                   .AddCommand(CMD_REMOVE_ACCOUNTS)
+                   .AddCommand(CMD_SET_ACCOUNTS)
+                   ;
 
             return library;
         }
