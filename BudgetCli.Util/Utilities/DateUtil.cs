@@ -90,7 +90,7 @@ namespace BudgetCli.Util.Utilities
                 case TimeUnit.Year:
                     return new DateTime(date.Year+delta, date.Month, date.Day);
                 default:
-                    throw new Exception("Cannot get relative date for this type of time unit: " + unit.Humanize());
+                    throw new ArgumentOutOfRangeException("Cannot get relative date for this type of time unit: " + unit.Humanize());
             }
         }
     }

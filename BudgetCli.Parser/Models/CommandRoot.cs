@@ -10,17 +10,19 @@ namespace BudgetCli.Parser.Models
 {
     public class CommandRoot : ICommandRoot
     {
+        public int CommandId { get; }
         public VerbToken[] CommonTokens { get; }
         public string Description { get; }
         public ICommandUsage[] Usages { get; }
 
-        private CommandRoot(VerbToken[] commonTokens, string description, params ICommandUsage[] usages)
+        private CommandRoot(int commandId, VerbToken[] commonTokens, string description, params ICommandUsage[] usages)
         {
             if(commonTokens.Length == 0)
             {
                 throw new ArgumentException("Must include at least 1 common token");
             }
 
+            CommandId = commandId;
             CommonTokens = commonTokens;
             Description = description;
             Usages = usages;
@@ -28,6 +30,7 @@ namespace BudgetCli.Parser.Models
 
         public class Builder
         {
+            private int _commandId;
             private readonly List<VerbToken> _commonTokens;
             private string _description;
             private readonly List<ICommandUsage> _usages;
@@ -36,6 +39,18 @@ namespace BudgetCli.Parser.Models
             {
                 _commonTokens = new List<VerbToken>();
                 _usages = new List<ICommandUsage>();
+            }
+
+            public Builder Id(int commandId)
+            {
+                _commandId = commandId;
+                return this;
+            }
+
+            public Builder Id<T>(T commandId) where T : Enum
+            {
+                //Gross but whatever
+                return Id((int)(object)commandId);
             }
 
             public Builder WithToken(string preferred, params string[] alternatives)
@@ -70,7 +85,7 @@ namespace BudgetCli.Parser.Models
 
             public CommandRoot Build()
             {
-                return new CommandRoot(_commonTokens.ToArray(), _description, _usages.ToArray());
+                return new CommandRoot(_commandId, _commonTokens.ToArray(), _description, _usages.ToArray());
             }
         }
     }

@@ -28,7 +28,7 @@ namespace BudgetCli.ConsoleApp.App
             ReadLine.HistoryEnabled = true;
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
             _continueLoop = true;
-            _interpreter = new CommandInterpreter(commandLibrary);
+            _interpreter = new CommandInterpreter(RepositoryBagUtil.GetRuntimeRepositoryBag(dbInfo, null), commandLibrary);
         }
 
         void IExitListener.Exit()

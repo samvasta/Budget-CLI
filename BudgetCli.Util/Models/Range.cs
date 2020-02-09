@@ -9,7 +9,7 @@ namespace BudgetCli.Util.Models
     /// </summary>
     public class Range<T> where T : System.IComparable<T>
     {
-        public delegate bool ValueParser(string text, out T value); 
+        public delegate bool TryParseValue(string text, out T value); 
 
         /// <summary>
         /// Lower Bound
@@ -83,11 +83,11 @@ namespace BudgetCli.Util.Models
             }
             else
             {
-                throw new ArgumentOutOfRangeException($"{nameof(From)} must be greater or equal to {nameof(To)}");
+                return $"Invalid Range: {From} is greater than {To}";
             }
         }
 
-        public static bool TryParse(string text, ValueParser valueParser, out Range<T> range)
+        public static bool TryParse(string text, TryParseValue valueParser, out Range<T> range)
         {
             const string pattern = @"(\[|\()([^,]*)\s*,\s*([^\)\]]*)(\)|\])";
 

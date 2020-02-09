@@ -2,7 +2,7 @@ using System.Globalization;
 using System;
 namespace BudgetCli.Util.Models
 {
-    public struct Money : IComparable<Money>
+    public struct Money : IComparable<Money>, IEquatable<Money>
     {
         public static readonly Money None = (Money)0;
 
@@ -201,6 +201,11 @@ namespace BudgetCli.Util.Models
         public int CompareTo(Money other)
         {
             return this._value.CompareTo(other._value);
+        }
+
+        public bool Equals(Money other)
+        {
+            return this == other;
         }
     }
 }

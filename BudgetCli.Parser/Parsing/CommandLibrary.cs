@@ -66,5 +66,27 @@ namespace BudgetCli.Parser.Parsing
 
             return suggestions;
         }
+
+        public CommandUsageMatchData Parse(string text)
+        {
+            CommandUsageMatchData bestMatchData = null;
+            float bestMatchQuality = float.NegativeInfinity;
+
+            foreach(var command in _commands)
+            {
+                Dictionary<ICommandUsage, TokenMatchCollection> matchDict = CommandParser.GetUsageMatchResults(command, text);
+                foreach(var kvp in matchDict)
+                {
+                    ICommandUsage usage = kvp.Key;
+                    TokenMatchCollection matchCollection = kvp.Value;
+                    if(matchCollection.IsFullMatch && matchCollection.MatchQuality > bestMatchQuality)
+                    {
+                        bestMatchQuality = matchCollection.MatchQuality;
+                        bestMatchData = new CommandUsageMatchData(command, usage, matchCollection);
+                    }        
+                }
+            }
+            return bestMatchData;
+        }
     }
 }

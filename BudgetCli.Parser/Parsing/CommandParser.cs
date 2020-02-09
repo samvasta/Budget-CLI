@@ -41,13 +41,18 @@ namespace BudgetCli.Parser.Parsing
             return tokens.ToArray();
         }
 
-        public static IEnumerable<TokenMatchCollection> GetCurrentUsageToken(ICommandRoot currentRoot, string text)
+        public static Dictionary<ICommandUsage, TokenMatchCollection> GetUsageMatchResults(ICommandRoot currentRoot, string text)
         {
-            return currentRoot.Usages.Select(x =>
+            Dictionary<ICommandUsage, TokenMatchCollection> usageMatchData = new Dictionary<ICommandUsage, TokenMatchCollection>();
+
+            foreach(var usage in currentRoot.Usages)
             {
-                ICommandToken[] tokens = currentRoot.CommonTokens.Concat(x.Tokens).ToArray();
-                return Match(tokens, text);
-            });
+                ICommandToken[] tokens = currentRoot.CommonTokens.Concat(usage.Tokens).ToArray();
+                TokenMatchCollection matchCollection = Match(tokens, text);
+                usageMatchData.Add(usage, matchCollection);
+            }
+
+            return usageMatchData;
         }
 
         public static TokenMatchCollection Match(ICommandToken[] commandTokens, string input)

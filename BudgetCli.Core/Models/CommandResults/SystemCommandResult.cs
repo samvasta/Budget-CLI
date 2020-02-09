@@ -9,9 +9,9 @@ namespace BudgetCli.Core.Models.CommandResults
 
         public bool IsSuccessful { get; set; }
 
-        public SystemCommandKind CommandKind { get; set; }
+        public CommandKind CommandKind { get; set; }
 
-        public SystemCommandResult(ICommandAction command, bool isSuccessful, SystemCommandKind commandKind)
+        public SystemCommandResult(ICommandAction command, bool isSuccessful, CommandKind commandKind)
         {
             Command = command;
             IsSuccessful = isSuccessful;

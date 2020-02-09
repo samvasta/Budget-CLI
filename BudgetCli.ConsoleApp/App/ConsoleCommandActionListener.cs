@@ -49,20 +49,20 @@ namespace BudgetCli.ConsoleApp.App
 
         public void OnCommand(SystemCommandResult result)
         {
-            if(result.CommandKind == SystemCommandKind.Exit)
+            if(result.CommandKind == CommandKind.Exit)
             {
                 Console.WriteLine("Goodbye.");
                 ExitListener?.Exit();
             }
-            else if(result.CommandKind == SystemCommandKind.Version)
+            else if(result.CommandKind == CommandKind.Version)
             {
                 Console.WriteLine($"Version {System.Reflection.Assembly.GetEntryAssembly().GetName().Version}");
             }
-            else if(result.CommandKind == SystemCommandKind.ClearConsole)
+            else if(result.CommandKind == CommandKind.ClearConsole)
             {
                 Console.Clear();
             }
-            else if(result.CommandKind == SystemCommandKind.Help)
+            else if(result.CommandKind == CommandKind.Help)
             {
                 HelpCommand helpCommand = (HelpCommand)result.Command;
                 //TODO: Get ICommandRoot and pass to HelpInfoWriter

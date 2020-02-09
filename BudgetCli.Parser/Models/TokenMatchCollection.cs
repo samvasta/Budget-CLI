@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using BudgetCli.Parser.Interfaces;
 using BudgetCli.Parser.Models.Tokens;
@@ -31,6 +32,28 @@ namespace BudgetCli.Parser.Models
                 }
 
                 return totalCharsMatched * percentOfTokensMatched;
+            }
+        }
+
+        public bool IsFullMatch
+        {
+            get
+            {
+                //All must be full match
+                if(!_matches.All(x => x.IsFullMatch))
+                {
+                    return false;
+                }
+
+                //Make sure all required tokens are matched
+                foreach(var requiredToken in MatchableTokens.Where(x => !x.IsOptional))
+                {
+                    if(!_matches.Any(x => x.Token.Equals(requiredToken)))
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
 

@@ -8,16 +8,18 @@ namespace BudgetCli.Parser.Models
 {
     public class CommandUsage : ICommandUsage
     {
+        public bool IsHelp { get; }
         public string Description { get; }
         public ICommandToken[] Tokens { get; }
         public string[] Examples { get; }
 
-        private CommandUsage(string description, ICommandToken[] tokens, string[] examples)
+        private CommandUsage(bool isHelp, string description, ICommandToken[] tokens, string[] examples)
         {
             if(tokens.Length == 0)
             {
                 throw new ArgumentException($"{nameof(tokens)} cannot be empty!");
             }
+            IsHelp = isHelp;
             Description = description;
             Tokens = tokens;
             Examples = examples;
@@ -25,14 +27,22 @@ namespace BudgetCli.Parser.Models
 
         public class Builder
         {
+            private bool _isHelp;
             private string _description;
-            private List<ICommandToken> _tokens;
-            private List<string> _examples;
+            private readonly List<ICommandToken> _tokens;
+            private readonly List<string> _examples;
 
             public Builder()
             {
+                _isHelp = false;
                 _tokens = new List<ICommandToken>();
                 _examples = new List<string>();
+            }
+
+            public Builder IsHelp()
+            {
+                _isHelp = true;
+                return this;
             }
 
             public Builder Description(string description)
@@ -55,7 +65,7 @@ namespace BudgetCli.Parser.Models
 
             public CommandUsage Build()
             {
-                return new CommandUsage(_description, _tokens.ToArray(), _examples.ToArray());
+                return new CommandUsage(_isHelp, _description, _tokens.ToArray(), _examples.ToArray());
             }
         }
     }

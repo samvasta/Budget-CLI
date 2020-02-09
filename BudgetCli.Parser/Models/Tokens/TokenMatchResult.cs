@@ -6,7 +6,7 @@ using BudgetCli.Parser.Interfaces;
 
 namespace BudgetCli.Parser.Models.Tokens
 {
-    public struct TokenMatchResult : IComparable<TokenMatchResult>
+    public struct TokenMatchResult : IComparable<TokenMatchResult>, IEquatable<TokenMatchResult>
     {
         public static readonly TokenMatchResult None = new TokenMatchResult(null, String.Empty, MatchOutcome.None, 0, 0);
 
@@ -72,6 +72,11 @@ namespace BudgetCli.Parser.Models.Tokens
 
             //Then prioritize characters matched
             return this.CharsMatched.CompareTo(other.CharsMatched);
+        }
+
+        public bool Equals(TokenMatchResult other)
+        {
+            return this.CompareTo(other) == 0;
         }
     }
 }

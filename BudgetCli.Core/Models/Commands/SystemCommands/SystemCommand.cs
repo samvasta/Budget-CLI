@@ -12,9 +12,9 @@ namespace BudgetCli.Core.Models.Commands.SystemCommands
 
         public string ActionText { get { return RawText; } }
 
-        public SystemCommandKind CommandKind { get; set; }
+        public CommandKind CommandKind { get; set; }
 
-        public SystemCommand(string text, SystemCommandKind commandKind)
+        public SystemCommand(string text, CommandKind commandKind)
         {
             RawText = text;
             CommandKind = commandKind;

@@ -1,4 +1,5 @@
 using System;
+using BudgetCli.Core.Enums;
 using BudgetCli.Data.Enums;
 using BudgetCli.Parser.Interfaces;
 using BudgetCli.Parser.Models;
@@ -67,11 +68,12 @@ namespace BudgetCli.Core.Grammar
 
         #endregion
 
-
-        private static readonly CommandRoot CMD_NEW_ACCOUNT = new CommandRoot.Builder()
+        public static readonly CommandRoot CMD_NEW_ACCOUNT = new CommandRoot.Builder()
+                .Id(CommandActionKind.AddAccount)
                 .WithToken(NEW)
                 .WithToken(ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
+                    .IsHelp()
                     .Description("Help").WithToken(OPT_HELP)
                     .WithExample("new account --help").WithExample("n a -h")
                     .Build())
@@ -86,10 +88,12 @@ namespace BudgetCli.Core.Grammar
                     .Build())
                 .Build();
 
-        private static readonly CommandRoot CMD_LS_ACCOUNTS = new CommandRoot.Builder()
+        public static readonly CommandRoot CMD_LS_ACCOUNTS = new CommandRoot.Builder()
+                .Id(CommandActionKind.ListAccount)
                 .WithToken(LIST)
                 .WithToken(ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
+                    .IsHelp()
                     .Description("Help").WithToken(OPT_HELP)
                     .WithExample("ls accounts --help").WithExample("ls a -h")
                     .Build())
@@ -105,10 +109,12 @@ namespace BudgetCli.Core.Grammar
                     .Build())
                 .Build();
                 
-        private static readonly CommandRoot CMD_DETAIL_ACCOUNTS = new CommandRoot.Builder()
+        public static readonly CommandRoot CMD_DETAIL_ACCOUNTS = new CommandRoot.Builder()
+                .Id(CommandActionKind.DetailAccount)
                 .WithToken(DETAIL)
                 .WithToken(ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
+                    .IsHelp()
                     .Description("Help").WithToken(OPT_HELP)
                     .WithExample("detail accounts --help").WithExample("d a -h")
                     .Build())
@@ -119,10 +125,12 @@ namespace BudgetCli.Core.Grammar
                     .Build())
                 .Build();
                 
-        private static readonly CommandRoot CMD_REMOVE_ACCOUNTS = new CommandRoot.Builder()
+        public static readonly CommandRoot CMD_REMOVE_ACCOUNTS = new CommandRoot.Builder()
+                .Id(CommandActionKind.RemoveAccount)
                 .WithToken(REMOVE)
                 .WithToken(ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
+                    .IsHelp()
                     .Description("Help").WithToken(OPT_HELP)
                     .WithExample("remove account --help").WithExample("rm a -h")
                     .Build())
@@ -133,10 +141,12 @@ namespace BudgetCli.Core.Grammar
                     .Build())
                 .Build();
                 
-        private static readonly CommandRoot CMD_SET_ACCOUNTS = new CommandRoot.Builder()
+        public static readonly CommandRoot CMD_SET_ACCOUNTS = new CommandRoot.Builder()
+                .Id(CommandActionKind.UpdateAccount)
                 .WithToken(SET)
                 .WithToken(ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
+                    .IsHelp()
                     .Description("Help").WithToken(OPT_HELP)
                     .WithExample("set account --help").WithExample("set a -h")
                     .Build())

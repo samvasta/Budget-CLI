@@ -17,7 +17,7 @@ namespace BudgetCli.Parser.Models
         // to ensure users cannot add something they won't be able to get out
         public void SetValue<E>(T token, E value) where E : class
         {
-            if(token == null)
+            if(token.Equals(default(T)))
             {
                 throw new ArgumentNullException(nameof(token));
             }

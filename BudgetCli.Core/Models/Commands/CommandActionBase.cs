@@ -25,7 +25,7 @@ namespace BudgetCli.Core.Models.Commands
         /// <summary>
         /// New Command constructor
         /// </summary>
-        public CommandActionBase(string rawText, RepositoryBag repositories)
+        protected CommandActionBase(string rawText, RepositoryBag repositories)
         {
             RawText = rawText;
             Repositories = repositories;
@@ -33,14 +33,10 @@ namespace BudgetCli.Core.Models.Commands
 
         public bool TryExecute(ILog log, IEnumerable<ICommandActionListener> listeners = null)
         {
-            // using(TransactionScope scope = new TransactionScope())
-            // {
-                if(TryDoAction(log, listeners))
-                {
-                    // scope.Complete();
-                    return true;
-                }
-            // }
+            if(TryDoAction(log, listeners))
+            {
+                return true;
+            }
 
             return false;
         }

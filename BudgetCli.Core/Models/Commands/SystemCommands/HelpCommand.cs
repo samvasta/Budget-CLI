@@ -25,7 +25,7 @@ namespace BudgetCli.Core.Models.Commands.SystemCommands
             //No data to manipulate. Need to transmit though
             if(listeners != null)
             {
-                SystemCommandResult result = new SystemCommandResult(this, true, Enums.SystemCommandKind.Help);
+                SystemCommandResult result = new SystemCommandResult(this, true, Enums.CommandKind.Help);
                 foreach(var listener in listeners)
                 {
                     listener.OnCommand(result);

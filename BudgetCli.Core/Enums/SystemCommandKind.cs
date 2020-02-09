@@ -1,10 +1,16 @@
 namespace BudgetCli.Core.Enums
 {
-    public enum SystemCommandKind
+    public enum CommandKind
     {
         Help,
         Version,
         Exit,
-        ClearConsole
+        ClearConsole,
+
+        AccountNew,
+        AccountList,
+        AccountDetail,
+        AccountSet,
+        AccountRemove
     }
 }

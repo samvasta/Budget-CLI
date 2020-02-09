@@ -24,7 +24,7 @@ namespace BudgetCli.Core.Models
         {
             if(dto == null)
             {
-                throw new Exception("THIS IS SUPER DUMB");
+                throw new ArgumentNullException(nameof(dto));
             }
             return new AccountState(dto.Id.Value, dto.AccountId, new Money(dto.Funds, true), dto.Timestamp, dto.IsClosed);
         }
