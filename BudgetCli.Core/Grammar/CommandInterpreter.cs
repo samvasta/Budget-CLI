@@ -1,12 +1,14 @@
 using System;
 using BudgetCli.Core.Enums;
 using BudgetCli.Core.Models.Commands;
+using BudgetCli.Core.Models.Commands.Accounts;
 using BudgetCli.Core.Models.Commands.SystemCommands;
 using BudgetCli.Data.Enums;
 using BudgetCli.Data.Repositories;
 using BudgetCli.Parser.Interfaces;
 using BudgetCli.Parser.Models;
 using BudgetCli.Parser.Parsing;
+using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Grammar
 {
@@ -43,49 +45,131 @@ namespace BudgetCli.Core.Grammar
 
             if(matchData.Command == BudgetCliCommands.CMD_DETAIL_ACCOUNTS)
             {
-                return BuildDetailAccountCommand(matchData);
+                return BuildDetailAccountCommand(input, matchData);
             }
             if(matchData.Command == BudgetCliCommands.CMD_LS_ACCOUNTS)
             {
-                return BuildListAccountCommand(matchData);
+                return BuildListAccountCommand(input, matchData);
             }
             if(matchData.Command == BudgetCliCommands.CMD_NEW_ACCOUNT)
             {
-                return BuildNewAccountCommand(matchData);
+                return BuildNewAccountCommand(input, matchData);
             }
             if(matchData.Command == BudgetCliCommands.CMD_REMOVE_ACCOUNTS)
             {
-                return BuildRemoveAccountCommand(matchData);
+                return BuildRemoveAccountCommand(input, matchData);
             }
             if(matchData.Command == BudgetCliCommands.CMD_SET_ACCOUNTS)
             {
-                return BuildSetAccountCommand(matchData);
+                return BuildSetAccountCommand(input, matchData);
             }
 
             return null;
         }
 
-        private ICommandAction BuildDetailAccountCommand(CommandUsageMatchData matchData)
+        private ICommandAction BuildDetailAccountCommand(string input, CommandUsageMatchData matchData)
         {
             throw new NotImplementedException();
         }
 
-        private ICommandAction BuildListAccountCommand(CommandUsageMatchData matchData)
+        private ICommandAction BuildListAccountCommand(string input, CommandUsageMatchData matchData)
         {
-            throw new NotImplementedException();
+            ListAccountCommand cmd = new ListAccountCommand(input, Repositories);
+            
+            AccountKind accountType;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_ACCOUNT_TYPE.Arguments[0], out accountType))
+            {
+                cmd.AccountTypeOption.SetData(accountType);
+            }
+
+            string categoryName;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_CATEGORY.Arguments[0], out categoryName))
+            {
+                cmd.CategoryIdOption.SetData(Repositories.AccountRepository.GetIdByName(categoryName));
+            }
+
+            string description;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_DESCRIPTION.Arguments[0], out description))
+            {
+                cmd.DescriptionOption.SetData(description);
+            }
+
+            string name;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_ACCOUNT_NAME.Arguments[0], out name))
+            {
+                cmd.NameOption.SetData(name);
+            }
+
+            //TODO: Funds & Priorotiy Range Options
+
+            return cmd;
         }
 
-        private ICommandAction BuildNewAccountCommand(CommandUsageMatchData matchData)
+        private ICommandAction BuildNewAccountCommand(string input, CommandUsageMatchData matchData)
         {
-            throw new NotImplementedException();
+            string accountName;
+
+            if(!matchData.TryGetArgValue(BudgetCliCommands.ARG_ACCOUNT_NAME, out accountName))
+            {
+                return null;
+            }
+
+            AddAccountCommand cmd = new AddAccountCommand(input, Repositories, accountName);
+
+            string categoryName;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_CATEGORY.Arguments[0], out categoryName))
+            {
+                cmd.CategoryIdOption.SetData(Repositories.AccountRepository.GetIdByName(categoryName));
+            }
+
+            string description;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_DESCRIPTION.Arguments[0], out description))
+            {
+                cmd.DescriptionOption.SetData(description);
+            }
+
+            Money funds;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_FUNDS.Arguments[0], out funds))
+            {
+                cmd.FundsOption.SetData(funds);
+            }
+
+            AccountKind accountKind;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_ACCOUNT_TYPE.Arguments[0], out accountKind))
+            {
+                cmd.AccountTypeOption.SetData(accountKind);
+            }
+
+            int priority;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_PRIORITY.Arguments[0], out priority))
+            {
+                cmd.PriorityOption.SetData(priority);
+            }
+
+            return cmd;
         }
 
-        private ICommandAction BuildRemoveAccountCommand(CommandUsageMatchData matchData)
+        private ICommandAction BuildRemoveAccountCommand(string input, CommandUsageMatchData matchData)
         {
-            throw new NotImplementedException();
+            DeleteAccountCommand cmd = new DeleteAccountCommand(input, Repositories);
+
+            string accountName;
+            if(!matchData.TryGetArgValue(BudgetCliCommands.ARG_ACCOUNT_NAME, out accountName))
+            {
+                return null;
+            }
+
+            cmd.AccountName.SetData(accountName);
+
+            if(matchData.HasToken(BudgetCliCommands.OPT_RECURSIVE))
+            {
+                cmd.IsRecursiveOption.SetData(true);
+            }
+
+            return cmd;
         }
 
-        private ICommandAction BuildSetAccountCommand(CommandUsageMatchData matchData)
+        private ICommandAction BuildSetAccountCommand(string input, CommandUsageMatchData matchData)
         {
             throw new NotImplementedException();
         }

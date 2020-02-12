@@ -22,16 +22,20 @@ namespace BudgetCli.Parser.Models
         {
             get
             {
-                float percentOfTokensMatched = 0;
+                int maxTokens = 0;
+                int maxChars = 0;
+                int totalTokensMatched = 0;
                 int totalCharsMatched = 0;
                 
                 foreach(var match in _matches)
                 {
-                    percentOfTokensMatched += (float)match.CharsMatched / match.MatchedTokensText.Length;
+                    maxTokens++;
+                    maxChars += match.FullMatchText.Length;
+                    totalTokensMatched += match.TokensMatched;
                     totalCharsMatched += match.CharsMatched;
                 }
 
-                return totalCharsMatched * percentOfTokensMatched;
+                return 0.5f * (((float)totalTokensMatched / maxTokens) + ((float)totalCharsMatched / maxChars));
             }
         }
 
@@ -85,6 +89,11 @@ namespace BudgetCli.Parser.Models
         public bool TryGetArgValue<T>(ArgumentToken argument, out T value)
         {
             return _argumentValues.TryGetValue<T>(argument, out value);
+        }
+
+        public bool TryGetArgValue<T>(string argName, out T value)
+        {
+            return _argumentValues.TryGetValue<T>(argName, out value);
         }
     }
 }

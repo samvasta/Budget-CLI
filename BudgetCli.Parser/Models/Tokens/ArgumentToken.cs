@@ -55,7 +55,8 @@ namespace BudgetCli.Parser.Models.Tokens
 
             if(Parser(inputTokens[startIdx], out _))
             {
-                return new TokenMatchResult(this, TokenUtils.GetMatchText(inputTokens, startIdx, 1),  MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                string text = TokenUtils.GetMatchText(inputTokens, startIdx, 1);
+                return new TokenMatchResult(this, text, text, MatchOutcome.Full, inputTokens[startIdx].Length, 1);
             }
 
             return TokenMatchResult.None;

@@ -126,7 +126,7 @@ namespace BudgetCli.Parser.Parsing
                             //Add a partial match for whatever last failed to match
                             matchCollection.With(new ParserTokenMatch(bestMatchIdx, bestMatch));
                         }
-                        
+                        Console.WriteLine("Failed at token idx " + commandTokensIdx);
                         return matchCollection;
                     }
                 }

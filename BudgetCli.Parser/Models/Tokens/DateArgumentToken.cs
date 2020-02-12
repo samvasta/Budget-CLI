@@ -22,20 +22,20 @@ namespace BudgetCli.Parser.Models.Tokens
             //Explicit date
             if(DateTime.TryParse(inputTokens[startIdx], out output))
             {
-                return new TokenMatchResult(this, inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                return new TokenMatchResult(this, inputTokens[startIdx], inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
             }
             
             //Yesterday
             if(inputTokens[startIdx].Equals("yesterday", StringComparison.CurrentCultureIgnoreCase))
             {
                 output = DateTime.Today.Subtract(new TimeSpan(1, 0, 0, 0));
-                return new TokenMatchResult(this, inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                return new TokenMatchResult(this, inputTokens[startIdx], inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
             }
             if(startIdx == inputTokens.Length-1)
             {
                 //End of tokens, cannot match anything else
                 output = DateTime.Today;
-                return new TokenMatchResult(this, String.Empty, MatchOutcome.None, 0, 0);
+                return TokenMatchResult.None;
             }
             
             if(inputTokens[startIdx].Equals("last", StringComparison.CurrentCultureIgnoreCase))
@@ -48,7 +48,7 @@ namespace BudgetCli.Parser.Models.Tokens
                     {
                         output = DateUtil.GetRelativeDateDayOfWeek(dayOfWeek);
                         string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 2);
-                        return new TokenMatchResult(this, matchText, MatchOutcome.Full, matchText.Length, 2);
+                        return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 2);
                     }
                 }
 
@@ -62,12 +62,12 @@ namespace BudgetCli.Parser.Models.Tokens
                     {
                         output = new DateTime(DateTime.Today.Year-1, month, day);
                         string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 3);
-                        return new TokenMatchResult(this, matchText, MatchOutcome.Full, matchText.Length, 3);
+                        return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 3);
                     }
                 }
 
                 output = DateTime.Today;
-                return new TokenMatchResult(this, String.Empty, MatchOutcome.None, 0, 0);
+                return TokenMatchResult.None;
             }
 
             //<number> <time-unit> ago
@@ -81,13 +81,13 @@ namespace BudgetCli.Parser.Models.Tokens
                 {
                     output = DateUtil.GetRelativeDate(DateTime.Today, -number, unit);
                         string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 3);
-                        return new TokenMatchResult(this, matchText, MatchOutcome.Full, matchText.Length, 3);
+                        return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 3);
                 }
             }
 
 
             output = DateTime.Today;
-            return new TokenMatchResult(this, String.Empty, MatchOutcome.None, 0, 0);
+            return TokenMatchResult.None;
         }
     }
 }

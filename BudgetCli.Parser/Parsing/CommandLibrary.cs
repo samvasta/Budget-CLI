@@ -79,6 +79,7 @@ namespace BudgetCli.Parser.Parsing
                 {
                     ICommandUsage usage = kvp.Key;
                     TokenMatchCollection matchCollection = kvp.Value;
+                    Console.WriteLine($"Match: {usage.Description.Substring(0, Math.Min(usage.Description.Length, 20)),-20} Full Match: {matchCollection.IsFullMatch,-10} Quality: {matchCollection.MatchQuality}");
                     if(matchCollection.IsFullMatch && matchCollection.MatchQuality > bestMatchQuality)
                     {
                         bestMatchQuality = matchCollection.MatchQuality;

@@ -36,5 +36,25 @@ namespace BudgetCli.Parser.Models
             value = default(E);
             return false;
         }
+
+        public bool TryGetValue<E>(string tokenName, out E value)
+        {
+            if(tokenName == null)
+            {
+                throw new ArgumentNullException(nameof(tokenName));
+            }
+
+            foreach(var kvp in _values)
+            {
+                if(tokenName.Equals(kvp.Key.ToString()))
+                {
+                    value = (E)kvp.Value;
+                    return true;
+                }
+            }
+
+            value = default(E);
+            return false;
+        }
     }
 }

@@ -32,6 +32,8 @@ namespace BudgetCli.Parser.Models
         /// Full text of all tokens matched fully or partially
         /// </summary>
         public string MatchedTokensText { get { return TokenMatchResult.MatchedTokensText; } }
+
+        public string FullMatchText { get { return TokenMatchResult.FullMatchText; } }
         
         public bool IsFullMatch { get { return TokenMatchResult.MatchOutcome == Enums.MatchOutcome.Full; } }
         #endregion - Pass-Thru properties of TokenMatchResult -

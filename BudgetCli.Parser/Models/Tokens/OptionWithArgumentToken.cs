@@ -47,7 +47,7 @@ namespace BudgetCli.Parser.Models.Tokens
             if(match.Length != partialMatchLength)
             {
                 //Only partial match on the option name
-                return new TokenMatchResult(this, inputTokens[startIdx], MatchOutcome.Partial, partialMatchLength, 0);
+                return new TokenMatchResult(this, inputTokens[startIdx], match, MatchOutcome.Partial, partialMatchLength, 0);
             }
 
             int charsMatched = inputTokens[startIdx].Length;
@@ -60,7 +60,8 @@ namespace BudgetCli.Parser.Models.Tokens
                 TokenMatchResult matchResult = Arguments[argIdx].Matches(inputTokens, i);
                 if(matchResult.MatchOutcome != MatchOutcome.Full)
                 {
-                    return new TokenMatchResult(this, TokenUtils.GetMatchText(inputTokens, startIdx, i), MatchOutcome.Partial, charsMatched + matchResult.CharsMatched, 1 + argIdx);
+                    string partialMatchText = TokenUtils.GetMatchText(inputTokens, startIdx, i);
+                    return new TokenMatchResult(this, partialMatchText, partialMatchText, MatchOutcome.Partial, charsMatched + matchResult.CharsMatched, 1 + argIdx);
                 }
 
                 i += matchResult.TokensMatched-1;
@@ -69,15 +70,16 @@ namespace BudgetCli.Parser.Models.Tokens
 
             //Add one for the option name
             int numTokens = 1 + argIdx;
+            string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, numTokens);
             if(numTokens == FullMatchLength)
             {
                 //Full match
-                return new TokenMatchResult(this, TokenUtils.GetMatchText(inputTokens, startIdx, numTokens), MatchOutcome.Full, charsMatched, numTokens);
+                return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, charsMatched, numTokens);
             }
             else
             {
                 //Partial match
-                return new TokenMatchResult(this, TokenUtils.GetMatchText(inputTokens, startIdx, numTokens),MatchOutcome.Partial, charsMatched, numTokens);
+                return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Partial, charsMatched, numTokens);
             }
         }
 

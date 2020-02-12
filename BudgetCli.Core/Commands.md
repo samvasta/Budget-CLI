@@ -4,8 +4,6 @@
 
 * `h` or `help`
 * `v` or `version`
-* `u` or `undo`
-* `r` or `redo`
 
 ## Parameter Types & Expressions
 

@@ -3,12 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using BudgetCli.Parser.Enums;
 using BudgetCli.Parser.Interfaces;
+using BudgetCli.Util.Utilities;
 
 namespace BudgetCli.Parser.Models.Tokens
 {
     public struct TokenMatchResult : IComparable<TokenMatchResult>, IEquatable<TokenMatchResult>
     {
-        public static readonly TokenMatchResult None = new TokenMatchResult(null, String.Empty, MatchOutcome.None, 0, 0);
+        public static readonly TokenMatchResult None = new TokenMatchResult(null, String.Empty, String.Empty, MatchOutcome.None, 0, 0);
 
         public ICommandToken Token { get; }
         public MatchOutcome MatchOutcome { get; }
@@ -28,7 +29,12 @@ namespace BudgetCli.Parser.Models.Tokens
         /// </summary>
         public string MatchedTokensText { get; }
 
-        public TokenMatchResult(ICommandToken token, string matchedTokensText, MatchOutcome matchOutcome, int charsMatched, int tokensMatched)
+        /// <summary>
+        /// Text expected to classify as a "full" match
+        /// </summary>
+        public string FullMatchText { get; }
+
+        public TokenMatchResult(ICommandToken token, string matchedTokensText, string fullMatchText, MatchOutcome matchOutcome, int charsMatched, int tokensMatched)
         {
             if(matchedTokensText == null)
             {
@@ -41,6 +47,7 @@ namespace BudgetCli.Parser.Models.Tokens
             
             Token = token;
             MatchedTokensText = matchedTokensText;
+            FullMatchText = fullMatchText;
             MatchOutcome = matchOutcome;
             CharsMatched = charsMatched;
             TokensMatched = tokensMatched;
@@ -74,9 +81,57 @@ namespace BudgetCli.Parser.Models.Tokens
             return this.CharsMatched.CompareTo(other.CharsMatched);
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Token, MatchedTokensText, MatchOutcome, CharsMatched, TokensMatched);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj == null)
+            {
+                return false;
+            }
+            if(obj is TokenMatchResult other)
+            {
+                return Equals(other);
+            }
+            return false;
+        }
+
         public bool Equals(TokenMatchResult other)
         {
             return this.CompareTo(other) == 0;
+        }
+
+        public static bool operator >(TokenMatchResult left, TokenMatchResult right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
+        public static bool operator <(TokenMatchResult left, TokenMatchResult right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator >=(TokenMatchResult left, TokenMatchResult right)
+        {
+            return left.CompareTo(right) >= 0;
+        }
+
+        public static bool operator <=(TokenMatchResult left, TokenMatchResult right)
+        {
+            return left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator ==(TokenMatchResult left, TokenMatchResult right)
+        {
+            return left.CompareTo(right) == 0;
+        }
+
+        public static bool operator !=(TokenMatchResult left, TokenMatchResult right)
+        {
+            return left.CompareTo(right) != 0;
         }
     }
 }

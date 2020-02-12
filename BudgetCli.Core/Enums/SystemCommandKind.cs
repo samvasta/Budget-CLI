@@ -5,12 +5,6 @@ namespace BudgetCli.Core.Enums
         Help,
         Version,
         Exit,
-        ClearConsole,
-
-        AccountNew,
-        AccountList,
-        AccountDetail,
-        AccountSet,
-        AccountRemove
+        ClearConsole
     }
 }

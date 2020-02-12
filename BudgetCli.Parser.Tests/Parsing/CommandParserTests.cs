@@ -50,13 +50,13 @@ namespace BudgetCli.Parser.Tests.Parsing
         }
 
         [Theory]
-        // [InlineData("verb1", null)]                     //No match
-        // [InlineData("1234", 0)]                         //Partial
-        // [InlineData("1234 verb1", 1)]                   //Partial
-        // [InlineData("1234 verb1 verb2", 2)]             //Partial
-        // [InlineData("1234 verb1 verb2 verb3", 3)]       //Full match
+        [InlineData("verb1", null)]                     //No match
+        [InlineData("1234", 0)]                         //Partial
+        [InlineData("1234 verb1", 1)]                   //Partial
+        [InlineData("1234 verb1 verb2", 2)]             //Partial
+        [InlineData("1234 verb1 verb2 verb3", 3)]       //Full match
         [InlineData("1234 verb1 ver", 1)]               //Partial token
-        // [InlineData("1234 verb1 verb2 verb3 verb4", 3)] //Too many tokens
+        [InlineData("1234 verb1 verb2 verb3 verb4", 3)] //Too many tokens
         public void TestMatch(string input, int? expectedMatchIdx)
         {
             var tokens = new ICommandToken[] 

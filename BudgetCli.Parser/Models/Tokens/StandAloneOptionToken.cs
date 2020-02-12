@@ -35,13 +35,14 @@ namespace BudgetCli.Parser.Models.Tokens
             
             if(match.Length == matchLength)
             {
-                return new TokenMatchResult(this, inputTokens[startIdx], MatchOutcome.Full, matchLength, 1);
+                return new TokenMatchResult(this, inputTokens[startIdx], match, MatchOutcome.Full, matchLength, 1);
             }
             else if(matchLength > 0)
             {
-                return new TokenMatchResult(this, inputTokens[startIdx], MatchOutcome.Partial, matchLength, 0);
+                return new TokenMatchResult(this, inputTokens[startIdx], match, MatchOutcome.Partial, matchLength, 0);
             }
-            return new TokenMatchResult(this, String.Empty, MatchOutcome.None, 0, 0);
+            
+            return TokenMatchResult.None;
         }
     }
 }
