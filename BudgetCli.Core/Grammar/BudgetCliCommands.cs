@@ -36,7 +36,7 @@ namespace BudgetCli.Core.Grammar
 
         #region - Options -
         
-        public static readonly StandAloneOptionToken OPT_HELP = new StandAloneOptionToken(new Name("--help", "-h"));
+        public static readonly VerbToken OPT_HELP_REQUIRED = new VerbToken(new Name("--help", "-h"));
 
         public static readonly OptionWithArgumentToken OPT_ACCOUNT_NAME = new OptionWithArgumentToken.Builder()
                 .Name("--name", "-n")
@@ -95,7 +95,7 @@ namespace BudgetCli.Core.Grammar
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
                     .IsHelp()
-                    .Description("Help").WithToken(OPT_HELP)
+                    .Description("Help").WithToken(OPT_HELP_REQUIRED)
                     .WithExample("new account --help").WithExample("n a -h")
                     .Build())
                 .WithUsage(new CommandUsage.Builder()
@@ -115,7 +115,7 @@ namespace BudgetCli.Core.Grammar
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
                     .IsHelp()
-                    .Description("Help").WithToken(OPT_HELP)
+                    .Description("Help").WithToken(OPT_HELP_REQUIRED)
                     .WithExample("ls accounts --help").WithExample("ls a -h")
                     .Build())
                 .WithUsage(new CommandUsage.Builder()
@@ -136,7 +136,7 @@ namespace BudgetCli.Core.Grammar
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
                     .IsHelp()
-                    .Description("Help").WithToken(OPT_HELP)
+                    .Description("Help").WithToken(OPT_HELP_REQUIRED)
                     .WithExample("detail accounts --help").WithExample("d a -h")
                     .Build())
                 .WithUsage(new CommandUsage.Builder()
@@ -152,7 +152,7 @@ namespace BudgetCli.Core.Grammar
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
                     .IsHelp()
-                    .Description("Help").WithToken(OPT_HELP)
+                    .Description("Help").WithToken(OPT_HELP_REQUIRED)
                     .WithExample("remove account --help").WithExample("rm a -h")
                     .Build())
                 .WithUsage(new CommandUsage.Builder()
@@ -168,7 +168,7 @@ namespace BudgetCli.Core.Grammar
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
                     .IsHelp()
-                    .Description("Help").WithToken(OPT_HELP)
+                    .Description("Help").WithToken(OPT_HELP_REQUIRED)
                     .WithExample("set account --help").WithExample("set a -h")
                     .Build())
                 .WithUsage(new CommandUsage.Builder()

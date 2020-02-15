@@ -39,7 +39,6 @@ namespace BudgetCli.Core.Models.Commands.Accounts
         {
             long accountId = Repositories.AccountRepository.GetIdByName(AccountName.GetValue(String.Empty));
 
-            Console.WriteLine("Found account with id " + accountId);
             List<Account> deletedAccounts = new List<Account>();
             bool isSuccessful = DeleteAccount(accountId, IsRecursiveOption.GetValue(false), log, deletedAccounts);
 

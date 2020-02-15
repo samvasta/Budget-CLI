@@ -29,6 +29,11 @@ namespace BudgetCli.Parser.Models.Tokens
 
         public abstract TokenMatchResult Matches(string[] inputTokens, int startIdx);
         public virtual object Parse(string text) { return null; }
+
+        public override string ToString()
+        {
+            return ArgumentName;
+        }
     }
 
     public class ArgumentToken<T> : ArgumentToken, ICommandArgumentToken<T>
@@ -62,7 +67,12 @@ namespace BudgetCli.Parser.Models.Tokens
             return TokenMatchResult.None;
         }
 
-        public new T Parse(string text)
+        public override object Parse(string text)
+        {
+            return ParseAs(text);
+        }
+
+        public T ParseAs(string text)
         {
             T value;
             Parser(text, out value);

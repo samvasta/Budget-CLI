@@ -19,7 +19,7 @@ namespace BudgetCli.Core.Tests.Grammar
 
         private bool HasHelpOption(ICommandRoot commandRoot)
         {
-            return commandRoot.Usages.Any(x => x.Tokens.Contains(BudgetCliCommands.OPT_HELP));
+            return commandRoot.Usages.Any(x => x.Tokens.Contains(BudgetCliCommands.OPT_HELP_REQUIRED));
         }
 
         [Fact]

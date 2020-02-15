@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using BudgetCli.Parser.Interfaces;
+using BudgetCli.Parser.Models;
 using BudgetCli.Parser.Models.Tokens;
 using BudgetCli.Parser.Parsing;
+using BudgetCli.Parser.Util;
 using BudgetCli.Util.Models;
 using Moq;
 using Xunit;
@@ -115,6 +117,104 @@ namespace BudgetCli.Parser.Tests.Parsing
             Assert.Equal(commandRoot1.Object, orderedCommands.First());
             Assert.Equal(commandRoot2.Object, orderedCommands.Skip(1).First());
             Assert.Equal(commandRoot3.Object, orderedCommands.Skip(2).First());
+        }
+
+        [Fact]
+        public void TestParse()
+        {
+            VerbToken token1 = new VerbToken(new Name("verb1", "a"));
+
+            ArgumentToken token2 = new ArgumentToken<int>.Builder().Name("arg").Parser(int.TryParse).IsOptional(false).Build();
+            
+            CommandRoot command1 = new CommandRoot.Builder()
+                .Id(0)
+                .Description("command")
+                .WithToken(token1)
+                .WithUsage(new CommandUsage.Builder()
+                    .Description("usage1")
+                    .WithToken(token2)
+                    .Build())
+                .Build();
+
+            CommandLibrary library = new CommandLibrary();
+            library.AddCommand(command1);
+
+            CommandUsageMatchData matchData = library.Parse("verb1 123");
+            
+            Assert.True(matchData.IsSuccessful);
+            Assert.True(matchData.HasToken(token1));
+            Assert.True(matchData.HasToken(token2));
+
+            bool hasArgVal = matchData.TryGetArgValue(token2, out int argVal);
+            Assert.True(hasArgVal);
+            Assert.Equal(123, argVal);
+        }
+
+        [Fact]
+        public void TestParseWithOptionalArg()
+        {
+            VerbToken token1 = new VerbToken(new Name("verb1", "a"));
+
+            ArgumentToken token2 = new ArgumentToken<int>.Builder().Name("arg").Parser(int.TryParse).IsOptional(false).Build();
+            ArgumentToken token3 = new ArgumentToken<int>.Builder().Name("arg2").Parser(int.TryParse).IsOptional(true).Build();
+            
+            CommandRoot command1 = new CommandRoot.Builder()
+                .Id(0)
+                .Description("command")
+                .WithToken(token1)
+                .WithUsage(new CommandUsage.Builder()
+                    .Description("usage1")
+                    .WithToken(token2)
+                    .WithToken(token3)
+                    .Build())
+                .Build();
+
+            CommandLibrary library = new CommandLibrary();
+            library.AddCommand(command1);
+
+            CommandUsageMatchData matchData = library.Parse("verb1 123");
+            
+            Assert.True(matchData.IsSuccessful);
+            Assert.True(matchData.HasToken(token1));
+            Assert.True(matchData.HasToken(token2));
+
+            bool hasArg1Val = matchData.TryGetArgValue(token2, out int arg1Val);
+            Assert.True(hasArg1Val);
+            Assert.Equal(123, arg1Val);
+
+            bool hasArg2Val = matchData.TryGetArgValue(token3, out int arg2Val);
+            Assert.False(hasArg2Val);
+        }
+
+        [Fact]
+        public void TestParseWithStringArg()
+        {
+            VerbToken token1 = new VerbToken(new Name("verb1", "a"));
+
+            ArgumentToken token2 = TokenUtils.BuildArgString("arg1");
+            
+            CommandRoot command1 = new CommandRoot.Builder()
+                .Id(0)
+                .Description("command")
+                .WithToken(token1)
+                .WithUsage(new CommandUsage.Builder()
+                    .Description("usage1")
+                    .WithToken(token2)
+                    .Build())
+                .Build();
+
+            CommandLibrary library = new CommandLibrary();
+            library.AddCommand(command1);
+
+            CommandUsageMatchData matchData = library.Parse("verb1 \"the entire string\"");
+            
+            Assert.True(matchData.IsSuccessful);
+            Assert.True(matchData.HasToken(token1));
+            Assert.True(matchData.HasToken(token2));
+
+            bool hasArg1Val = matchData.TryGetArgValue(token2, out string arg1Val);
+            Assert.True(hasArg1Val);
+            Assert.Equal("the entire string", arg1Val);
         }
     }
 }

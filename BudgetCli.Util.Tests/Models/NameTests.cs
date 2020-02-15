@@ -262,5 +262,16 @@ namespace BudgetCli.Util.Tests.Models
             Assert.Equal(expLongestMatch, longestMatch);
             Assert.Equal(expLength, length);
         }
+
+        [Fact]
+        public void TestNameLongestMatch_PerfectMatch()
+        {
+            Name name = new Name("this_name_is_a", "this_name_is_a1", "this_name_is_a2", "this_is_the_third_name");
+
+            int length;
+            string longestMatch = name.GetLongestMatch("this_name_is_a", out length);
+            Assert.Equal("this_name_is_a", longestMatch);
+            Assert.Equal(14, length);
+        }
     }
 }

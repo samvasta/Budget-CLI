@@ -1,3 +1,4 @@
+using System.Reflection.PortableExecutable;
 using System.Text.RegularExpressions;
 using System;
 using System.Linq;
@@ -145,6 +146,14 @@ namespace BudgetCli.Util.Models
             }
 
             matchLength = charIdx;
+
+            //If we perfectly match one, return that.
+            var perfectMatch = enumerators.FirstOrDefault(x => !x.Value.MoveNext() && x.Key.Length == charIdx).Key;
+            if(perfectMatch != default(string))
+            {
+                return perfectMatch;
+            }
+
             return enumerators.Keys.OrderByDescending(x => x.Length).First();
         }
 
