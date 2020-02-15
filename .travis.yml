@@ -6,6 +6,7 @@ dotnet: 3.0.101
 before_install:
  - sudo apt-get install jq
  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
+ - dotnet tool install --global dotnet-reportgenerator-globaltool
 
 
 install:
@@ -16,4 +17,5 @@ script:
  - dotnet test
 
 after_success:
- - java -jar codacy-coverage-reporter-assembly.jar report -l CSharp
+ - reportgenerator  "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" "-reporttypes:lcov" "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*;-*Generated*;-*.nuget*
+ - java -jar codacy-coverage-reporter-assembly.jar report -l csharp -r coveragereport/lcov.info --force-language
