@@ -7,7 +7,7 @@ before_install:
  - sudo apt-get install jq
  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
  - dotnet tool install --global dotnet-reportgenerator-globaltool
-
+ - mkdir coveragereport
 
 install:
  - dotnet restore
@@ -17,5 +17,5 @@ script:
  - dotnet test
 
 after_success:
- - reportgenerator  "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" "-reporttypes:lcov" "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*;-*Generated*;-*.nuget*
- - java -jar codacy-coverage-reporter-assembly.jar report -l csharp -r coveragereport/lcov.info --force-language
+ - reportgenerator  "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" "-reporttypes:SonarQube" "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*;-*Generated*;-*.nuget*
+ - java -jar codacy-coverage-reporter-assembly.jar report -l csharp -r coveragereport/SonarQube.xml --force-language --commit-uuid $TRAVIS_COMMIT
