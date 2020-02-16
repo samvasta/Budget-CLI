@@ -51,6 +51,7 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.False(state.IsClosed);
             }
         }
+        
         [Fact]
         public void TestAddAccountActionExecute_DuplicateName()
         {

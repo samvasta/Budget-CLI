@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BudgetCli.Core.Models.Interfaces;
 using BudgetCli.Core.Models.ModelInfo;
@@ -9,7 +10,7 @@ using BudgetCli.Util.Models;
 
 namespace BudgetCli.Core.Models
 {
-    public class Transaction : IDataModel<TransactionDto>
+    public class Transaction : IDataModel<TransactionDto>, IEquatable<Transaction>
     {
         public static readonly ModelProperty PROP_ID = new ModelProperty("Id", "A unique ID used to reference a transaction.");
         public static readonly ModelProperty PROP_TIMESTAMP = new ModelProperty("Date", "The date this transaction was (or will be) executed");
@@ -25,7 +26,7 @@ namespace BudgetCli.Core.Models
 
         #region - DTO Properties -
         
-        public virtual long? Id { get; set; }
+        public virtual long? Id { get; }
         public virtual DateTime Timestamp { get; }
         public virtual long? SourceAccountId { get; }
         public virtual long? DestinationAccountId { get; }
@@ -69,8 +70,9 @@ namespace BudgetCli.Core.Models
             this.Timestamp = timestamp;
             this.SourceAccountId = sourceAccountId;
             this.DestinationAccountId = destAccountId;
-            this.TransferAmount = transferAmount;
+            this.TransferAmount = new Money(transferAmount, true);
             this.Memo = memo;
+            Repositories = repositories;
         }
 
         /// <summary>
@@ -84,6 +86,7 @@ namespace BudgetCli.Core.Models
             this.DestinationAccountId = destAccountId;
             this.TransferAmount = transferAmount;
             this.Memo = memo;
+            Repositories = repositories;
         }
 
         public TransactionDto ToDto()
@@ -119,6 +122,61 @@ namespace BudgetCli.Core.Models
             yield return new ModelPropertyValue<Account>(PROP_DEST, DestinationAccount);
             yield return new ModelPropertyValue<Money>(PROP_AMOUNT, TransferAmount);
             yield return new ModelPropertyValue<string>(PROP_MEMO, Memo);
+        }
+
+        public bool Equals([AllowNull] Transaction other)
+        {
+            if(object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+            return Id.Equals(other.Id);
+        }
+
+        public static bool operator ==(Transaction left, Transaction right)
+        {
+            if(object.ReferenceEquals(left, null))
+            {
+                //equal if both null
+                return object.ReferenceEquals(right, null);
+            }
+            if(object.ReferenceEquals(right, null))
+            {
+                return false;
+            }
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Transaction left, Transaction right)
+        {
+            if(object.ReferenceEquals(left, null))
+            {
+                //not equal if not both null
+                return !object.ReferenceEquals(right, null);
+            }
+            if(object.ReferenceEquals(right, null))
+            {
+                return true;
+            }
+            return !left.Equals(right);
+        }
+
+        public override bool Equals([AllowNull] object obj)
+        {
+            if(obj == null)
+            {
+                return false;
+            }
+            if(obj is Transaction other)
+            {
+                return this.Equals(other);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
         }
     }
 }

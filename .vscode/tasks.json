@@ -53,6 +53,7 @@
         },
         {
             "label": "generate-coverage-report",
+            "dependsOn": ["test-cover"],
             "command": "reportgenerator",
             "type": "shell",
             "args": [

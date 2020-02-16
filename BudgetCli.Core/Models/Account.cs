@@ -8,10 +8,11 @@ using BudgetCli.Data.Models;
 using BudgetCli.Util.Models;
 using BudgetCli.Core.Models.Interfaces;
 using BudgetCli.Core.Models.ModelInfo;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BudgetCli.Core.Models
 {
-    public class Account : IDataModel<AccountDto>
+    public class Account : IDataModel<AccountDto>, IEquatable<Account>
     {
         public static readonly ModelProperty PROP_ID = new ModelProperty("Id", "A unique ID used to reference the account", true, true);
         public static readonly ModelProperty PROP_NAME = new ModelProperty("Name", "A unique name used to reference the account", true, true);
@@ -31,7 +32,7 @@ namespace BudgetCli.Core.Models
         
         #region - DTO Properties -
         
-        public virtual long? Id { get; set; }
+        public virtual long? Id { get; }
 
         public virtual string Name { get; set; }
 
@@ -134,6 +135,61 @@ namespace BudgetCli.Core.Models
             yield return new ModelPropertyValue<AccountState>(PROP_CURRENT_STATE, CurrentState);
             yield return new ModelPropertyValue<Account>(PROP_CATEGORY, Category);
             yield return new ModelPropertyValue<long>(PROP_PRIORITY, Priority);
+        }
+
+        public bool Equals([AllowNull] Account other)
+        {
+            if(object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+            return Id.Equals(other.Id);
+        }
+
+        public static bool operator ==(Account left, Account right)
+        {
+            if(object.ReferenceEquals(left, null))
+            {
+                //equal if both null
+                return object.ReferenceEquals(right, null);
+            }
+            if(object.ReferenceEquals(right, null))
+            {
+                return false;
+            }
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Account left, Account right)
+        {
+            if(object.ReferenceEquals(left, null))
+            {
+                //not equal if not both null
+                return !object.ReferenceEquals(right, null);
+            }
+            if(object.ReferenceEquals(right, null))
+            {
+                return true;
+            }
+            return !left.Equals(right);
+        }
+
+        public override bool Equals([AllowNull] object obj)
+        {
+            if(obj == null)
+            {
+                return false;
+            }
+            if(obj is Account other)
+            {
+                return this.Equals(other);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
         }
     }
 }

@@ -19,11 +19,11 @@ namespace BudgetCli.Core.Models.Commands.Accounts
         {
             get
             {
-                return "";
+                return "Listed accounts";
             }
         }
 
-        public override CommandActionKind CommandActionKind { get { return CommandActionKind.NonPersisted; } }
+        public override CommandActionKind CommandActionKind { get { return CommandActionKind.ListAccount; } }
 
         //Options
         public IntegerCommandOption IdOption { get; set; }
@@ -57,13 +57,17 @@ namespace BudgetCli.Core.Models.Commands.Accounts
             return true;
         }
 
-        private IEnumerable<Account> GetAccounts()
+        private List<Account> GetAccounts()
         {
             var dtos = Repositories.AccountRepository.GetAccounts((long?)IdOption.GetValue(null), NameOption.GetValue(null), (long?)CategoryIdOption.GetValue(null), DescriptionOption.GetValue(null), PriorityOption.GetValue(null), (AccountKind?)AccountTypeOption.GetValue(null), FundsOption.GetValue(null), false);
+            
+            List<Account> accounts = new List<Account>();
+            
             foreach(var dto in dtos)
             {
-                yield return DtoToModelTranslator.FromDto(dto, Repositories);
+                accounts.Add(DtoToModelTranslator.FromDto(dto, Repositories));
             }
+            return accounts;
         }
 
         public FilterCriteria GetFilterCriteria()

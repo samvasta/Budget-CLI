@@ -23,7 +23,7 @@ namespace BudgetCli.Core.Models.ModelInfo
                 return this.DisplayName.Equals(modelProp.DisplayName) &&
                        this.Description.Equals(modelProp.Description) &&
                        this.IsVisibleInDetails.Equals(modelProp.IsVisibleInDetails) &&
-                       this.IsVisibleInList.Equals(modelProp.IsVisibleInDetails);
+                       this.IsVisibleInList.Equals(modelProp.IsVisibleInList);
             }
             return false;
         }

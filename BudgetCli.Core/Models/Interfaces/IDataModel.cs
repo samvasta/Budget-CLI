@@ -5,7 +5,7 @@ namespace BudgetCli.Core.Models.Interfaces
 {
     public interface IDataModel<TDto> : IListable where TDto : IDbModel
     {
-         long? Id { get; set; }
+         long? Id { get; }
 
          TDto ToDto();
     }
