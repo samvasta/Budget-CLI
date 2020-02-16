@@ -20,5 +20,5 @@ script:
  - dotnet test "./" "/p:CollectCoverage=true" "/p:CoverletOutputFormat=lcov" "/p:CoverletOutput=./lcov.info"
 
 after_success:
- - reportgenerator  "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" "-reporttypes:SonarQube" "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*;-*Generated*;-*.nuget*"
- - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l csharp -r coveragereport/SonarQube.xml --force-language --commit-uuid $TRAVIS_COMMIT
+ - reportgenerator  "-reports:BudgetCli.*.Tests/lcov.info" "-targetdir:coveragereport" "-reporttypes:lcov" "-filefilters:-*\Budget-CLI\BudgetCli.*.Tests\*;-*Generated*;-*.nuget*"
+ - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l csharp -r coveragereport/lcov.info --force-language --commit-uuid $TRAVIS_COMMIT
