@@ -286,5 +286,38 @@ namespace BudgetCli.Parser.Tests.Parsing
             ParserTokenMatch match = matchCollection.Matches.First();
             Assert.False(match.IsFullMatch, input);
         }
+
+        [Fact]
+        public void TestMatchArgValuesWithOptionalTokens()
+        {
+            ArgumentToken arg1 = new ArgumentToken<int>.Builder().Name("arg1").IsOptional(false).Parser(int.TryParse).Build();
+            ArgumentToken arg2 = new ArgumentToken<double>.Builder().Name("arg2").IsOptional(false).Parser(double.TryParse).Build();
+            var tokens = new ICommandToken[] 
+            {
+                new VerbToken(new Name("verb0")),
+                new OptionWithArgumentToken.Builder().Name("-o2", "--option2").WithArgument(arg1).WithArgument(arg2).Build(),
+            };
+            var builder = new CommandUsage.Builder()
+                                    .Description("test usage");
+            foreach(var token in tokens)
+            {
+                builder.WithToken(token);
+            }
+
+            ICommandUsage usage = builder.Build();
+
+            TokenMatchCollection matchCollection = CommandParser.Match(usage.Tokens, "verb0 -o2 1 2.34");
+
+            int arg1Value;
+            bool arg1Exists = matchCollection.TryGetArgValue(arg1, out arg1Value);
+
+            double arg2Value;
+            bool arg2Exists = matchCollection.TryGetArgValue(arg2, out arg2Value);
+
+            Assert.True(arg1Exists);
+            Assert.True(arg2Exists);
+            Assert.Equal(1, arg1Value);
+            Assert.Equal(2.34, arg2Value);
+        }
     }
 }

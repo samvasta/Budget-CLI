@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using BudgetCli.Parser.Enums;
 using BudgetCli.Parser.Interfaces;
 using BudgetCli.Parser.Util;
@@ -58,10 +60,12 @@ namespace BudgetCli.Parser.Models.Tokens
                 return TokenMatchResult.None;
             }
 
-            if(Parser(inputTokens[startIdx], out _))
+            if(Parser(inputTokens[startIdx], out T value))
             {
                 string text = TokenUtils.GetMatchText(inputTokens, startIdx, 1);
-                return new TokenMatchResult(this, text, text, MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                var result = new TokenMatchResult(this, text, text, MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                result.SetArgValue(this, value);
+                return result;
             }
 
             return TokenMatchResult.None;

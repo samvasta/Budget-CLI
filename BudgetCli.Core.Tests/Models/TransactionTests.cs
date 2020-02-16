@@ -55,7 +55,24 @@ namespace BudgetCli.Core.Tests.Models
             Assert.NotEqual(transaction1.GetHashCode(), transaction3.GetHashCode());
         }
 
+        [Fact]
+        public void NewTransaction_NoRepositoryBag()
+        {
+            DateTime timestamp = DateTime.Now;
+            long? sourceAccountId = 1;
+            long? destAccountId = 3;
+            Money transferAmount = 123.45;
+            string memo = "memo";
 
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Transaction transaction = new Transaction(timestamp, sourceAccountId, destAccountId, transferAmount.InternalValue, memo, null);
+            });
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Transaction transaction = new Transaction(3, timestamp, sourceAccountId, destAccountId, transferAmount, memo, null);
+            });
+        }
 
         [Fact]
         public void NewTransaction()

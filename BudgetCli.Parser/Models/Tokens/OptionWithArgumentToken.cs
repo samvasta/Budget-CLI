@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using System.Linq;
 using System;
 using System.Collections.Generic;
@@ -52,16 +53,22 @@ namespace BudgetCli.Parser.Models.Tokens
 
             int charsMatched = inputTokens[startIdx].Length;
 
+            List<TokenMatchResult> argMatchResults = new List<TokenMatchResult>();
+
             int argIdx = 0;
             //start at startIdx+1 because we already checked the option name at startIdx.
             //So start looking for arguments at startIdx+1
             for(int i = startIdx+1; i < inputTokens.Length && argIdx < Arguments.Length; i++)
             {
                 TokenMatchResult matchResult = Arguments[argIdx].Matches(inputTokens, i);
+                argMatchResults.Add(matchResult);
                 if(matchResult.MatchOutcome != MatchOutcome.Full)
                 {
                     string partialMatchText = TokenUtils.GetMatchText(inputTokens, startIdx, i);
-                    return new TokenMatchResult(this, partialMatchText, partialMatchText, MatchOutcome.Partial, charsMatched + matchResult.CharsMatched, 1 + argIdx);
+                    var partialResult = new TokenMatchResult(this, partialMatchText, partialMatchText, MatchOutcome.Partial, charsMatched + matchResult.CharsMatched, 1 + argIdx);
+                    PopulateArgValues(partialResult, argMatchResults);
+                    return partialResult;
+                    
                 }
 
                 i += matchResult.TokensMatched-1;
@@ -71,15 +78,26 @@ namespace BudgetCli.Parser.Models.Tokens
             //Add one for the option name
             int numTokens = 1 + argIdx;
             string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, numTokens);
+            TokenMatchResult result;
             if(numTokens == FullMatchLength)
             {
                 //Full match
-                return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, charsMatched, numTokens);
+                result = new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, charsMatched, numTokens);
             }
             else
             {
                 //Partial match
-                return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Partial, charsMatched, numTokens);
+                result = new TokenMatchResult(this, matchText, matchText, MatchOutcome.Partial, charsMatched, numTokens);
+            }
+            PopulateArgValues(result, argMatchResults);
+            return result;
+        }
+
+        private void PopulateArgValues(TokenMatchResult target, IEnumerable<TokenMatchResult> sources)
+        {
+            foreach(var source in sources)
+            {
+                target.ArgumentValues.AddAll(source.ArgumentValues);
             }
         }
 

@@ -66,6 +66,10 @@ namespace BudgetCli.Core.Models
         /// </summary>
         public Transaction(DateTime timestamp, long? sourceAccountId, long? destAccountId, long transferAmount, string memo, RepositoryBag repositories)
         {
+            if(repositories == null)
+            {
+                throw new ArgumentNullException(nameof(repositories));
+            }
             this.Id = null;
             this.Timestamp = timestamp;
             this.SourceAccountId = sourceAccountId;
@@ -80,6 +84,10 @@ namespace BudgetCli.Core.Models
         /// </summary>
         public Transaction(long id, DateTime timestamp, long? sourceAccountId, long? destAccountId, Money transferAmount, string memo, RepositoryBag repositories)
         {
+            if(repositories == null)
+            {
+                throw new ArgumentNullException(nameof(repositories));
+            }
             this.Id = id;
             this.Timestamp = timestamp;
             this.SourceAccountId = sourceAccountId;

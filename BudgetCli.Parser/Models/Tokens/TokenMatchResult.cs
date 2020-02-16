@@ -7,7 +7,7 @@ using BudgetCli.Util.Utilities;
 
 namespace BudgetCli.Parser.Models.Tokens
 {
-    public struct TokenMatchResult : IComparable<TokenMatchResult>, IEquatable<TokenMatchResult>
+    public struct TokenMatchResult : IComparable<TokenMatchResult>, IEquatable<TokenMatchResult>, IArgValueBag
     {
         public static readonly TokenMatchResult None = new TokenMatchResult(null, String.Empty, String.Empty, MatchOutcome.None, 0, 0);
 
@@ -34,6 +34,8 @@ namespace BudgetCli.Parser.Models.Tokens
         /// </summary>
         public string FullMatchText { get; }
 
+        public ValueBag<ArgumentToken> ArgumentValues { get; }
+
         public TokenMatchResult(ICommandToken token, string matchedTokensText, string fullMatchText, MatchOutcome matchOutcome, int charsMatched, int tokensMatched)
         {
             if(matchedTokensText == null)
@@ -44,6 +46,7 @@ namespace BudgetCli.Parser.Models.Tokens
             {
                 throw new ArgumentOutOfRangeException($"{nameof(charsMatched)} should be <= {nameof(matchedTokensText)}.Length");
             }
+            ArgumentValues = new ValueBag<ArgumentToken>();
             
             Token = token;
             MatchedTokensText = matchedTokensText;
@@ -81,6 +84,30 @@ namespace BudgetCli.Parser.Models.Tokens
             return this.CharsMatched.CompareTo(other.CharsMatched);
         }
 
+        #region - Implemetation of IArgValueBag -
+
+        public void SetArgValue(ArgumentToken argument, object value)
+        {
+            ArgumentValues.SetValue(argument, value);
+        }
+
+        public bool TryGetArgValue<T>(ArgumentToken argument, out T value)
+        {
+            return ArgumentValues.TryGetValue<T>(argument, out value);
+        }
+
+        public bool TryGetArgValue<T>(string argName, out T value)
+        {
+            return ArgumentValues.TryGetValue<T>(argName, out value);
+        }
+
+        #endregion - Implementation of IArgValueBag -
+
+        public static bool operator >(TokenMatchResult left, TokenMatchResult right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
         public override int GetHashCode()
         {
             return HashCode.Combine(Token, MatchedTokensText, MatchOutcome, CharsMatched, TokensMatched);
@@ -102,11 +129,6 @@ namespace BudgetCli.Parser.Models.Tokens
         public bool Equals(TokenMatchResult other)
         {
             return this.CompareTo(other) == 0;
-        }
-
-        public static bool operator >(TokenMatchResult left, TokenMatchResult right)
-        {
-            return left.CompareTo(right) > 0;
         }
 
         public static bool operator <(TokenMatchResult left, TokenMatchResult right)

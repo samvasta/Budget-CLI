@@ -79,6 +79,10 @@ namespace BudgetCli.Core.Models
         /// </summary>
         public Account(string name, Money initialFunds, RepositoryBag repositories)
         {
+            if(repositories == null)
+            {
+                throw new ArgumentNullException(nameof(repositories));
+            }
             this.Id = null;
             this.Name = name;
             this.CategoryId = null;
@@ -93,6 +97,10 @@ namespace BudgetCli.Core.Models
         /// </summary>
         public Account(long id, string name, long? categoryId, long priority, AccountKind accountKind, string description, RepositoryBag repositories)
         {
+            if(repositories == null)
+            {
+                throw new ArgumentNullException(nameof(repositories));
+            }
             this.Id = id;
             this.Name = name;
             this.CategoryId = categoryId;

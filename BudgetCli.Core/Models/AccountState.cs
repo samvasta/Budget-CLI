@@ -46,13 +46,18 @@ namespace BudgetCli.Core.Models
             }
         }
 
-        public AccountState(long id, long accountId, Money funds, DateTime timestamp, bool isClosed)
+        public AccountState(long id, long accountId, Money funds, DateTime timestamp, bool isClosed, RepositoryBag repositories)
         {
+            if(repositories == null)
+            {
+                throw new ArgumentNullException(nameof(repositories));
+            }
             Id = id;
             AccountId = accountId;
             Funds = funds;
             Timestamp = timestamp;
             IsClosed = isClosed;
+            Repositories = repositories;
         }
 
         public AccountStateDto ToDto()

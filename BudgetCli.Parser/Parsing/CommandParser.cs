@@ -93,12 +93,12 @@ namespace BudgetCli.Parser.Parsing
                     if(matchResult.MatchOutcome == MatchOutcome.Full)
                     {
                         //match!
-                        string matchText = string.Join(" ", inputTokens.Skip(inputTokenIdx).Take(tokenMatchLength));
+                        List<string> matchedTokensStrs = inputTokens.Skip(inputTokenIdx).Take(tokenMatchLength).ToList();
+                        string matchText = string.Join(" ", matchedTokensStrs);
                         matchCollection.With(new ParserTokenMatch(tokenIdx, matchResult));
-                        if(token is ArgumentToken argToken)
-                        {
-                            matchCollection.SetArgValue(argToken, argToken.Parse(matchResult.MatchedTokensText));
-                        }
+
+                        matchCollection.AddAllArgumentValues(matchResult);
+
                         matchableTokenIndexes.Remove(tokenIdx);
                         inputTokenIdx += tokenMatchLength;
 

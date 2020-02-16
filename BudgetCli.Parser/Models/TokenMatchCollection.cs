@@ -6,7 +6,7 @@ using BudgetCli.Parser.Models.Tokens;
 
 namespace BudgetCli.Parser.Models
 {
-    public class TokenMatchCollection
+    public class TokenMatchCollection : IArgValueBag
     {
         public string TextToMatch { get; }
         public ICommandToken[] MatchableTokens { get; }
@@ -94,6 +94,11 @@ namespace BudgetCli.Parser.Models
         public bool TryGetArgValue<T>(string argName, out T value)
         {
             return _argumentValues.TryGetValue<T>(argName, out value);
+        }
+
+        public void AddAllArgumentValues(TokenMatchResult result)
+        {
+            _argumentValues.AddAll(result.ArgumentValues);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace BudgetCli.Core.Models
             {
                 throw new ArgumentNullException(nameof(dto));
             }
-            return new AccountState(dto.Id.Value, dto.AccountId, new Money(dto.Funds, true), dto.Timestamp, dto.IsClosed);
+            return new AccountState(dto.Id.Value, dto.AccountId, new Money(dto.Funds, true), dto.Timestamp, dto.IsClosed, repositories);
         }
 
         public static Transaction FromDto(TransactionDto dto, RepositoryBag repositories)

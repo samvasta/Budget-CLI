@@ -16,60 +16,80 @@ namespace BudgetCli.Parser.Models.Tokens
         {
         }
 
-        public override TokenMatchResult Matches(string[] inputTokens, int startIdx)
+        private bool TryMatchExplicitDate(string[] inputTokens, int startIdx, out TokenMatchResult result)
         {
             DateTime output;
             //Explicit date
             if(DateTime.TryParse(inputTokens[startIdx], out output))
             {
-                return new TokenMatchResult(this, inputTokens[startIdx], inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                result = new TokenMatchResult(this, inputTokens[startIdx], inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                result.SetArgValue(this, output);
+                return true;
             }
-            
+
+            result = TokenMatchResult.None;
+            return false;
+        }
+
+        private bool TryMatchYesterday(string[] inputTokens, int startIdx, out TokenMatchResult result)
+        {
             //Yesterday
             if(inputTokens[startIdx].Equals("yesterday", StringComparison.CurrentCultureIgnoreCase))
             {
-                output = DateTime.Today.Subtract(new TimeSpan(1, 0, 0, 0));
-                return new TokenMatchResult(this, inputTokens[startIdx], inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                DateTime output = DateTime.Today.Subtract(new TimeSpan(1, 0, 0, 0));
+                result = new TokenMatchResult(this, inputTokens[startIdx], inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
+                result.SetArgValue(this, output);
+                return true;
             }
-            if(startIdx == inputTokens.Length-1)
+
+            result = TokenMatchResult.None;
+            return false;
+        }
+
+        private bool TryMatchLastDayOfWeek(string[] inputTokens, int startIdx, out TokenMatchResult result)
+        {
+            //last <day-of-week>
+            if(inputTokens.Length > startIdx+1)
             {
-                //End of tokens, cannot match anything else
-                output = DateTime.Today;
-                return TokenMatchResult.None;
+                DayOfWeek dayOfWeek;
+                if(DateParser.TryParseDayOfWeek(inputTokens[startIdx+1], out dayOfWeek))
+                {
+                    DateTime output = DateUtil.GetRelativeDateDayOfWeek(dayOfWeek);
+                    string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 2);
+                    result = new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 2);
+                    result.SetArgValue(this, output);
+                    return true;
+                }
             }
-            
-            if(inputTokens[startIdx].Equals("last", StringComparison.CurrentCultureIgnoreCase))
+
+            result = TokenMatchResult.None;
+            return false;
+        }
+
+        private bool TryMatchLastDayOfMonth(string[] inputTokens, int startIdx, out TokenMatchResult result)
+        {
+            //last <month> <day-of-month>
+            if(inputTokens.Length > startIdx+2)
             {
-                //last <day-of-week>
-                if(inputTokens.Length > startIdx+1)
+                int month;
+                int day;
+                if(DateParser.TryParseMonth(inputTokens[startIdx+1], out month) &&
+                    DateParser.TryParseDayOfMonth(inputTokens[startIdx+2], DateTime.Today.Year-1, month, out day))
                 {
-                    DayOfWeek dayOfWeek;
-                    if(DateParser.TryParseDayOfWeek(inputTokens[startIdx+1], out dayOfWeek))
-                    {
-                        output = DateUtil.GetRelativeDateDayOfWeek(dayOfWeek);
-                        string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 2);
-                        return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 2);
-                    }
+                    DateTime output = new DateTime(DateTime.Today.Year-1, month, day);
+                    string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 3);
+                    result = new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 3);
+                    result.SetArgValue(this, output);
+                    return true;
                 }
-
-                //last <month> <day-of-month>
-                if(inputTokens.Length > startIdx+2)
-                {
-                    int month;
-                    int day;
-                    if(DateParser.TryParseMonth(inputTokens[startIdx+1], out month) &&
-                       DateParser.TryParseDayOfMonth(inputTokens[startIdx+2], DateTime.Today.Year-1, month, out day))
-                    {
-                        output = new DateTime(DateTime.Today.Year-1, month, day);
-                        string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 3);
-                        return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 3);
-                    }
-                }
-
-                output = DateTime.Today;
-                return TokenMatchResult.None;
             }
 
+            result = TokenMatchResult.None;
+            return false;
+        }
+
+        private bool TryMatchRelativeDate(string[] inputTokens, int startIdx, out TokenMatchResult result)
+        {
             //<number> <time-unit> ago
             if(inputTokens.Length > startIdx+2 &&
                inputTokens[startIdx+2].Equals("ago", StringComparison.CurrentCultureIgnoreCase))
@@ -79,14 +99,53 @@ namespace BudgetCli.Parser.Models.Tokens
                 if(int.TryParse(inputTokens[startIdx], out number) &&
                    DateParser.TryParseTimeUnit(inputTokens[startIdx+1], out unit))
                 {
-                    output = DateUtil.GetRelativeDate(DateTime.Today, -number, unit);
-                        string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 3);
-                        return new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 3);
+                    DateTime output = DateUtil.GetRelativeDate(DateTime.Today, -number, unit);
+                    string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 3);
+                    result = new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 3);
+                    result.SetArgValue(this, output);
+                    return true;
                 }
             }
 
+            result = TokenMatchResult.None;
+            return false;
+        }
 
-            output = DateTime.Today;
+
+        public override TokenMatchResult Matches(string[] inputTokens, int startIdx)
+        {
+            TokenMatchResult result;
+            if(TryMatchExplicitDate(inputTokens, startIdx, out result))
+            {
+                return result;
+            }
+            else if(TryMatchYesterday(inputTokens, startIdx, out result))
+            {
+                return result;
+            }
+            else if(startIdx == inputTokens.Length-1)
+            {
+                //End of tokens, cannot match anything else
+                return TokenMatchResult.None;
+            }
+            else if(inputTokens[startIdx].Equals("last", StringComparison.CurrentCultureIgnoreCase))
+            {
+                if(TryMatchLastDayOfWeek(inputTokens, startIdx, out result))
+                {
+                    return result;
+                }
+                else if(TryMatchLastDayOfMonth(inputTokens, startIdx, out result))
+                {
+                    return result;
+                }
+
+                return TokenMatchResult.None;
+            }
+            else if(TryMatchRelativeDate(inputTokens, startIdx, out result))
+            {
+                return result;
+            }
+            
             return TokenMatchResult.None;
         }
     }

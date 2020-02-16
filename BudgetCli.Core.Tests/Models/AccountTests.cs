@@ -56,6 +56,19 @@ namespace BudgetCli.Core.Tests.Models
         }
 
         [Fact]
+        public void TestAccountAddNewConstructor_NoRepositoryBag()
+        {
+            Assert.Throws<ArgumentNullException>(() => 
+            {
+                Account account = new Account("Test Account", (Money)123.45, null);
+            });
+            Assert.Throws<ArgumentNullException>(() => 
+            {
+                Account account = new Account(2, "name", 3, 4, AccountKind.Sink, "", null);
+            });
+        }
+
+        [Fact]
         public void TestAccountAddNewConstructor()
         {
             RepositoryBag repositoryBag = new RepositoryBag();

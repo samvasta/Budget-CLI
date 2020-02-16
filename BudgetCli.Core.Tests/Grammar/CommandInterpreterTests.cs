@@ -19,55 +19,6 @@ namespace BudgetCli.Core.Tests.Grammar
 {
     public class CommandInterpreterTests
     {
-
-        class FakeCommandUsageMatchData : CommandUsageMatchData
-        {
-            public override bool IsSuccessful { get { return true; } }
-
-            private Dictionary<ArgumentToken, object> _argValues;
-            public FakeCommandUsageMatchData(ICommandRoot command, ICommandUsage usage, Dictionary<ArgumentToken, object> argValues)
-                : base(command, usage, null)
-            {
-                _argValues = argValues;
-            }
-
-            public override bool HasToken(ICommandToken token)
-            {
-                return true;
-            }
-
-            public override bool TryGetArgValue<T>(ArgumentToken argument, out T value)
-            {
-                if(_argValues.ContainsKey(argument))
-                {
-                    value = (T)_argValues[argument];
-                    return true;
-                }
-                value = default(T);
-                return false;
-            }
-
-            public override bool TryGetArgValue<T>(string argName, out T value)
-            {
-                foreach(var kvp in _argValues)
-                {
-                    if(kvp.Key.ArgumentName.Equals(argName))
-                    {
-                        value = (T)kvp.Value;
-                        return true;
-                    }
-                }
-
-                value = default(T);
-                return false;
-            }
-        }
-
-        private ICommandToken[] GetMatchableTokens(ICommandRoot commandRoot, ICommandUsage usage)
-        {
-            return commandRoot.CommonTokens.Concat(usage.Tokens).ToArray();
-        }
-
         [Fact]
         public void AddAccountCommand()
         {
@@ -77,11 +28,6 @@ namespace BudgetCli.Core.Tests.Grammar
 
                 ICommandRoot root = BudgetCliCommands.CMD_NEW_ACCOUNT;
                 ICommandUsage usage = root.Usages.First(x => !x.IsHelp);
-                ICommandToken[] matchableTokens = GetMatchableTokens(root, usage);
-
-                Dictionary<ArgumentToken, object> argValues = new Dictionary<ArgumentToken, object>();
-                argValues.Add(BudgetCliCommands.OPT_ACCOUNT_NAME.Arguments[0], "name");
-                FakeCommandUsageMatchData matchData = new FakeCommandUsageMatchData(root, usage, argValues);
 
                 CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
 
@@ -93,6 +39,78 @@ namespace BudgetCli.Core.Tests.Grammar
 
                 AddAccountCommand addAccount = (AddAccountCommand)action;
                 Assert.Equal("name", addAccount.AccountName.GetValue(null));
+            }
+        }
+
+        [Theory]
+        [InlineData("-p 4", 4)]
+        public void AddAccountCommand_WithOptions(string optionsStr, long? expectedPriority)
+        {
+            using(var testDbInfo = SetupUtil.CreateTestDb())
+            {
+                Mock<ILog> mockLog = new Mock<ILog>();
+
+                ICommandRoot root = BudgetCliCommands.CMD_NEW_ACCOUNT;
+                ICommandUsage usage = root.Usages.First(x => !x.IsHelp);
+
+                CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
+
+                ICommandAction action;
+                bool success = interpreter.TryParseCommand("new account name " + optionsStr, out action);
+
+                Assert.True(success);
+                Assert.IsType<AddAccountCommand>(action);
+
+                AddAccountCommand addAccount = (AddAccountCommand)action;
+                Assert.Equal("name", addAccount.AccountName.GetValue(null));
+
+                if(expectedPriority.HasValue)
+                {
+                    Assert.Equal(expectedPriority.Value, addAccount.PriorityOption.GetValue(null));
+                }
+            }
+        }
+
+        [Fact]
+        public void ListAccountCommand()
+        {
+            using(var testDbInfo = SetupUtil.CreateTestDb())
+            {
+                Mock<ILog> mockLog = new Mock<ILog>();
+
+                ICommandRoot root = BudgetCliCommands.CMD_LS_ACCOUNTS;
+                ICommandUsage usage = root.Usages.First(x => !x.IsHelp);
+
+                CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
+
+                ICommandAction action;
+                bool success = interpreter.TryParseCommand("ls accounts", out action);
+
+                Assert.True(success);
+                Assert.IsType<ListAccountCommand>(action);
+            }
+        }
+
+        [Fact]
+        public void DeleteAccountCommand()
+        {
+            using(var testDbInfo = SetupUtil.CreateTestDb())
+            {
+                Mock<ILog> mockLog = new Mock<ILog>();
+
+                ICommandRoot root = BudgetCliCommands.CMD_REMOVE_ACCOUNTS;
+                ICommandUsage usage = root.Usages.First(x => !x.IsHelp);
+
+                CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
+
+                ICommandAction action;
+                bool success = interpreter.TryParseCommand("rm account test", out action);
+
+                Assert.True(success);
+                Assert.IsType<DeleteAccountCommand>(action);
+
+                DeleteAccountCommand deleteAccount = (DeleteAccountCommand)action;
+                Assert.Equal("test", deleteAccount.AccountName.GetValue(null));
             }
         }
     }

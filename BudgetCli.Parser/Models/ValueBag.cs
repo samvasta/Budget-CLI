@@ -56,5 +56,13 @@ namespace BudgetCli.Parser.Models
             value = default(E);
             return false;
         }
+
+        public void AddAll<E>(ValueBag<E> other) where E : T
+        {
+            foreach(var kvp in other._values)
+            {
+                _values.Add(kvp.Key, kvp.Value);
+            }
+        }
     }
 }
