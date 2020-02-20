@@ -1,6 +1,6 @@
 # Budget-CLI
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f271024f55843e98ab704ad51160d6f)](https://app.codacy.com/manual/samuel.m.vasta/Budget-CLI?utm_source=github.com&utm_medium=referral&utm_content=samvasta/Budget-CLI&utm_campaign=Badge_Grade_Settings) [![Build Status](https://travis-ci.org/samvasta/Budget-CLI.svg?branch=master)](https://travis-ci.org/samvasta/Budget-CLI)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f271024f55843e98ab704ad51160d6f)](https://app.codacy.com/manual/samuel.m.vasta/Budget-CLI?utm_source=github.com&utm_medium=referral&utm_content=samvasta/Budget-CLI&utm_campaign=Badge_Grade_Settings) [![Build Status](https://travis-ci.org/samvasta/Budget-CLI.svg?branch=master)](https://travis-ci.org/samvasta/Budget-CLI) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/2ffcba9faf974c7b986789238324763f)](https://www.codacy.com/manual/samvasta/Budget-CLI?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=samvasta/Budget-CLI&amp;utm_campaign=Badge_Coverage)
 
 A budgeting tool with a command line interface. Initially started to learn .NET Core, TDD, and other random technologies.
 
