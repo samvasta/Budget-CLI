@@ -65,6 +65,11 @@ namespace BudgetCli.Core.Grammar
         public static readonly OptionWithArgumentToken OPT_DATE = new OptionWithArgumentToken.Builder()
             .Name("--date", "-d")
             .WithArgument(TokenUtils.BuildArgDate("date")).Build();
+
+        public static readonly OptionWithArgumentToken OPT_TAG = new OptionWithArgumentToken.Builder()
+            .Name("--tag", "-g")
+            .WithArgument(TokenUtils.BuildArgString("tag")).Build();
+
         public static readonly StandAloneOptionToken OPT_TREE = new StandAloneOptionToken(new Name("--tree", "-t"));
         public static readonly StandAloneOptionToken OPT_RECURSIVE = new StandAloneOptionToken(new Name("--recursive", "-r"));
 
@@ -127,6 +132,7 @@ namespace BudgetCli.Core.Grammar
                     // .WithToken(OPT_PRIORITY_RNG)
                     .WithToken(OPT_ACCOUNT_TYPE)
                     .WithToken(OPT_ACCOUNT_NAME)
+                    .WithToken(OPT_TREE)
                     .Build())
                 .Build();
                 

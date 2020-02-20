@@ -42,6 +42,10 @@ namespace BudgetCli.Parser.Models.Tokens
             {
                 throw new ArgumentNullException(nameof(matchedTokensText));
             }
+            if(fullMatchText == null)
+            {
+                throw new ArgumentNullException(nameof(fullMatchText));
+            }
             if(charsMatched < 0 || charsMatched > matchedTokensText.Length)
             {
                 throw new ArgumentOutOfRangeException($"{nameof(charsMatched)} should be <= {nameof(matchedTokensText)}.Length");

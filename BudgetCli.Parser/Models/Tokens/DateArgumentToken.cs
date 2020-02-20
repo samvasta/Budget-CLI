@@ -11,9 +11,17 @@ namespace BudgetCli.Parser.Models.Tokens
 {
     public class DateArgumentToken : ArgumentToken
     {
+        public DateTime CurrentDate { get; }
         public DateArgumentToken(string argumentName, bool isOptional)
+            : this(argumentName, isOptional, DateTime.Today)
+        {
+            //Intentionally blank
+        }
+
+        public DateArgumentToken(string argumentName, bool isOptional, DateTime currentDate)
             : base(argumentName, isOptional)
         {
+            CurrentDate = currentDate;
         }
 
         private bool TryMatchExplicitDate(string[] inputTokens, int startIdx, out TokenMatchResult result)
@@ -36,7 +44,7 @@ namespace BudgetCli.Parser.Models.Tokens
             //Yesterday
             if(inputTokens[startIdx].Equals("yesterday", StringComparison.CurrentCultureIgnoreCase))
             {
-                DateTime output = DateTime.Today.Subtract(new TimeSpan(1, 0, 0, 0));
+                DateTime output = CurrentDate.Subtract(new TimeSpan(1, 0, 0, 0));
                 result = new TokenMatchResult(this, inputTokens[startIdx], inputTokens[startIdx], MatchOutcome.Full, inputTokens[startIdx].Length, 1);
                 result.SetArgValue(this, output);
                 return true;
@@ -54,7 +62,7 @@ namespace BudgetCli.Parser.Models.Tokens
                 DayOfWeek dayOfWeek;
                 if(DateParser.TryParseDayOfWeek(inputTokens[startIdx+1], out dayOfWeek))
                 {
-                    DateTime output = DateUtil.GetRelativeDateDayOfWeek(dayOfWeek);
+                    DateTime output = DateUtil.GetRelativeDateDayOfWeek(CurrentDate, dayOfWeek);
                     string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 2);
                     result = new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 2);
                     result.SetArgValue(this, output);
@@ -74,9 +82,9 @@ namespace BudgetCli.Parser.Models.Tokens
                 int month;
                 int day;
                 if(DateParser.TryParseMonth(inputTokens[startIdx+1], out month) &&
-                    DateParser.TryParseDayOfMonth(inputTokens[startIdx+2], DateTime.Today.Year-1, month, out day))
+                    DateParser.TryParseDayOfMonth(inputTokens[startIdx+2], CurrentDate.Year-1, month, out day))
                 {
-                    DateTime output = new DateTime(DateTime.Today.Year-1, month, day);
+                    DateTime output = new DateTime(CurrentDate.Year-1, month, day);
                     string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 3);
                     result = new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 3);
                     result.SetArgValue(this, output);
@@ -99,7 +107,7 @@ namespace BudgetCli.Parser.Models.Tokens
                 if(int.TryParse(inputTokens[startIdx], out number) &&
                    DateParser.TryParseTimeUnit(inputTokens[startIdx+1], out unit))
                 {
-                    DateTime output = DateUtil.GetRelativeDate(DateTime.Today, -number, unit);
+                    DateTime output = DateUtil.GetRelativeDate(CurrentDate, -number, unit);
                     string matchText = TokenUtils.GetMatchText(inputTokens, startIdx, 3);
                     result = new TokenMatchResult(this, matchText, matchText, MatchOutcome.Full, matchText.Length, 3);
                     result.SetArgValue(this, output);
