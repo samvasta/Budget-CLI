@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -14,20 +15,35 @@ using BudgetCli.Data.Tests.TestHarness;
 using BudgetCli.Util.Logging;
 using BudgetCli.Core.Models.Commands;
 using BudgetCli.Core.Models.Commands.Accounts;
+using BudgetCli.Data.Enums;
 
 namespace BudgetCli.Core.Tests.Grammar
 {
     public class CommandInterpreterTests
     {
         [Fact]
-        public void AddAccountCommand()
+        public void UnrecognizedCommand()
         {
             using(var testDbInfo = SetupUtil.CreateTestDb())
             {
                 Mock<ILog> mockLog = new Mock<ILog>();
 
-                ICommandRoot root = BudgetCliCommands.CMD_NEW_ACCOUNT;
-                ICommandUsage usage = root.Usages.First(x => !x.IsHelp);
+                CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
+
+                ICommandAction action;
+                bool success = interpreter.TryParseCommand("NOT A REAL COMMAND", out action);
+
+                Assert.False(success);
+                Assert.Null(action);
+            }
+        }
+
+        [Fact]
+        public void AddAccountCommand()
+        {
+            using(var testDbInfo = SetupUtil.CreateTestDb())
+            {
+                Mock<ILog> mockLog = new Mock<ILog>();
 
                 CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
 
@@ -49,9 +65,6 @@ namespace BudgetCli.Core.Tests.Grammar
             using(var testDbInfo = SetupUtil.CreateTestDb())
             {
                 Mock<ILog> mockLog = new Mock<ILog>();
-
-                ICommandRoot root = BudgetCliCommands.CMD_NEW_ACCOUNT;
-                ICommandUsage usage = root.Usages.First(x => !x.IsHelp);
 
                 CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
 
@@ -78,9 +91,6 @@ namespace BudgetCli.Core.Tests.Grammar
             {
                 Mock<ILog> mockLog = new Mock<ILog>();
 
-                ICommandRoot root = BudgetCliCommands.CMD_LS_ACCOUNTS;
-                ICommandUsage usage = root.Usages.First(x => !x.IsHelp);
-
                 CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
 
                 ICommandAction action;
@@ -92,14 +102,53 @@ namespace BudgetCli.Core.Tests.Grammar
         }
 
         [Fact]
-        public void DeleteAccountCommand()
+        public void ListAccountCommand_Options_()
         {
             using(var testDbInfo = SetupUtil.CreateTestDb())
             {
                 Mock<ILog> mockLog = new Mock<ILog>();
 
-                ICommandRoot root = BudgetCliCommands.CMD_REMOVE_ACCOUNTS;
-                ICommandUsage usage = root.Usages.First(x => !x.IsHelp);
+                AccountRepository repo = new AccountRepository(testDbInfo.ConnectionString, mockLog.Object);
+
+                //Id will be 1
+                repo.Upsert(new Data.Models.AccountDto(){
+                    AccountKind = AccountKind.Source,
+                    CategoryId = 2,
+                    Description = "Description",
+                    Name = "Name",
+                    Priority = 5
+                });
+                //Id will be 2
+                repo.Upsert(new Data.Models.AccountDto(){
+                    AccountKind = AccountKind.Category,
+                    CategoryId = null,
+                    Description = "",
+                    Name = "Category",
+                    Priority = 5
+                });
+
+                CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object, repo), BudgetCliCommands.BuildCommandLibrary());
+
+                ICommandAction action;
+                bool success = interpreter.TryParseCommand("list accounts -n Name -c Category -d Description -y Source", out action);
+
+                Assert.True(success);
+                Assert.IsType<ListAccountCommand>(action);
+
+                ListAccountCommand command = (ListAccountCommand)action;
+                Assert.Equal("Name", command.NameOption.GetValue("N/A"));
+                Assert.Equal("Description", command.DescriptionOption.GetValue("N/A"));
+                Assert.Equal(2L, command.CategoryIdOption.GetValue("N/A"));
+                Assert.Equal(AccountKind.Source, command.AccountTypeOption.GetValue(AccountKind.Sink));
+            }
+        }
+
+        [Fact]
+        public void DeleteAccountCommand()
+        {
+            using(var testDbInfo = SetupUtil.CreateTestDb())
+            {
+                Mock<ILog> mockLog = new Mock<ILog>();
 
                 CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
 

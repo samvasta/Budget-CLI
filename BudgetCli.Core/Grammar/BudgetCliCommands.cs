@@ -40,7 +40,7 @@ namespace BudgetCli.Core.Grammar
 
         public static readonly OptionWithArgumentToken OPT_ACCOUNT_NAME = new OptionWithArgumentToken.Builder()
                 .Name("--name", "-n")
-                .WithArgument(TokenUtils.BuildArgInt("account-name")).Build();
+                .WithArgument(TokenUtils.BuildArgString("account-name")).Build();
 
         public static readonly OptionWithArgumentToken OPT_CATEGORY = new OptionWithArgumentToken.Builder()
             .Name("--category", "-c")
