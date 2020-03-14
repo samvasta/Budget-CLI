@@ -40,7 +40,24 @@ namespace BudgetCli.Core.Grammar
         {
             if(matchData.Usage.IsHelp)
             {
-                return new HelpCommand(input, Repositories, (CommandActionKind)matchData.Command.CommandId);
+                return new HelpCommand(input, Repositories, matchData.Command);
+            }
+
+            if(matchData.Command == BudgetCliCommands.CMD_CLEAR)
+            {
+                return new SystemCommand(input, CommandKind.ClearConsole);
+            }
+            if(matchData.Command == BudgetCliCommands.CMD_EXIT)
+            {
+                return new SystemCommand(input, CommandKind.Exit);
+            }
+            if(matchData.Command == BudgetCliCommands.CMD_HELP)
+            {
+                return new SystemCommand(input, CommandKind.Help);
+            }
+            if(matchData.Command == BudgetCliCommands.CMD_VERSION)
+            {
+                return new SystemCommand(input, CommandKind.Version);
             }
 
             if(matchData.Command == BudgetCliCommands.CMD_DETAIL_ACCOUNTS)
@@ -69,7 +86,21 @@ namespace BudgetCli.Core.Grammar
 
         private ICommandAction BuildDetailAccountCommand(string input, CommandUsageMatchData matchData)
         {
-            throw new NotImplementedException();
+            DetailAccountCommand cmd = new DetailAccountCommand(input, Repositories);
+            
+            string name;
+            if(matchData.TryGetArgValue(BudgetCliCommands.ARG_ACCOUNT_NAME, out name))
+            {
+                cmd.NameOption.SetData(name);
+            }
+
+            DateTime date;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_DATE.Arguments[0], out date))
+            {
+                cmd.DateOption.SetData(date);
+            }
+
+            return cmd;
         }
 
         private ICommandAction BuildListAccountCommand(string input, CommandUsageMatchData matchData)
@@ -100,7 +131,17 @@ namespace BudgetCli.Core.Grammar
                 cmd.NameOption.SetData(name);
             }
 
-            //TODO: Funds & Priorotiy Range Options
+            Range<Money> fundsRange;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_FUNDS_RANGE.Arguments[0], out fundsRange))
+            {
+                cmd.FundsOption.SetData(fundsRange);
+            }
+
+            Range<long> priorityRange;
+            if(matchData.TryGetArgValue(BudgetCliCommands.OPT_PRIORITY_RANGE.Arguments[0], out priorityRange))
+            {
+                cmd.PriorityOption.SetData(priorityRange);
+            }
 
             return cmd;
         }

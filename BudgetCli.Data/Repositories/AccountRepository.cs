@@ -59,6 +59,24 @@ namespace BudgetCli.Data.Repositories
             return id;
         }
 
+        public AccountDto GetByName(string name)
+        {
+            AccountDto dto = null;
+            Execute((con) =>
+            {
+                string command = $@"SELECT * FROM [{GetTableName()}] WHERE [Name] = @Name;";
+                object parameter = new { Name = name };
+                dto = con.QueryFirstOrDefault<AccountDto>(command, parameter);
+            });
+#if DEBUG
+            if(dto == null)
+            {
+                LogError($"Retrieval of row by Name failed because row does not exist! (Name = {name})");
+            }
+#endif
+            return dto;
+        }
+
         public bool DoesNameExist(string name)
         {
             long count = 0;

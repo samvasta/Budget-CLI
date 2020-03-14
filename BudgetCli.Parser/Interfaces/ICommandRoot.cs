@@ -7,6 +7,7 @@ namespace BudgetCli.Parser.Interfaces
     {
         int CommandId { get; }
         VerbToken[] CommonTokens { get; }
+        string Name { get; }
         string Description { get; }
         ICommandUsage[] Usages { get; }
     }

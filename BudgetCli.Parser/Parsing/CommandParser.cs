@@ -45,11 +45,20 @@ namespace BudgetCli.Parser.Parsing
         {
             Dictionary<ICommandUsage, TokenMatchCollection> usageMatchData = new Dictionary<ICommandUsage, TokenMatchCollection>();
 
-            foreach(var usage in currentRoot.Usages)
+            if(currentRoot.Usages.Any())
             {
-                ICommandToken[] tokens = currentRoot.CommonTokens.Concat(usage.Tokens).ToArray();
-                TokenMatchCollection matchCollection = Match(tokens, text);
-                usageMatchData.Add(usage, matchCollection);
+                foreach(var usage in currentRoot.Usages)
+                {
+                    ICommandToken[] tokens = currentRoot.CommonTokens.Concat(usage.Tokens).ToArray();
+                    TokenMatchCollection matchCollection = Match(tokens, text);
+                    usageMatchData.Add(usage, matchCollection);
+                }
+            }
+            else
+            {
+                    ICommandToken[] tokens = currentRoot.CommonTokens.ToArray();
+                    TokenMatchCollection matchCollection = Match(tokens, text);
+                    usageMatchData.Add(new CommandRootUsage(currentRoot), matchCollection);
             }
 
             return usageMatchData;

@@ -5,7 +5,7 @@ namespace BudgetCli.Core.Models.CommandResults
 {
     public class CreateCommandResult<TModel> : ICommandResult where TModel : IDetailable
     {
-        public ICommandAction Command { get; }
+        public ICommandAction CommandAction { get; }
 
         public bool IsSuccessful { get; }
 
@@ -13,7 +13,7 @@ namespace BudgetCli.Core.Models.CommandResults
 
         public CreateCommandResult(CommandActionBase command, bool isSuccessful, TModel createdItem)
         {
-            Command = command;
+            CommandAction = command;
             IsSuccessful = isSuccessful;
             CreatedItem = createdItem;
         }

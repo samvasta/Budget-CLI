@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -7,7 +8,7 @@ namespace BudgetCli.Util.Models
     /// <summary>
     /// Represents a range of values that can have upper and/or lower bounds
     /// </summary>
-    public class Range<T> where T : System.IComparable<T>
+    public class Range<T> : IEquatable<Range<T>> where T : System.IComparable<T>
     {
         public delegate bool TryParseValue(string text, out T value); 
 
@@ -126,21 +127,47 @@ namespace BudgetCli.Util.Models
             return false;
         }
 
-        public override bool Equals(object obj)
-        {
-            if(obj is Range<T> other)
-            {
-                return this.From.Equals(other.From) &&
-                       this.To.Equals(other.To) &&
-                       this.IsFromInclusive == other.IsFromInclusive &&
-                       this.IsToInclusive == other.IsToInclusive;
-            }
-            return false;
-        }
-
         public override int GetHashCode()
         {
             return HashCode.Combine(From, To, IsFromInclusive, IsToInclusive);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this == obj;
+        }
+
+        public bool Equals([AllowNull] Range<T> other)
+        {
+            return this.From.Equals(other.From) &&
+                   this.To.Equals(other.To) &&
+                   this.IsFromInclusive == other.IsFromInclusive &&
+                   this.IsToInclusive == other.IsToInclusive;
+        }
+
+        public static bool operator ==(Range<T> x, object y)
+        {
+            if(ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if(ReferenceEquals(null, x) || ReferenceEquals(null, y))
+            {
+                return false;
+            }
+
+            if(ReferenceEquals(x.GetType(), y.GetType()))
+            {
+                return x.Equals((Range<T>)y);
+            }
+
+            return false;
+        }
+
+        public static bool operator !=(Range<T> x, object y)
+        {
+            return !(x == y);
         }
     }
 }

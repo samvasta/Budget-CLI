@@ -3,6 +3,7 @@ using BudgetCli.Core.Models.CommandResults;
 using BudgetCli.Core.Models.Interfaces;
 using BudgetCli.Data.Enums;
 using BudgetCli.Data.Repositories;
+using BudgetCli.Parser.Interfaces;
 using BudgetCli.Util.Logging;
 
 namespace BudgetCli.Core.Models.Commands.SystemCommands
@@ -13,9 +14,9 @@ namespace BudgetCli.Core.Models.Commands.SystemCommands
 
         public override CommandActionKind CommandActionKind { get { return CommandActionKind.Help;} }
 
-        public CommandActionKind HelpTarget { get; }
+        public ICommandRoot HelpTarget { get; }
 
-        public HelpCommand(string rawText, RepositoryBag repositories, CommandActionKind helpTarget) : base(rawText, repositories)
+        public HelpCommand(string rawText, RepositoryBag repositories, ICommandRoot helpTarget) : base(rawText, repositories)
         {
             HelpTarget = helpTarget;
         }
@@ -25,7 +26,7 @@ namespace BudgetCli.Core.Models.Commands.SystemCommands
             //No data to manipulate. Need to transmit though
             if(listeners != null)
             {
-                SystemCommandResult result = new SystemCommandResult(this, true, Enums.CommandKind.Help);
+                HelpCommandResult result = new HelpCommandResult(this, true, HelpTarget);
                 foreach(var listener in listeners)
                 {
                     listener.OnCommand(result);

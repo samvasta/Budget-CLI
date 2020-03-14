@@ -54,9 +54,17 @@ namespace BudgetCli.Core.Grammar
             .Name("--funds", "-f")
             .WithArgument(TokenUtils.BuildArgMoney("funds")).Build();
 
+        public static readonly OptionWithArgumentToken OPT_FUNDS_RANGE = new OptionWithArgumentToken.Builder()
+            .Name("--funds", "-f")
+            .WithArgument(TokenUtils.BuildArgMoneyRange("funds")).Build();
+
         public static readonly OptionWithArgumentToken OPT_PRIORITY = new OptionWithArgumentToken.Builder()
             .Name("--priority", "-p")
             .WithArgument(TokenUtils.BuildArgInt("priority")).Build();
+
+        public static readonly OptionWithArgumentToken OPT_PRIORITY_RANGE = new OptionWithArgumentToken.Builder()
+            .Name("--priority", "-p")
+            .WithArgument(TokenUtils.BuildArgLongRange("priority")).Build();
 
         public static readonly OptionWithArgumentToken OPT_ACCOUNT_TYPE = new OptionWithArgumentToken.Builder()
             .Name("--type", "-y")
@@ -79,23 +87,28 @@ namespace BudgetCli.Core.Grammar
 
         public static readonly CommandRoot CMD_HELP = new CommandRoot.Builder()
                 .Id(CommandActionKind.Help)
+                .Description("List available commands.")
                 .WithToken(VERB_HELP)
                 .Build();
         public static readonly CommandRoot CMD_VERSION = new CommandRoot.Builder()
                 .Id(CommandActionKind.Version)
+                .Description("Print the current app version.")
                 .WithToken(VERB_VERSION)
                 .Build();
         public static readonly CommandRoot CMD_CLEAR = new CommandRoot.Builder()
                 .Id(CommandActionKind.Clear)
+                .Description("Clear the console.")
                 .WithToken(VERB_CLEAR)
                 .Build();
         public static readonly CommandRoot CMD_EXIT = new CommandRoot.Builder()
                 .Id(CommandActionKind.Exit)
+                .Description("Exit the app.")
                 .WithToken(VERB_EXIT)
                 .Build();
 
         public static readonly CommandRoot CMD_NEW_ACCOUNT = new CommandRoot.Builder()
                 .Id(CommandActionKind.AddAccount)
+                .Description("Add a new account.")
                 .WithToken(VERB_NEW)
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
@@ -116,6 +129,7 @@ namespace BudgetCli.Core.Grammar
 
         public static readonly CommandRoot CMD_LS_ACCOUNTS = new CommandRoot.Builder()
                 .Id(CommandActionKind.ListAccount)
+                .Description("List all accounts.")
                 .WithToken(VERB_LIST)
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
@@ -127,9 +141,8 @@ namespace BudgetCli.Core.Grammar
                     .Description("List Accounts")
                     .WithToken(OPT_CATEGORY)
                     .WithToken(OPT_DESCRIPTION)
-                    //TODO
-                    // .WithToken(OPT_FUNDS_RNG)
-                    // .WithToken(OPT_PRIORITY_RNG)
+                    .WithToken(OPT_FUNDS_RANGE)
+                    .WithToken(OPT_PRIORITY_RANGE)
                     .WithToken(OPT_ACCOUNT_TYPE)
                     .WithToken(OPT_ACCOUNT_NAME)
                     .WithToken(OPT_TREE)
@@ -138,6 +151,7 @@ namespace BudgetCli.Core.Grammar
                 
         public static readonly CommandRoot CMD_DETAIL_ACCOUNTS = new CommandRoot.Builder()
                 .Id(CommandActionKind.DetailAccount)
+                .Description("Show details for a particular account.")
                 .WithToken(VERB_DETAIL)
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
@@ -154,6 +168,7 @@ namespace BudgetCli.Core.Grammar
                 
         public static readonly CommandRoot CMD_REMOVE_ACCOUNTS = new CommandRoot.Builder()
                 .Id(CommandActionKind.RemoveAccount)
+                .Description("Close an account.")
                 .WithToken(VERB_REMOVE)
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()
@@ -170,6 +185,7 @@ namespace BudgetCli.Core.Grammar
                 
         public static readonly CommandRoot CMD_SET_ACCOUNTS = new CommandRoot.Builder()
                 .Id(CommandActionKind.UpdateAccount)
+                .Description("Update properties of a particular account.")
                 .WithToken(VERB_SET)
                 .WithToken(VERB_ACCOUNT)
                 .WithUsage(new CommandUsage.Builder()

@@ -4,7 +4,7 @@ namespace BudgetCli.Core.Models.CommandResults
 {
     public interface ICommandResult
     {
-         ICommandAction Command { get; }
+         ICommandAction CommandAction { get; }
          bool IsSuccessful { get; }
     }
 }

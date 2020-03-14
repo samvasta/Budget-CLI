@@ -12,6 +12,7 @@ namespace BudgetCli.Parser.Models
     {
         public int CommandId { get; }
         public VerbToken[] CommonTokens { get; }
+        public string Name { get { return string.Join(" ", CommonTokens.Select(x => x.Name.Preferred)); } }
         public string Description { get; }
         public ICommandUsage[] Usages { get; }
 

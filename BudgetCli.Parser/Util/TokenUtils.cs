@@ -53,5 +53,20 @@ namespace BudgetCli.Parser.Util
         {
             return new DateArgumentToken(name, isOptional);
         }
+
+        public static RangeArgumentToken<Money> BuildArgMoneyRange(string name, bool isOptional = false)
+        {
+            return new RangeArgumentToken<Money>(name, isOptional, Money.TryParse);
+        }
+
+        public static RangeArgumentToken<long> BuildArgLongRange(string name, bool isOptional = false)
+        {
+            return new RangeArgumentToken<long>(name, isOptional, Int64.TryParse);
+        }
+
+        public static RangeArgumentToken<DateTime> BuildArgDateRange(string name, bool isOptional = false)
+        {
+            return new RangeArgumentToken<DateTime>(name, isOptional, DateMatchUtils.TryMatchDate);
+        }
     }
 }

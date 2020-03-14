@@ -11,6 +11,7 @@ using BudgetCli.ConsoleApp.Interfaces;
 using BudgetCli.Core.Models.Commands.SystemCommands;
 using BudgetCli.ConsoleApp.Writers;
 using BudgetCli.Parser.Parsing;
+using System.Drawing;
 
 namespace BudgetCli.ConsoleApp.App
 {
@@ -64,9 +65,13 @@ namespace BudgetCli.ConsoleApp.App
             }
             else if(result.CommandKind == CommandKind.Help)
             {
-                HelpCommand helpCommand = (HelpCommand)result.Command;
-                //TODO: Get ICommandRoot and pass to HelpInfoWriter
+                HelpInfoWriter.WriteCommandList(CommandLibrary);
             }
+        }
+
+        public void OnCommand(HelpCommandResult result)
+        {
+            HelpInfoWriter.WriteHelpItem(result.CommandRootTarget);
         }
 
         public void OnCommand<T>(CreateCommandResult<T> result) where T : IDetailable
@@ -162,10 +167,52 @@ namespace BudgetCli.ConsoleApp.App
             throw new System.NotImplementedException();
         }
 
-        public void WritePropertyValueDetails(ModelPropertyValue propertyValue)
+        public void WritePropertyValueDetails(ModelPropertyValue propertyValue, int indent = 0, int recursionLimit = 1)
         {
-            //TODO
+            if(indent > recursionLimit) { return; }
+            
+            if(propertyValue.Value is IDetailable)
+            {
+                if(indent < recursionLimit)
+                {
+                    Console.Write(new String(' ', indent*2));
+                    Console.Write(propertyValue.Property.DisplayName);
+                    Console.WriteLine(":");
+                    foreach(var propValue in ((IDetailable)propertyValue.Value).GetPropertyValues().Where(x => x.Property.IsVisibleInDetails))
+                    {
+                        WritePropertyValueDetails(propValue, indent+1);
+                    }
+                }
+            }
+            else
+            {
+                Console.Write(new String(' ', indent*2));
+                Console.Write(propertyValue.Property.DisplayName);
+                string valueStr = Humanize(propertyValue.Value);
+                Console.WriteLine($" = {valueStr}", Color.Gray);
+            }
         }
 
+        public static string Humanize(object obj)
+        {
+            if(obj is null)
+            {
+                return "<empty>";
+            }
+            if(obj is Enum)
+            {
+                return ((Enum)obj).Humanize();
+            }
+            if(obj is string)
+            {
+                return $"\"{obj}\"";
+            }
+            if(obj is DateTime)
+            {
+                return ((DateTime)obj).ToShortDateString();
+            }
+
+            return obj.ToString();
+        }
     }
 }

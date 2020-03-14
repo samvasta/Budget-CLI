@@ -7,7 +7,7 @@ namespace BudgetCli.Core.Models.CommandResults
 {
     public class UpdateCommandResult<TModel> : ICommandResult where TModel : IDetailable
     {
-        public ICommandAction Command { get; }
+        public ICommandAction CommandAction { get; }
 
         public bool IsSuccessful { get; }
         public TModel UpdatedItem { get; }
@@ -15,7 +15,7 @@ namespace BudgetCli.Core.Models.CommandResults
 
         public UpdateCommandResult(CommandActionBase command, bool isSuccessful, TModel updatedItem, IEnumerable<UpdateInfo> updateInfos)
         {
-            Command = command;
+            CommandAction = command;
             IsSuccessful = isSuccessful;
             UpdatedItem = updatedItem;
             UpdateInfos = updateInfos;

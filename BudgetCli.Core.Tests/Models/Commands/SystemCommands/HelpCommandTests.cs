@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BudgetCli.Core.Grammar;
 using BudgetCli.Core.Models;
 using BudgetCli.Core.Models.CommandResults;
 using BudgetCli.Core.Models.Commands.Accounts;
@@ -26,12 +27,12 @@ namespace BudgetCli.Core.Tests.Models.Commands.SystemCommands
                 Mock<ILog> mockLog = new Mock<ILog>();
                 RepositoryBag repositories = SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object);
                 
-                HelpCommand command = new HelpCommand("new account -h", repositories, CommandActionKind.AddAccount);
+                HelpCommand command = new HelpCommand("new account -h", repositories, BudgetCliCommands.CMD_NEW_ACCOUNT);
 
                 List<ICommandActionListener> listeners = new List<ICommandActionListener>();
 
                 Mock<ICommandActionListener> mockListener = new Mock<ICommandActionListener>();
-                mockListener.Setup(x => x.OnCommand(It.IsAny<SystemCommandResult>())).Verifiable();
+                mockListener.Setup(x => x.OnCommand(It.IsAny<HelpCommandResult>())).Verifiable();
 
                 listeners.Add(mockListener.Object);
 

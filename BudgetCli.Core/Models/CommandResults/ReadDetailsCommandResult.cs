@@ -7,7 +7,7 @@ namespace BudgetCli.Core.Models.CommandResults
 {
     public class ReadDetailsCommandResult<TModel> : ICommandResult where TModel : IDetailable
     {
-        public ICommandAction Command { get; }
+        public ICommandAction CommandAction { get; }
 
         public bool IsSuccessful { get; }
 
@@ -16,7 +16,7 @@ namespace BudgetCli.Core.Models.CommandResults
 
         public ReadDetailsCommandResult(CommandActionBase command, bool isSuccessful, TModel item, FilterCriteria criteria)
         {
-            Command = command;
+            CommandAction = command;
             IsSuccessful = isSuccessful;
             Criteria = criteria;
             Item = item;

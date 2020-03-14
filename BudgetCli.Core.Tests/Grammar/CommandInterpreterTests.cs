@@ -16,6 +16,8 @@ using BudgetCli.Util.Logging;
 using BudgetCli.Core.Models.Commands;
 using BudgetCli.Core.Models.Commands.Accounts;
 using BudgetCli.Data.Enums;
+using BudgetCli.Core.Enums;
+using BudgetCli.Core.Models.Commands.SystemCommands;
 
 namespace BudgetCli.Core.Tests.Grammar
 {
@@ -36,6 +38,29 @@ namespace BudgetCli.Core.Tests.Grammar
                 Assert.False(success);
                 Assert.Null(action);
             }
+        }
+
+        [Theory]
+        [InlineData("exit", CommandKind.Exit)]
+        [InlineData("help", CommandKind.Help)]
+        [InlineData("clear", CommandKind.ClearConsole)]
+        [InlineData("version", CommandKind.Version)]
+        public void SystemCommand(string input, CommandKind expectedKind)
+        {
+            using(var testDbInfo = SetupUtil.CreateTestDb())
+            {
+                Mock<ILog> mockLog = new Mock<ILog>();
+
+                CommandInterpreter interpreter = new CommandInterpreter(SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object), BudgetCliCommands.BuildCommandLibrary());
+
+                ICommandAction action;
+                bool success = interpreter.TryParseCommand(input, out action);
+
+                Assert.True(success);
+                Assert.NotNull(action);
+                Assert.IsType(typeof(SystemCommand), action);
+                Assert.Equal(expectedKind, ((SystemCommand)action).CommandKind);
+            } 
         }
 
         [Fact]

@@ -9,6 +9,7 @@ namespace BudgetCli.Data.Repositories.Interfaces
     public interface IAccountRepository : IRepository<AccountDto>
     {
         long GetIdByName(string name);
+        AccountDto GetByName(string name);
         IEnumerable<long> GetChildAccountIds(long categoryId);
 
         bool DoesNameExist(string accountName);

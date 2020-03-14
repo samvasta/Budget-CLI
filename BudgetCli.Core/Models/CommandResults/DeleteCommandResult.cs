@@ -6,7 +6,7 @@ namespace BudgetCli.Core.Models.CommandResults
 {
     public class DeleteCommandResult<TModel> : ICommandResult where TModel : IDetailable
     {
-        public ICommandAction Command { get; }
+        public ICommandAction CommandAction { get; }
 
         public bool IsSuccessful { get; }
 
@@ -20,7 +20,7 @@ namespace BudgetCli.Core.Models.CommandResults
 
         public DeleteCommandResult(CommandActionBase command, bool isSuccessful, IEnumerable<TModel> deletedItems)
         {
-            Command = command;
+            CommandAction = command;
             IsSuccessful = isSuccessful;
             DeletedItems = deletedItems;
         }
