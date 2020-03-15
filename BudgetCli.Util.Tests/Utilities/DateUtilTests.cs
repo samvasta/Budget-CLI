@@ -9,6 +9,14 @@ namespace BudgetCli.Util.Tests.Utilities
 {
     public class DateUtilTests
     {
+        [Fact]
+        public void GetRelativeDayOfWeek_FromToday()
+        {
+            DateTime expected = DateUtil.GetRelativeDateDayOfWeek(DateTime.Today, DayOfWeek.Friday);
+            DateTime output = DateUtil.GetRelativeDateDayOfWeek(DayOfWeek.Friday);
+            Assert.Equal(expected, output);
+        }
+
         [Theory]
         [InlineData(DayOfWeek.Monday, "2019-12-23")]
         [InlineData(DayOfWeek.Tuesday, "2019-12-24")]
@@ -24,6 +32,37 @@ namespace BudgetCli.Util.Tests.Utilities
             DateTime output = DateUtil.GetRelativeDateDayOfWeek(start, dayOfWeek);
             DateTime expected = DateTime.Parse(expectedOutputStr);
             Assert.Equal(expected, output);
+        }
+
+        [Fact]
+        public void GetRelativeDayOfMonth()
+        {
+            DateTime start = DateTime.Parse("1/1/2020");
+            DateTime expected = DateTime.Parse("3/1/2019");
+            DateTime actual = DateUtil.GetRelativeDateDayOfMonth(start, 3, 1);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void GetRelativeDayOfMonth_FromToday()
+        {
+            DateTime start = DateTime.Today;
+
+            //Assumes GetRelativeDateDayOfMonth(start, month, day) works
+            DateTime expected = DateUtil.GetRelativeDateDayOfMonth(start, 3, 1);
+            DateTime actual = DateUtil.GetRelativeDateDayOfMonth(3, 1);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void GetRelativeDate_FromToday()
+        {
+            DateTime expected = DateTime.Today.AddYears(-2).AddMonths(-1).AddDays(-5);
+            DateTime actual = DateUtil.GetRelativeDate(-2, -1, -5);
+
+            Assert.Equal(expected, actual);
         }
 
         [Theory]

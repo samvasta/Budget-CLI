@@ -6,12 +6,6 @@ namespace BudgetCli.Util.Utilities
 {
     public static class DateUtil
     {
-        public static bool TryParseDate(string input, out DateTime date)
-        {
-            date = DateTime.Today;
-            return true;
-        }
-
         /// <summary>
         /// Calls <see cref="DateUtil.GetRelativeDateDayOfWeek()"/> starting from <see cref="DateTime.Today"/>
         /// </summary>

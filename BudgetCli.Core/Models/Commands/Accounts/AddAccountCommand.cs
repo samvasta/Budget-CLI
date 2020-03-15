@@ -30,7 +30,7 @@ namespace BudgetCli.Core.Models.Commands.Accounts
         //Options
         public IntegerCommandOption AccountId { get; set; }
         public StringCommandOption AccountName { get; set; }
-        public IntegerCommandOption CategoryIdOption { get; set; }
+        public StringCommandOption CategoryNameOption { get; set; }
         public StringCommandOption DescriptionOption { get; set; }
         public MoneyCommandOption FundsOption { get; set; }
         public IntegerCommandOption PriorityOption { get; set; }
@@ -40,7 +40,7 @@ namespace BudgetCli.Core.Models.Commands.Accounts
         {
             AccountId = new IntegerCommandOption(CommandOptionKind.Account);
             AccountName = new StringCommandOption(CommandOptionKind.Name);
-            CategoryIdOption = new IntegerCommandOption(CommandOptionKind.Category);
+            CategoryNameOption = new StringCommandOption(CommandOptionKind.Category);
             DescriptionOption = new StringCommandOption(CommandOptionKind.Description);
             FundsOption = new MoneyCommandOption(CommandOptionKind.Funds);
             PriorityOption = new IntegerCommandOption(CommandOptionKind.Priority);
@@ -54,6 +54,13 @@ namespace BudgetCli.Core.Models.Commands.Accounts
 
             if(Repositories.AccountRepository.DoesNameExist(AccountName.GetValue(String.Empty)))
             {
+                TransmitResult(result, listeners);
+                return false;
+            }
+            else if(CategoryNameOption.IsDataValid &&
+                    !Repositories.AccountRepository.DoesNameExist(CategoryNameOption.GetValue(String.Empty)))
+            {
+                //invalid category name
                 TransmitResult(result, listeners);
                 return false;
             }
@@ -89,11 +96,18 @@ namespace BudgetCli.Core.Models.Commands.Accounts
             AccountDto dto = new AccountDto()
             {
                 AccountKind = AccountTypeOption.GetValue(Account.DEFAULT_ACCOUNT_KIND),
-                CategoryId = (long?)CategoryIdOption.GetValue((long?)null),
                 Description = DescriptionOption.GetValue(String.Empty),
                 Name = AccountName.GetValue(String.Empty),
                 Priority = PriorityOption.GetValue(Account.DEFAULT_PRIORITY)
             };
+            if(CategoryNameOption.IsDataValid)
+            {
+                dto.CategoryId = Repositories.AccountRepository.GetIdByName(CategoryNameOption.GetValue(null));
+            }
+            else
+            {
+                dto.CategoryId = null;
+            }
 
             if(AccountId.IsDataValid)
             {

@@ -1,14 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using BudgetCli.Core.Enums;
 using BudgetCli.Core.Grammar;
-using BudgetCli.Core.Models;
 using BudgetCli.Core.Models.CommandResults;
-using BudgetCli.Core.Models.Commands.Accounts;
 using BudgetCli.Core.Models.Commands.SystemCommands;
 using BudgetCli.Core.Models.Interfaces;
-using BudgetCli.Data.Enums;
-using BudgetCli.Data.Models;
 using BudgetCli.Data.Repositories;
 using BudgetCli.Data.Tests.TestHarness;
 using BudgetCli.Util.Logging;
@@ -17,7 +12,7 @@ using Xunit;
 
 namespace BudgetCli.Core.Tests.Models.Commands.SystemCommands
 {
-    public class HelpCommandTests
+    public class SystemCommandTests
     {
         [Fact]
         public void TestTryDoAction()
@@ -27,12 +22,12 @@ namespace BudgetCli.Core.Tests.Models.Commands.SystemCommands
                 Mock<ILog> mockLog = new Mock<ILog>();
                 RepositoryBag repositories = SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object);
                 
-                HelpCommand command = new HelpCommand("new account -h", repositories, BudgetCliCommands.CMD_NEW_ACCOUNT);
+                SystemCommand command = new SystemCommand("version", CommandKind.Version);
 
                 List<ICommandActionListener> listeners = new List<ICommandActionListener>();
 
                 Mock<ICommandActionListener> mockListener = new Mock<ICommandActionListener>();
-                mockListener.Setup(x => x.OnCommand(It.IsAny<HelpCommandResult>())).Verifiable();
+                mockListener.Setup(x => x.OnCommand(It.Is<SystemCommandResult>(x => x.CommandKind == CommandKind.Version && x.IsSuccessful && x.CommandAction == command))).Verifiable();
 
                 listeners.Add(mockListener.Object);
 
@@ -41,5 +36,6 @@ namespace BudgetCli.Core.Tests.Models.Commands.SystemCommands
                 mockListener.VerifyAll();
             }
         }
+        
     }
 }

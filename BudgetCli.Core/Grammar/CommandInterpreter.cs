@@ -160,7 +160,7 @@ namespace BudgetCli.Core.Grammar
             string categoryName;
             if(matchData.TryGetArgValue(BudgetCliCommands.OPT_CATEGORY.Arguments[0], out categoryName))
             {
-                cmd.CategoryIdOption.SetData(Repositories.AccountRepository.GetIdByName(categoryName));
+                cmd.CategoryNameOption.SetData(categoryName);
             }
 
             string description;
