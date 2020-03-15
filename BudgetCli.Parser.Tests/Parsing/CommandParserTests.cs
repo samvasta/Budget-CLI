@@ -297,8 +297,9 @@ namespace BudgetCli.Parser.Tests.Parsing
                 new VerbToken(new Name("verb0")),
                 new OptionWithArgumentToken.Builder().Name("-o2", "--option2").WithArgument(arg1).WithArgument(arg2).Build(),
             };
-            var builder = new CommandUsage.Builder()
-                                    .Description("test usage");
+            
+            var builder = new CommandUsage.Builder().Description("test usage");
+
             foreach(var token in tokens)
             {
                 builder.WithToken(token);
@@ -318,6 +319,65 @@ namespace BudgetCli.Parser.Tests.Parsing
             Assert.True(arg2Exists);
             Assert.Equal(1, arg1Value);
             Assert.Equal(2.34, arg2Value);
+        }
+
+        [Theory]
+        [InlineData("5 verb1 verb2", 1, 2, 3)]
+        [InlineData("5", null, 0, 1)]
+        [InlineData("5 verb1 verb2 verb3", 2, 3, null
+        )]
+        public void TestAdjacentTokens(string input, int? prevIdx, int? currentIdx, int? nextIdx)
+        {
+            var tokens = new ICommandToken[] 
+            {
+                new ArgumentToken<int>.Builder()
+                                        .Name("name")
+                                        .Parser(int.TryParse)
+                                        .IsOptional(false)
+                                        .Build(),
+                new VerbToken(new Name("verb1", "alt1")),
+                new VerbToken(new Name("verb2", "alt2")),
+                new VerbToken(new Name("verb3", "alt3"))
+            };
+            var builder = new CommandUsage.Builder()
+                                    .Description("test usage");
+            foreach(var token in tokens)
+            {
+                builder.WithToken(token);
+            }
+
+            ICommandUsage usage = builder.Build();
+
+            ICommandToken currentToken = CommandParser.GetCurrentToken(usage, input);
+            ICommandToken prevToken = CommandParser.GetPreviousToken(usage, input);
+            ICommandToken nextToken = CommandParser.GetNextToken(usage, input);
+
+            if(prevIdx.HasValue)
+            {
+                Assert.Same(tokens[prevIdx.Value], prevToken);
+            }
+            else
+            {
+                Assert.Null(prevToken);
+            }
+            
+            if(currentIdx.HasValue)
+            {
+                Assert.Same(tokens[currentIdx.Value], currentToken);
+            }
+            else
+            {
+                Assert.Null(currentToken);
+            }
+            
+            if(nextIdx.HasValue)
+            {
+                Assert.Same(tokens[nextIdx.Value], nextToken);
+            }
+            else
+            {
+                Assert.Null(nextToken);
+            }
         }
     }
 }
