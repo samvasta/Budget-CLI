@@ -40,7 +40,7 @@ namespace BudgetCli.Core.Models
                 if(_account == null)
                 {
                     AccountDto dto = Repositories.AccountRepository.GetById(AccountId);
-                    _account = DtoToModelTranslator.FromDto(dto, Repositories);
+                    _account = DtoToModelTranslator.FromDto(dto, Timestamp, Repositories);
                 }
                 return _account;
             }

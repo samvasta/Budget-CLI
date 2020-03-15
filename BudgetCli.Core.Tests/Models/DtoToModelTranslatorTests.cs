@@ -33,7 +33,7 @@ namespace BudgetCli.Core.Tests.Models
                 RepositoryBag repositories = SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object);
                 
                 //Act
-                Account account = DtoToModelTranslator.FromDto(accountDto, repositories);
+                Account account = DtoToModelTranslator.FromDto(accountDto, DateTime.Today, repositories);
                 
                 //Assert
                 Assert.Equal("Test Account", account.Name);
@@ -62,7 +62,7 @@ namespace BudgetCli.Core.Tests.Models
                     Priority = 7
                 };
 
-                Account account = new Account(1, "Test Account", null, 7, AccountKind.Source, "", repositories);
+                Account account = new Account(1, "Test Account", null, 7, AccountKind.Source, "", DateTime.Today, repositories);
 
                 //Act
                 AccountDto toDto = account.ToDto();

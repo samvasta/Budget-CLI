@@ -52,7 +52,7 @@ namespace BudgetCli.Core.Models.Commands.Accounts
         {
             //Populate list
             AccountDto dto = Repositories.AccountRepository.GetById(id);
-            Account deletedAccount = DtoToModelTranslator.FromDto(dto, Repositories);
+            Account deletedAccount = DtoToModelTranslator.FromDto(dto, DateTime.Today, Repositories);
             deletedAccounts.Add(deletedAccount);
 
             //Delete the account

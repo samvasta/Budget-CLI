@@ -154,8 +154,8 @@ namespace BudgetCli.Core.Tests.Models
                     Timestamp = DateTime.Now
                 });
 
-                Account account1 = DtoToModelTranslator.FromDto(accountDto1, repositories);
-                Account account2 = DtoToModelTranslator.FromDto(accountDto2, repositories);
+                Account account1 = DtoToModelTranslator.FromDto(accountDto1, DateTime.Today, repositories);
+                Account account2 = DtoToModelTranslator.FromDto(accountDto2, DateTime.Today, repositories);
 
                 long id = 1;
                 DateTime timestamp = DateTime.Now;

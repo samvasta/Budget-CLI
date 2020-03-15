@@ -77,7 +77,7 @@ namespace BudgetCli.Core.Models.Commands.Accounts
             {
                 log?.WriteLine($"Added account \"{accountDto.Name}\"", LogLevel.Normal);
                 
-                result = new CreateCommandResult<Account>(this, successful, DtoToModelTranslator.FromDto(accountDto, Repositories));
+                result = new CreateCommandResult<Account>(this, successful, DtoToModelTranslator.FromDto(accountDto, DateTime.Today, Repositories));
             }
 
             TransmitResult(result, listeners);

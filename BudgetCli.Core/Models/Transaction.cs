@@ -42,7 +42,7 @@ namespace BudgetCli.Core.Models
             {
                 if(_sourceAccount == null && SourceAccountId.HasValue)
                 {
-                    _sourceAccount = DtoToModelTranslator.FromDto(Repositories.AccountRepository.GetById(SourceAccountId.Value), Repositories);
+                    _sourceAccount = DtoToModelTranslator.FromDto(Repositories.AccountRepository.GetById(SourceAccountId.Value), Timestamp, Repositories);
                 }
                 return _sourceAccount;
             }
@@ -55,7 +55,7 @@ namespace BudgetCli.Core.Models
             {
                 if(_destAccount == null && DestinationAccountId.HasValue)
                 {
-                    _destAccount = DtoToModelTranslator.FromDto(Repositories.AccountRepository.GetById(DestinationAccountId.Value), Repositories);
+                    _destAccount = DtoToModelTranslator.FromDto(Repositories.AccountRepository.GetById(DestinationAccountId.Value), Timestamp, Repositories);
                 }
                 return _destAccount;
             }

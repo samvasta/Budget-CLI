@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BudgetCli.Data.Models;
 
@@ -6,6 +7,7 @@ namespace BudgetCli.Data.Repositories.Interfaces
     public interface IAccountStateRepository : IRepository<AccountStateDto>
     {
         AccountStateDto GetLatestByAccountId(long accountId);
+        AccountStateDto GetLatestByAccountId(long accountId, DateTime date);
         
          List<AccountStateDto> GetAllByAccountId(long accountId);
          

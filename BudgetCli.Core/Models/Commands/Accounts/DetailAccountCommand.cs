@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BudgetCli.Core.Models.CommandResults;
 using BudgetCli.Core.Models.CommandResults.InfoModels;
@@ -41,17 +42,32 @@ namespace BudgetCli.Core.Models.Commands.Accounts
 
             FilterCriteria criteria = GetFilterCriteria();
 
-            ReadDetailsCommandResult<Account> result = new ReadDetailsCommandResult<Account>(this, true, account, criteria);
+            bool success;
+            ReadDetailsCommandResult<Account> result;
+            if(account == null)
+            {
+                success = false;
+                result = new ReadDetailsCommandResult<Account>(this, false, null, criteria);
+            }
+            else
+            {
+                success = true;
+                result = new ReadDetailsCommandResult<Account>(this, true, account, criteria);
+            }
             
             TransmitResult(result, listeners);
-            return true;
+            return success;
         }
 
         private Account GetAccount()
         {
             AccountDto dto = Repositories.AccountRepository.GetByName(NameOption.GetValue(null));
 
-            return DtoToModelTranslator.FromDto(dto, Repositories);
+            if(dto == null)
+            {
+                return null;
+            }
+            return DtoToModelTranslator.FromDto(dto, DateOption.GetValue(DateTime.Today), Repositories);
         }
 
         public FilterCriteria GetFilterCriteria()

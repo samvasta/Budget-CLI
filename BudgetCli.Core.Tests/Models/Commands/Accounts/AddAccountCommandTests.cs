@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BudgetCli.Core.Models;
@@ -34,7 +35,7 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 //Act
                 bool successful = action.TryExecute(mockLog.Object);
 
-                Account account = DtoToModelTranslator.FromDto(repo.GetById(1), repositories);
+                Account account = DtoToModelTranslator.FromDto(repo.GetById(1), DateTime.Today, repositories);
                 AccountState state = DtoToModelTranslator.FromDto(accountStateRepo.GetLatestByAccountId(1), repositories);
                 
                 //Assert
@@ -106,7 +107,7 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 //Act
                 bool successful = action.TryExecute(mockLog.Object, listeners);
 
-                Account account = DtoToModelTranslator.FromDto(repo.GetById(1), repositories);
+                Account account = DtoToModelTranslator.FromDto(repo.GetById(1), DateTime.Today, repositories);
                 AccountState state = DtoToModelTranslator.FromDto(accountStateRepo.GetLatestByAccountId(1), repositories);
                 
                 //Assert

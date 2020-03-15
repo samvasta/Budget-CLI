@@ -65,7 +65,7 @@ namespace BudgetCli.Core.Models.Commands.Accounts
             
             foreach(var dto in dtos)
             {
-                accounts.Add(DtoToModelTranslator.FromDto(dto, Repositories));
+                accounts.Add(DtoToModelTranslator.FromDto(dto, DateTime.Today, Repositories));
             }
             return accounts;
         }
@@ -83,7 +83,7 @@ namespace BudgetCli.Core.Models.Commands.Accounts
             //Category
             if(CategoryIdOption.IsDataValid)
             {
-                Account category = DtoToModelTranslator.FromDto(Repositories.AccountRepository.GetById(CategoryIdOption.GetValue(-1)), Repositories);
+                Account category = DtoToModelTranslator.FromDto(Repositories.AccountRepository.GetById(CategoryIdOption.GetValue(-1)), DateTime.Today, Repositories);
 
                 criteria.AddField(Account.PROP_CATEGORY.DisplayName, $"= {category.Name}");
             }

@@ -46,6 +46,8 @@ namespace BudgetCli.Core.Models
 
         #endregion - DTO Properties -
 
+        public DateTime CurrentDate { get; set; }
+
         private Account _category;
         public Account Category
         {
@@ -54,7 +56,7 @@ namespace BudgetCli.Core.Models
                 if(_category == null && CategoryId.HasValue)
                 {
                     AccountDto categoryDto = Repositories.AccountRepository.GetById(CategoryId.Value);
-                    _category = DtoToModelTranslator.FromDto(categoryDto, Repositories);
+                    _category = DtoToModelTranslator.FromDto(categoryDto, CurrentDate, Repositories);
                 }
                 return _category;
             }
@@ -67,7 +69,7 @@ namespace BudgetCli.Core.Models
             {
                 if(_currentState == null && Id.HasValue)
                 {
-                    AccountStateDto dto = Repositories.AccountStateRepository.GetLatestByAccountId(Id.Value);
+                    AccountStateDto dto = Repositories.AccountStateRepository.GetLatestByAccountId(Id.Value, CurrentDate);
                     _currentState = DtoToModelTranslator.FromDto(dto, Repositories);
                 }
                 return _currentState;
@@ -77,7 +79,7 @@ namespace BudgetCli.Core.Models
         /// <summary>
         /// New Account Constructor
         /// </summary>
-        public Account(string name, Money initialFunds, RepositoryBag repositories)
+        public Account(string name, Money initialFunds, DateTime date, RepositoryBag repositories)
         {
             if(repositories == null)
             {
@@ -89,13 +91,14 @@ namespace BudgetCli.Core.Models
             this.Priority = DEFAULT_PRIORITY;
             this.AccountKind = DEFAULT_ACCOUNT_KIND;
             this.Description = String.Empty;
+            this.CurrentDate = date;
             this.Repositories = repositories;
         }
 
         /// <summary>
         /// From DTO Constructor
         /// </summary>
-        public Account(long id, string name, long? categoryId, long priority, AccountKind accountKind, string description, RepositoryBag repositories)
+        public Account(long id, string name, long? categoryId, long priority, AccountKind accountKind, string description, DateTime date, RepositoryBag repositories)
         {
             if(repositories == null)
             {
@@ -107,6 +110,7 @@ namespace BudgetCli.Core.Models
             this.Priority = priority;
             this.AccountKind = accountKind;
             this.Description = description;
+            this.CurrentDate = date;
             this.Repositories = repositories;
         }
 

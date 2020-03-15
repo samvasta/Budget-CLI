@@ -20,9 +20,9 @@ namespace BudgetCli.Core.Tests.Models
         public void TestAccountEquals()
         {
             RepositoryBag repositoryBag = new RepositoryBag();
-            Account account1 = new Account(1, "Test Account", 4, 10, AccountKind.Category, "Description", repositoryBag);
-            Account account1_copy = new Account(1, "Test Account", 4, 10, AccountKind.Category, "Description", repositoryBag);
-            Account account3 = new Account(2, "Test Account2", 2, 2, AccountKind.Sink, "Description2", repositoryBag);
+            Account account1 = new Account(1, "Test Account", 4, 10, AccountKind.Category, "Description", DateTime.Today, repositoryBag);
+            Account account1_copy = new Account(1, "Test Account", 4, 10, AccountKind.Category, "Description", DateTime.Today, repositoryBag);
+            Account account3 = new Account(2, "Test Account2", 2, 2, AccountKind.Sink, "Description2", DateTime.Today, repositoryBag);
 
             Assert.True(account1 == account1_copy);
             Assert.True(account1.Equals(account1_copy));
@@ -47,9 +47,9 @@ namespace BudgetCli.Core.Tests.Models
         public void TestAccountGetHashCode()
         {
             RepositoryBag repositoryBag = new RepositoryBag();
-            Account account1 = new Account(1, "Test Account", 4, 10, AccountKind.Category, "Description", repositoryBag);
-            Account account1_copy = new Account(1, "Test Account", 4, 10, AccountKind.Category, "Description", repositoryBag);
-            Account account3 = new Account(2, "Test Account2", 2, 2, AccountKind.Sink, "Description2", repositoryBag);
+            Account account1 = new Account(1, "Test Account", 4, 10, AccountKind.Category, "Description", DateTime.Today, repositoryBag);
+            Account account1_copy = new Account(1, "Test Account", 4, 10, AccountKind.Category, "Description", DateTime.Today, repositoryBag);
+            Account account3 = new Account(2, "Test Account2", 2, 2, AccountKind.Sink, "Description2", DateTime.Today, repositoryBag);
 
             Assert.Equal(account1.GetHashCode(), account1_copy.GetHashCode());
             Assert.NotEqual(account1.GetHashCode(), account3.GetHashCode());
@@ -60,11 +60,11 @@ namespace BudgetCli.Core.Tests.Models
         {
             Assert.Throws<ArgumentNullException>(() => 
             {
-                Account account = new Account("Test Account", (Money)123.45, null);
+                Account account = new Account("Test Account", (Money)123.45, DateTime.Today, null);
             });
             Assert.Throws<ArgumentNullException>(() => 
             {
-                Account account = new Account(2, "name", 3, 4, AccountKind.Sink, "", null);
+                Account account = new Account(2, "name", 3, 4, AccountKind.Sink, "", DateTime.Today, null);
             });
         }
 
@@ -72,7 +72,7 @@ namespace BudgetCli.Core.Tests.Models
         public void TestAccountAddNewConstructor()
         {
             RepositoryBag repositoryBag = new RepositoryBag();
-            Account account = new Account("Test Account", (Money)123.45, repositoryBag);
+            Account account = new Account("Test Account", (Money)123.45, DateTime.Today, repositoryBag);
 
             Assert.Equal("Test Account", account.Name);
             Assert.Null(account.Category);
@@ -112,7 +112,7 @@ namespace BudgetCli.Core.Tests.Models
                 RepositoryBag repositories = SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object, repo);
                 
                 //Act
-                Account account = new Account(accountDto.Id.Value, accountDto.Name, accountDto.CategoryId, accountDto.Priority, accountDto.AccountKind, accountDto.Description, repositories);
+                Account account = new Account(accountDto.Id.Value, accountDto.Name, accountDto.CategoryId, accountDto.Priority, accountDto.AccountKind, accountDto.Description, DateTime.Today, repositories);
 
                 Account category = account.Category;
                 
@@ -144,7 +144,7 @@ namespace BudgetCli.Core.Tests.Models
                 RepositoryBag repositories = new RepositoryBag();
                 
                 //Act
-                Account account = new Account(id, name, categoryId, priority, accountKind, description, repositories);
+                Account account = new Account(id, name, categoryId, priority, accountKind, description, DateTime.Today, repositories);
 
             var properties = account.GetProperties().ToList();
 
@@ -203,7 +203,7 @@ namespace BudgetCli.Core.Tests.Models
                 RepositoryBag repositories = SetupUtil.CreateMockRepositoryBag(testDbInfo.ConnectionString, mockLog.Object, repo, stateRepo);
                 
                 //Act
-                Account account = new Account(accountDto.Id.Value, accountDto.Name, accountDto.CategoryId, accountDto.Priority, accountDto.AccountKind, accountDto.Description, repositories);
+                Account account = new Account(accountDto.Id.Value, accountDto.Name, accountDto.CategoryId, accountDto.Priority, accountDto.AccountKind, accountDto.Description, timestamp, repositories);
 
                 var propertyValues = account.GetPropertyValues().ToList();
 

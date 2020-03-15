@@ -37,6 +37,18 @@ namespace BudgetCli.Data.Repositories
             });
             return latestDto;
         }
+        
+        public virtual AccountStateDto GetLatestByAccountId(long accountId, DateTime date)
+        {
+            AccountStateDto latestDto = null;
+            Execute((con) =>
+            {
+                object parameters = new { AccountId = accountId, Date = date };
+                string command = $@"SELECT * FROM [{GetTableName()}] WHERE [AccountId] = @AccountId AND [Timestamp] = (SELECT MAX([Timestamp]) FROM [{GetTableName()}] WHERE [AccountId] = @AccountId AND [Timestamp] <= @Date);";
+                latestDto = con.QueryFirstOrDefault<AccountStateDto>(command, parameters);
+            });
+            return latestDto;
+        }
 
         public virtual List<AccountStateDto> GetAllByAccountId(long accountId)
         {

@@ -15,9 +15,9 @@ namespace BudgetCli.Core.Models
     public static class DtoToModelTranslator
     {
 
-        public static Account FromDto(AccountDto dto, RepositoryBag repositories)
+        public static Account FromDto(AccountDto dto, DateTime date, RepositoryBag repositories)
         {
-            return new Account(dto.Id.Value, dto.Name, dto.CategoryId, dto.Priority, dto.AccountKind, dto.Description, repositories);
+            return new Account(dto.Id.Value, dto.Name, dto.CategoryId, dto.Priority, dto.AccountKind, dto.Description, date, repositories);
         }
 
         public static AccountState FromDto(AccountStateDto dto, RepositoryBag repositories)

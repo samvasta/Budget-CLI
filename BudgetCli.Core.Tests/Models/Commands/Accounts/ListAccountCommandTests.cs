@@ -107,8 +107,8 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, results.Count());
                 Assert.Equal(2, accounts.Count());
 
-                Assert.Contains(DtoToModelTranslator.FromDto(account1, repositories), accounts);
-                Assert.Contains(DtoToModelTranslator.FromDto(account2, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account1, DateTime.Today, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account2, DateTime.Today, repositories), accounts);
             }
         }
         
@@ -161,8 +161,8 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, results.Count());
                 Assert.Equal(1, accounts.Count());
 
-                Assert.Contains(DtoToModelTranslator.FromDto(account1, repositories), accounts);
-                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account1, DateTime.Today, repositories), accounts);
+                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, DateTime.Today, repositories), accounts);
             }
         }
         
@@ -215,8 +215,8 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, results.Count());
                 Assert.Equal(1, accounts.Count());
 
-                Assert.Contains(DtoToModelTranslator.FromDto(account1, repositories), accounts);
-                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account1, DateTime.Today, repositories), accounts);
+                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, DateTime.Today, repositories), accounts);
             }
         }
         
@@ -269,8 +269,8 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, results.Count());
                 Assert.Equal(1, accounts.Count());
 
-                Assert.Contains(DtoToModelTranslator.FromDto(account1, repositories), accounts);
-                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account1, DateTime.Today, repositories), accounts);
+                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, DateTime.Today, repositories), accounts);
             }
         }
         
@@ -322,8 +322,8 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, results.Count());
                 Assert.Equal(1, accounts.Count());
 
-                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account1, repositories), accounts);
-                Assert.Contains(DtoToModelTranslator.FromDto(account2, repositories), accounts);
+                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account1, DateTime.Today, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account2, DateTime.Today, repositories), accounts);
             }
         }
         
@@ -375,8 +375,8 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, results.Count());
                 Assert.Equal(1, accounts.Count());
 
-                Assert.Contains(DtoToModelTranslator.FromDto(account1, repositories), accounts);
-                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account1, DateTime.Today, repositories), accounts);
+                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, DateTime.Today, repositories), accounts);
             }
         }
         
@@ -428,8 +428,8 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, results.Count());
                 Assert.Equal(1, accounts.Count());
 
-                Assert.Contains(DtoToModelTranslator.FromDto(account1, repositories), accounts);
-                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account1, DateTime.Today, repositories), accounts);
+                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, DateTime.Today, repositories), accounts);
             }
         }
         
@@ -481,8 +481,8 @@ namespace BudgetCli.Core.Tests.Models.Commands.Accounts
                 Assert.Equal(1, results.Count());
                 Assert.Equal(1, accounts.Count());
 
-                Assert.Contains(DtoToModelTranslator.FromDto(account1, repositories), accounts);
-                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, repositories), accounts);
+                Assert.Contains(DtoToModelTranslator.FromDto(account1, DateTime.Today, repositories), accounts);
+                Assert.DoesNotContain(DtoToModelTranslator.FromDto(account2, DateTime.Today, repositories), accounts);
             }
         }
     }

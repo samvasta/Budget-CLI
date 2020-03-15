@@ -170,7 +170,7 @@ namespace BudgetCli.Core.Tests.Models
 
 
                 //Act
-                Account account = DtoToModelTranslator.FromDto(accountDto, repositories);
+                Account account = DtoToModelTranslator.FromDto(accountDto, DateTime.Today, repositories);
                 AccountState state = DtoToModelTranslator.FromDto(accountStateDto, repositories);
                 var propertyValues = state.GetPropertyValues().ToList();
                 
