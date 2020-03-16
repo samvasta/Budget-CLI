@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using BudgetCli.Parser.Interfaces;
 using Humanizer;
@@ -7,12 +8,15 @@ namespace BudgetCli.Parser.Models.Tokens
 {
     public class EnumArgumentToken<T> : ArgumentToken<T> where T : Enum
     {
-        public override string[] PossibleValues { get; }
-
         protected EnumArgumentToken(string argumentName, bool isOptional)
-            : base(argumentName, isOptional, TryParse)
+            : base(argumentName, isOptional, TryParse, GetPossibleValues<T>())
         {
-            PossibleValues = ((T[])Enum.GetValues(typeof(T))).Select(x => x.Humanize().Transform(To.TitleCase)).ToArray();
+            //Nothing to do
+        }
+
+        private static string[] GetPossibleValues<E>() where E : Enum
+        {
+            return ((E[])Enum.GetValues(typeof(E))).Select(x => x.Humanize().Transform(To.TitleCase)).ToArray();
         }
 
         public static bool TryParse(string enumStr, out T enumValue)

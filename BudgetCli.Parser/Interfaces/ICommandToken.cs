@@ -15,10 +15,13 @@ namespace BudgetCli.Parser.Interfaces
         bool IsOptional { get; }
         
         /// <summary>
-        /// 
+        /// For Help Documentation. Usages of the token (ex. "-h --help")
         /// </summary>
-        string Description { get; }
+        string DisplayName { get; }
 
+        /// <summary>
+        /// For Help Documentation. Possible values of the token. Empty will be ignored
+        /// </summary>
         string[] PossibleValues { get; }
 
         TokenMatchResult Matches(string[] inputTokens, int startIdx);

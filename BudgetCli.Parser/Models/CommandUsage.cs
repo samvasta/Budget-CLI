@@ -13,7 +13,9 @@ namespace BudgetCli.Parser.Models
         public ICommandToken[] Tokens { get; }
         public string[] Examples { get; }
 
-        private CommandUsage(bool isHelp, string description, ICommandToken[] tokens, string[] examples)
+        private readonly Dictionary<ICommandToken, string> _descriptions;
+
+        private CommandUsage(bool isHelp, string description, ICommandToken[] tokens, string[] examples, Dictionary<ICommandToken, string> descriptions)
         {
             if(tokens.Length == 0)
             {
@@ -23,6 +25,16 @@ namespace BudgetCli.Parser.Models
             Description = description;
             Tokens = tokens;
             Examples = examples;
+            _descriptions = descriptions;
+        }
+
+        public string GetDescription(ICommandToken token)
+        {
+            if(_descriptions.ContainsKey(token))
+            {
+                return _descriptions[token];
+            }
+            return String.Empty;
         }
 
         public class Builder
@@ -31,12 +43,14 @@ namespace BudgetCli.Parser.Models
             private string _description;
             private readonly List<ICommandToken> _tokens;
             private readonly List<string> _examples;
+            private readonly Dictionary<ICommandToken, string> _descriptions;
 
             public Builder()
             {
                 _isHelp = false;
                 _tokens = new List<ICommandToken>();
                 _examples = new List<string>();
+                _descriptions = new Dictionary<ICommandToken, string>();
             }
 
             public Builder IsHelp()
@@ -51,9 +65,10 @@ namespace BudgetCli.Parser.Models
                 return this;
             }
 
-            public Builder WithToken(ICommandToken token)
+            public Builder WithToken(ICommandToken token, string description = "")
             {
                 _tokens.Add(token);
+                _descriptions.Add(token, description);
                 return this;
             }
 
@@ -65,7 +80,7 @@ namespace BudgetCli.Parser.Models
 
             public CommandUsage Build()
             {
-                return new CommandUsage(_isHelp, _description, _tokens.ToArray(), _examples.ToArray());
+                return new CommandUsage(_isHelp, _description, _tokens.ToArray(), _examples.ToArray(), _descriptions);
             }
         }
     }

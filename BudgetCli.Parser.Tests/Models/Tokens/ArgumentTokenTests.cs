@@ -22,7 +22,7 @@ namespace BudgetCli.Parser.Tests.Models.Tokens
             var token = new ArgumentToken<int>.Builder().Name("arg1").IsOptional(false).Parser(int.TryParse).Build();
 
             Assert.Equal("arg1", token.ArgumentName);
-            Assert.Equal("<arg1>", token.Description);
+            Assert.Equal("<arg1>", token.DisplayName);
             Assert.False(token.IsOptional);
             Assert.Equal(TokenKind.Argument, token.Kind);
         }

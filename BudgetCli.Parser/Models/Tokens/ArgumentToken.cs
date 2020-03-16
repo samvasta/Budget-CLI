@@ -17,16 +17,16 @@ namespace BudgetCli.Parser.Models.Tokens
 
         public string ArgumentName { get; }
 
-        public string Description { get; }
+        public string DisplayName { get; }
 
         public virtual string[] PossibleValues { get; }
 
-        protected ArgumentToken(string argumentName, bool isOptional)
+        protected ArgumentToken(string argumentName, bool isOptional, IEnumerable<string> possibleValues)
         {
             ArgumentName = argumentName;
-            Description = $"<{argumentName.Kebaberize()}>";
+            DisplayName = $"<{argumentName.Kebaberize()}>";
             IsOptional = isOptional;
-            PossibleValues = new string[0];
+            PossibleValues = possibleValues.ToArray();
         }
 
         public abstract TokenMatchResult Matches(string[] inputTokens, int startIdx);
@@ -43,8 +43,8 @@ namespace BudgetCli.Parser.Models.Tokens
 
         public ICommandArgumentToken<T>.ValueParser Parser { get; }
 
-        protected ArgumentToken(string argumentName, bool isOptional, ICommandArgumentToken<T>.ValueParser parser)
-            : base(argumentName, isOptional)
+        protected ArgumentToken(string argumentName, bool isOptional, ICommandArgumentToken<T>.ValueParser parser, IEnumerable<string> possibleValues)
+            : base(argumentName, isOptional, possibleValues)
         {
             if(parser == null)
             {
@@ -87,6 +87,7 @@ namespace BudgetCli.Parser.Models.Tokens
         {
             protected string _name;
             protected bool _isOptional;
+            protected List<object> _possibleValues = new List<object>();
 
             protected ICommandArgumentToken<T>.ValueParser _parser;
 
@@ -102,6 +103,18 @@ namespace BudgetCli.Parser.Models.Tokens
                 return this;
             }
 
+            public Builder PossibleValues(IEnumerable<object> values)
+            {
+                _possibleValues.AddRange(values);
+                return this;
+            }
+
+            public Builder PossibleValues(params object[] values)
+            {
+                _possibleValues.AddRange(values);
+                return this;
+            }
+
             public Builder Parser(ICommandArgumentToken<T>.ValueParser parser)
             {
                 _parser = parser;
@@ -110,7 +123,7 @@ namespace BudgetCli.Parser.Models.Tokens
 
             public ArgumentToken<T> Build()
             {
-                return new ArgumentToken<T>(_name, _isOptional, _parser);
+                return new ArgumentToken<T>(_name, _isOptional, _parser, _possibleValues.Select(x => x.ToString()));
             }
         }
     }

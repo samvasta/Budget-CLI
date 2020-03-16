@@ -1,6 +1,7 @@
 using System;
 using BudgetCli.Parser.Enums;
 using BudgetCli.Parser.Interfaces;
+using BudgetCli.Parser.Util;
 using BudgetCli.Util.Models;
 
 namespace BudgetCli.Parser.Models.Tokens
@@ -13,14 +14,13 @@ namespace BudgetCli.Parser.Models.Tokens
 
         public Name Name { get; }
 
-        public string Description { get { return Name.Preferred; } }
-
+        public string DisplayName { get { return Name.ToDisplayName(); } }
         public string[] PossibleValues { get; }
 
         public VerbToken(Name name)
         {
             Name = name;
-            PossibleValues = new string[] {};
+            PossibleValues = new string[0];
         }
 
         public TokenMatchResult Matches(string[] inputTokens, int startIdx)

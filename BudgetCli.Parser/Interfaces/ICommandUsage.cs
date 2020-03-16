@@ -8,5 +8,7 @@ namespace BudgetCli.Parser.Interfaces
         string Description { get; }
         ICommandToken[] Tokens { get; }
         string[] Examples { get; }
+
+        string GetDescription(ICommandToken token);
     }
 }

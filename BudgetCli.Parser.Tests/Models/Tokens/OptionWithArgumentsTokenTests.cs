@@ -22,7 +22,7 @@ namespace BudgetCli.Parser.Tests.Models.Tokens
                                 .Build();
 
             Assert.Equal(name, token.Name);
-            Assert.Equal("option <arg1>", token.Description);
+            Assert.Equal("(option|alt1|alt2) <arg1>", token.DisplayName);
             Assert.True(token.IsOptional);
             Assert.Equal(TokenKind.OptionWithArgument, token.Kind);
             Assert.Equal(1, token.Arguments.Length);

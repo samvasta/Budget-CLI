@@ -9,7 +9,8 @@ namespace BudgetCli.Parser.Models.Tokens
     {
         public Range<T>.TryParseValue ValueParser { get; }
 
-        public RangeArgumentToken(string argumentName, bool isOptional, Range<T>.TryParseValue valueParser) : base(argumentName, isOptional)
+        public RangeArgumentToken(string argumentName, bool isOptional, Range<T>.TryParseValue valueParser)
+            : base(argumentName, isOptional, new string[0])
         {
             ValueParser = valueParser;
         }

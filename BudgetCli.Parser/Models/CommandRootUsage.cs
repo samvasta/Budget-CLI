@@ -12,11 +12,16 @@ namespace BudgetCli.Parser.Models
 
         public ICommandToken[] Tokens { get { return CommandRoot.CommonTokens; } }
 
-        public string[] Examples { get { return Tokens.Select(x => x.Description).ToArray(); } }
+        public string[] Examples { get { return Tokens.Select(x => x.DisplayName).ToArray(); } }
 
         public CommandRootUsage(ICommandRoot root)
         {
             CommandRoot = root;
+        }
+
+        public string GetDescription(ICommandToken token)
+        {
+            return "";
         }
     }
 }

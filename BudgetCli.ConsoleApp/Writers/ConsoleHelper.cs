@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using BudgetCli.ConsoleApp.Interfaces;
 using Console = Colorful.Console;
 
@@ -7,6 +8,11 @@ namespace BudgetCli.ConsoleApp.Writers
     public static class ConsoleHelper
     {
         public static void WriteWithIndent(string text, int charIndentNum, ConsoleColor color)
+        {
+            int cursorLeft = Console.CursorLeft;
+            WriteWithIndent(text, charIndentNum, x => Console.Write(x, color), Console.WindowWidth, ref cursorLeft);
+        }
+        public static void WriteWithIndent(string text, int charIndentNum, Color color)
         {
             int cursorLeft = Console.CursorLeft;
             WriteWithIndent(text, charIndentNum, x => Console.Write(x, color), Console.WindowWidth, ref cursorLeft);

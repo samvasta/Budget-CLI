@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Mime;
 using BudgetCli.Parser.Enums;
 using BudgetCli.Parser.Interfaces;
@@ -19,7 +20,7 @@ namespace BudgetCli.Parser.Models.Tokens
         }
 
         public DateArgumentToken(string argumentName, bool isOptional, DateTime currentDate)
-            : base(argumentName, isOptional)
+            : base(argumentName, isOptional, new string[0])
         {
             CurrentDate = currentDate;
         }

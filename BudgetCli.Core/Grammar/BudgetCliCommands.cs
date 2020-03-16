@@ -118,12 +118,15 @@ namespace BudgetCli.Core.Grammar
                     .Build())
                 .WithUsage(new CommandUsage.Builder()
                     .Description("New Account")
-                    .WithToken(TokenUtils.BuildArgString(ARG_ACCOUNT_NAME))
-                    .WithToken(OPT_CATEGORY)
-                    .WithToken(OPT_DESCRIPTION)
-                    .WithToken(OPT_FUNDS)
-                    .WithToken(OPT_PRIORITY)
-                    .WithToken(OPT_ACCOUNT_TYPE)
+                    .WithToken(TokenUtils.BuildArgString(ARG_ACCOUNT_NAME), "name of the new account")
+                    .WithToken(OPT_CATEGORY, "name of the category the new account will belong to")
+                    .WithToken(OPT_DESCRIPTION, "a brief description of the account")
+                    .WithToken(OPT_FUNDS, "initial funds in the account")
+                    .WithToken(OPT_PRIORITY, "used for operations like filtering and sorting. Lower values are higher priority")
+                    .WithToken(OPT_ACCOUNT_TYPE, "Sink typically collects funds, Source typically distributes funds, Category contains other accounts")
+                    .WithExample("new account \"account name\"")
+                    .WithExample("new account \"account name\" -d \"description\"")
+                    .WithExample("new account \"account name\" -f $250 -d \"groceries\" -y Sink")
                     .Build())
                 .Build();
 
@@ -139,13 +142,13 @@ namespace BudgetCli.Core.Grammar
                     .Build())
                 .WithUsage(new CommandUsage.Builder()
                     .Description("List Accounts")
-                    .WithToken(OPT_CATEGORY)
-                    .WithToken(OPT_DESCRIPTION)
-                    .WithToken(OPT_FUNDS_RANGE)
-                    .WithToken(OPT_PRIORITY_RANGE)
-                    .WithToken(OPT_ACCOUNT_TYPE)
-                    .WithToken(OPT_ACCOUNT_NAME)
-                    .WithToken(OPT_TREE)
+                    .WithToken(OPT_CATEGORY, "filter by accounts belonging to this category")
+                    .WithToken(OPT_DESCRIPTION, "filter by accounts with this in their description")
+                    .WithToken(OPT_FUNDS_RANGE, "filter by accounts with funds in this range")
+                    .WithToken(OPT_PRIORITY_RANGE, "filter by accounts with priority in this range")
+                    .WithToken(OPT_ACCOUNT_TYPE, "filter by accounts of this type")
+                    .WithToken(OPT_ACCOUNT_NAME, "filter by accounts with this in their name")
+                    .WithToken(OPT_TREE, "display results as a visual tree")
                     .Build())
                 .Build();
                 
@@ -162,7 +165,7 @@ namespace BudgetCli.Core.Grammar
                 .WithUsage(new CommandUsage.Builder()
                     .Description("Display the details of an account. Optionally specify a date to see the funds in the account at a specific date.")
                     .WithToken(TokenUtils.BuildArgString(ARG_ACCOUNT_NAME))
-                    .WithToken(OPT_DATE)
+                    .WithToken(OPT_DATE, "show the account's state on this date")
                     .Build())
                 .Build();
                 
@@ -179,7 +182,7 @@ namespace BudgetCli.Core.Grammar
                 .WithUsage(new CommandUsage.Builder()
                     .Description("Removes the specified account. The account will not be deleted; instead it will be marked as \"closed\" and will not be effected by other commands until re-opened.")
                     .WithToken(TokenUtils.BuildArgString(ARG_ACCOUNT_NAME))
-                    .WithToken(OPT_RECURSIVE)
+                    .WithToken(OPT_RECURSIVE, "remove this account and all accounts under it. Only applied to Category accounts")
                     .Build())
                 .Build();
                 
@@ -196,11 +199,11 @@ namespace BudgetCli.Core.Grammar
                 .WithUsage(new CommandUsage.Builder()
                     .Description("Change one or more fields of the account.")
                     .WithToken(TokenUtils.BuildArgString(ARG_ACCOUNT_NAME))
-                    .WithToken(OPT_CATEGORY)
-                    .WithToken(OPT_FUNDS)
-                    .WithToken(OPT_DESCRIPTION)
-                    .WithToken(OPT_PRIORITY)
-                    .WithToken(OPT_ACCOUNT_TYPE)
+                    .WithToken(OPT_CATEGORY, "set the category to a new value")
+                    .WithToken(OPT_FUNDS, "set the funds to a new value")
+                    .WithToken(OPT_DESCRIPTION, "set the description to a new value")
+                    .WithToken(OPT_PRIORITY, "set the priority to a new value")
+                    .WithToken(OPT_ACCOUNT_TYPE, "set the account type to a new value")
                     .Build())
                 .Build();
 

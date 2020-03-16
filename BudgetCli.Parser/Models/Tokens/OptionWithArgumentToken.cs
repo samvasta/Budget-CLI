@@ -19,7 +19,7 @@ namespace BudgetCli.Parser.Models.Tokens
 
         public ArgumentToken[] Arguments { get; }
 
-        public string Description { get { return $"{Name.Preferred} {String.Join(' ', Arguments.Select(x => x.Description))}"; } }
+        public string DisplayName { get { return $"{Name.ToDisplayName()} {String.Join(' ', Arguments.Select(x => x.DisplayName))}"; } }
 
         /// <summary>
         /// Number of tokens that are expected to match in the case of completely successful parsing

@@ -16,7 +16,7 @@ namespace BudgetCli.Parser.Tests.Models.Tokens
             var token = new VerbToken(name);
 
             Assert.Same(name, token.Name);
-            Assert.Equal("verb", token.Description);
+            Assert.Equal("(verb|alt1|alt2)", token.DisplayName);
             Assert.False(token.IsOptional);
             Assert.Equal(TokenKind.Verb, token.Kind);
         }

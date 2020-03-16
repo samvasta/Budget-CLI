@@ -16,7 +16,7 @@ namespace BudgetCli.Parser.Tests.Models.Tokens
             var token = new StandAloneOptionToken(name);
 
             Assert.Same(name, token.Name);
-            Assert.Equal("option", token.Description);
+            Assert.Equal("(option|alt1|alt2)", token.DisplayName);
             Assert.True(token.IsOptional);
             Assert.Equal(TokenKind.StandAloneOption, token.Kind);
         }
