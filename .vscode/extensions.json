@@ -4,7 +4,7 @@
 
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
-        "ms-vscode.csharp",
+        "ms-dotnettools.csharp",
         "formulahendry.dotnet-test-explorer",
         "mike-lischke.vscode-antlr4",
         "jchannon.csharpextensions",

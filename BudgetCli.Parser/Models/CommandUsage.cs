@@ -14,8 +14,9 @@ namespace BudgetCli.Parser.Models
         public string[] Examples { get; }
 
         private readonly Dictionary<ICommandToken, string> _descriptions;
+        private readonly Dictionary<ICommandToken, object> _defaultValues;
 
-        private CommandUsage(bool isHelp, string description, ICommandToken[] tokens, string[] examples, Dictionary<ICommandToken, string> descriptions)
+        private CommandUsage(bool isHelp, string description, ICommandToken[] tokens, string[] examples, Dictionary<ICommandToken, string> descriptions, Dictionary<ICommandToken, object> defaultValues)
         {
             if(tokens.Length == 0)
             {
@@ -26,6 +27,7 @@ namespace BudgetCli.Parser.Models
             Tokens = tokens;
             Examples = examples;
             _descriptions = descriptions;
+            _defaultValues = defaultValues;
         }
 
         public string GetDescription(ICommandToken token)
@@ -37,6 +39,15 @@ namespace BudgetCli.Parser.Models
             return String.Empty;
         }
 
+        public object GetDefaultValue(ICommandToken token)
+        {
+            if(_defaultValues.ContainsKey(token))
+            {
+                return _defaultValues[token];
+            }
+            return null;
+        }
+
         public class Builder
         {
             private bool _isHelp;
@@ -44,6 +55,7 @@ namespace BudgetCli.Parser.Models
             private readonly List<ICommandToken> _tokens;
             private readonly List<string> _examples;
             private readonly Dictionary<ICommandToken, string> _descriptions;
+            private readonly Dictionary<ICommandToken, object> _defaultValues;
 
             public Builder()
             {
@@ -51,6 +63,7 @@ namespace BudgetCli.Parser.Models
                 _tokens = new List<ICommandToken>();
                 _examples = new List<string>();
                 _descriptions = new Dictionary<ICommandToken, string>();
+                _defaultValues = new Dictionary<ICommandToken, object>();
             }
 
             public Builder IsHelp()
@@ -65,10 +78,14 @@ namespace BudgetCli.Parser.Models
                 return this;
             }
 
-            public Builder WithToken(ICommandToken token, string description = "")
+            public Builder WithToken(ICommandToken token, string description = "", object defaultValue = null)
             {
                 _tokens.Add(token);
                 _descriptions.Add(token, description);
+                if(defaultValue != null)
+                {
+                    _defaultValues.Add(token, defaultValue);
+                }
                 return this;
             }
 
@@ -80,7 +97,7 @@ namespace BudgetCli.Parser.Models
 
             public CommandUsage Build()
             {
-                return new CommandUsage(_isHelp, _description, _tokens.ToArray(), _examples.ToArray(), _descriptions);
+                return new CommandUsage(_isHelp, _description, _tokens.ToArray(), _examples.ToArray(), _descriptions, _defaultValues);
             }
         }
     }

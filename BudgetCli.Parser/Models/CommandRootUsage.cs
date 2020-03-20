@@ -23,5 +23,10 @@ namespace BudgetCli.Parser.Models
         {
             return "";
         }
+
+        public object GetDefaultValue(ICommandToken token)
+        {
+            return null;
+        }
     }
 }

@@ -115,6 +115,19 @@ namespace BudgetCli.ConsoleApp.Writers
                     ConsoleHelper.WriteWithIndent($"{token.DisplayName}", indent*IndentAmount);
                     ConsoleHelper.WriteWithIndent("  # ", descriptionIndent, Color.Gray);
                     ConsoleHelper.WriteWithIndent(helpItem.GetDescription(token), descriptionIndent+4, Color.Gray);
+
+                    object defaultValue = helpItem.GetDefaultValue(token);
+                    if(defaultValue != null)
+                    {
+                        ConsoleHelper.WriteWithIndent($" [default: {defaultValue.ToString()}]", descriptionIndent+4, Color.Gray);
+                    }
+
+                    if(token.PossibleValues != null && token.PossibleValues.Length > 0)
+                    {
+                        Console.WriteLine();
+                        ConsoleHelper.WriteWithIndent($"Possible Values: {{{string.Join(", ", token.PossibleValues)}}}", descriptionIndent+8);
+                    }
+
                     Console.WriteLine();
                 }
             }

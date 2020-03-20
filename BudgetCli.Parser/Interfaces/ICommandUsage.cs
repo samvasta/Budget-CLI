@@ -10,5 +10,6 @@ namespace BudgetCli.Parser.Interfaces
         string[] Examples { get; }
 
         string GetDescription(ICommandToken token);
+        object GetDefaultValue(ICommandToken token);
     }
 }
